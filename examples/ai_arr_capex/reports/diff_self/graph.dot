@@ -1,4 +1,0 @@
-digraph WorkbookDiff {
-  rankdir=LR;
-  node [shape=box, style=rounded];
-}

@@ -1,9 +1,0 @@
-{
-  "diagnostics": [
-    {
-      "severity": "info",
-      "code": "CACHED_VALUE_MODE",
-      "message": "This report uses cached formula results. Numeric output deltas assume both workbooks were saved after recalculation."
-    }
-  ]
-}

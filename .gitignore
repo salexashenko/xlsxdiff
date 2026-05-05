@@ -9,3 +9,5 @@ dist/
 diff_out/
 outputs/
 scratch/
+examples/**/reports/
+examples/**/previews/

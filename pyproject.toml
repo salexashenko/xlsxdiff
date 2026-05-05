@@ -8,6 +8,10 @@ version = "0.1.0"
 description = "Semantic Excel workbook diff engine for humans and LLM agents."
 readme = "README.md"
 requires-python = ">=3.9"
+authors = [
+  { name = "Sergey Alexashenko" },
+]
+license = { file = "LICENSE" }
 dependencies = [
   "openpyxl>=3.1.0",
   "PyYAML>=6.0",
@@ -17,12 +21,18 @@ classifiers = [
   "Development Status :: 3 - Alpha",
   "Environment :: Console",
   "Intended Audience :: Developers",
+  "License :: OSI Approved :: BSD License",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.9",
   "Topic :: Office/Business :: Financial :: Spreadsheet",
   "Topic :: Software Development :: Libraries :: Python Modules",
 ]
+
+[project.urls]
+Homepage = "https://github.com/salexashenko/xlsxdiff"
+Repository = "https://github.com/salexashenko/xlsxdiff"
+Issues = "https://github.com/salexashenko/xlsxdiff/issues"
 
 [project.optional-dependencies]
 dev = [

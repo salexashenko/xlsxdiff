@@ -7,8 +7,8 @@ This example compares two scenario workbooks modeling 2026 and 2027 OpenAI / Ant
 - `workbooks/`: committed baseline and candidate `.xlsx` files.
 - `workbook_diff.yml`: output-cell and semantic-role config used by the diff.
 - `run_diff.py`: small example script that imports the main `workbook_diff` library API.
-- `reports/diff_main/`: generated report artifacts from the configured diff.
-- `previews/`: rendered workbook sheet previews.
+- `reports/diff_main/`: generated report artifacts from the configured diff, ignored by Git.
+- `previews/`: rendered workbook sheet previews, ignored by Git.
 - `scripts/`: optional provenance scripts used to generate and inspect the workbooks.
 
 ## Run

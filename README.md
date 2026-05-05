@@ -1,15 +1,33 @@
 # xlsxdiff
 
-`xlsxdiff` is a semantic diff engine for Excel workbooks. It compares two `.xlsx` or `.xlsm` files, identifies changed constants and formulas, follows formula dependencies to impacted outputs, and writes reports for both humans and LLM agents.
+`xlsxdiff` is a semantic diff engine for Excel workbooks. It compares two `.xlsx` or `.xlsm` files, identifies changed constants and formulas, traces formula dependencies to impacted outputs, and writes reports for humans and LLM agents.
 
-The tool is meant for spreadsheet review workflows where a plain cell-by-cell diff is too noisy: financial models, planning workbooks, operating dashboards, and generated Excel artifacts.
+The project is designed for spreadsheet review workflows where a plain cell-by-cell diff is too noisy: financial models, planning workbooks, operating dashboards, and generated Excel artifacts.
 
-Before diffing cells, `xlsxdiff` infers semantic cell identities from defined names, row headers, and column headers. This lets it describe cells as intersections like `Anthropic ARR / 2027E` and align cells that moved because a row or column was inserted.
+## What It Does
 
-## Quick Start
+- Detects changed constants, formulas, workbook metadata, defined names, tables, comments, hyperlinks, and optional style changes.
+- Parses formula references to build a dependency graph from changed inputs to impacted outputs.
+- Infers semantic cell identity from defined names, row headers, and column headers, so cells can be matched by meaning rather than only by A1 address.
+- Aligns shifted cells when rows or columns are inserted, reducing false delete/add noise.
+- Groups real modeling edits such as inserted model steps, raw data refreshes, and formula blocks.
+- Emits compact `llm_summary.json` output so agents can summarize a workbook diff without reading a full report.
+
+## Install
+
+```bash
+pip install xlsxdiff
+```
+
+For local development:
 
 ```bash
 pip install -e ".[dev]"
+```
+
+## CLI
+
+```bash
 xlsxdiff old.xlsx new.xlsx --out diff_out
 ```
 
@@ -17,9 +35,9 @@ xlsxdiff old.xlsx new.xlsx --out diff_out
 
 By default the output directory includes:
 
-- `diff_report.html`: interactive human-readable report with a focused impact graph.
+- `diff_report.html`: interactive report with a focused impact graph.
 - `llm_summary.json`: compact structured summary for agents.
-- `llm_summary.md`: Markdown summary for direct user responses.
+- `llm_summary.md`: Markdown version of the LLM summary.
 - `diff.json`: full structured diff.
 - `change_graph.json`: dependency graph and impact paths.
 - `changed_cells.csv`: flat changed-cell table.
@@ -39,7 +57,7 @@ write_artifacts(result, Path("diff_out"), formats=["html", "json", "md"])
 print(result["llm_summary"]["one_sentence_summary"])
 ```
 
-Pass a YAML-backed config as a dictionary when the workbook has known output cells or domain-specific labels:
+Pass config as a dictionary when a workbook has known output cells or semantic ranges:
 
 ```python
 result = diff_workbooks(
@@ -49,59 +67,34 @@ result = diff_workbooks(
         "outputs": [
             {"ref": "Summary!G31", "name": "Total LTV"},
             {"ref": "Summary!B6", "name": "2027 supportable capex"},
-        ]
+        ],
+        "assumption_ranges": ["Assumptions!B7:C10"],
+        "raw_data_sheets": ["Raw Export"],
     },
 )
 ```
 
 ## LLM Usage
 
-For agent workflows, read `llm_summary.json` or `result["llm_summary"]` instead of trying to summarize the full diff. The file is intentionally small and contains:
+For agent workflows, read `llm_summary.json` or `result["llm_summary"]` instead of trying to summarize the full diff. The summary includes:
 
 - `one_sentence_summary`: a ready-to-send summary sentence.
-- `top_direct_changes`: the most important changed assumptions, formulas, inputs, or metadata.
-- `top_change_groups`: grouped edits such as inserted or deleted modeling steps.
+- `top_direct_changes`: important changed assumptions, formulas, inputs, or metadata.
+- `top_change_groups`: grouped edits such as inserted/deleted modeling steps.
 - `top_impacted_outputs`: ranked final variables with old value, new value, delta, and upstream change IDs.
 - `caveats`: diagnostics that should temper the answer.
 
-A good agent response pattern is: use `one_sentence_summary` when present, mention one or two `top_direct_changes` or `top_change_groups` if the user asks for detail, and surface `caveats` when the diff includes unexplained output changes or unsupported formula constructs.
+A useful agent response pattern is to use `one_sentence_summary` for the answer, mention one or two `top_direct_changes` or `top_change_groups` only when the user asks for detail, and surface `caveats` when the diff includes unexplained output changes or unsupported formula constructs.
 
-## Example
+## Regenerate Example Reports
 
-The AI ARR/capex sample workbooks live under `examples/ai_arr_capex/workbooks`. The example runner imports the main library API and writes reports under `examples/ai_arr_capex/reports/diff_main`.
+The repository includes example workbooks and a script that regenerates report artifacts locally:
 
 ```bash
 python examples/ai_arr_capex/run_diff.py
-open examples/ai_arr_capex/reports/diff_main/diff_report.html
 ```
 
-The optional scripts in `examples/ai_arr_capex/scripts` show how the sample workbooks were generated and verified. They use the Codex spreadsheet artifact runtime; the committed `.xlsx` workbooks do not require that runtime.
-
-## Configuration
-
-Configs are YAML mappings passed with `--config`.
-
-```yaml
-outputs:
-  - ref: Summary!B6
-    name: Combined supportable capex 2026E
-  - ref: Summary!B7
-    name: Combined supportable capex 2027E
-
-semantic_roles:
-  assumption_sheets:
-    - Assumptions
-  raw_data_sheets:
-    - Raw Stripe Export
-```
-
-Configured outputs are prioritized in the HTML graph, Markdown report, and LLM summary.
-
-## Semantic Alignment
-
-Financial models often identify a cell by both its row label and column label, not by its A1 address. For example, the value in `Summary!C12` may mean `Anthropic ARR / 2027E`. `xlsxdiff` stores that semantic identity on each cell snapshot and uses it to match old and new cells before comparing values.
-
-This also reduces noise when a modeler inserts a row or column. If `Gross Margin / 2027E` moves from `Summary!C12` to `Summary!C13`, the diff treats it as the same logical cell. The inserted row is reported as a modeling step, while formulas and final outputs are compared against their aligned logical predecessors.
+Generated example reports are ignored by Git.
 
 ## Security and Limitations
 
@@ -115,4 +108,6 @@ Formula values are compared from cached workbook values. The engine does not cur
 python -m pytest -q
 ```
 
-Before publishing publicly, add the license file and project metadata you want attached to the package.
+## License
+
+`xlsxdiff` is released under the Zero-Clause BSD license. See `LICENSE`.

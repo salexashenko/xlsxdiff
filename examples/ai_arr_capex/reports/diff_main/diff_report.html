@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Workbook Diff Report</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1f2933;
+      --muted: #5b6776;
+      --line: #d7dde5;
+      --panel: #f7f9fb;
+      --accent: #0f766e;
+      --warn: #9a3412;
+    }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: #ffffff;
+      line-height: 1.45;
+    }
+    header, main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px;
+    }
+    header {
+      border-bottom: 1px solid var(--line);
+    }
+    h1, h2 {
+      margin: 0 0 12px;
+      letter-spacing: 0;
+    }
+    .meta {
+      color: var(--muted);
+      display: grid;
+      gap: 4px;
+      font-size: 14px;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin: 20px 0 28px;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: var(--panel);
+      color: var(--muted);
+    }
+    .card strong {
+      display: block;
+      color: var(--ink);
+      font-size: 26px;
+      margin-top: 4px;
+    }
+    section {
+      margin: 30px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 9px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      color: var(--muted);
+      font-weight: 600;
+      background: #fbfcfd;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.92em;
+      background: #eef2f6;
+      border-radius: 4px;
+      padding: 1px 4px;
+    }
+    ul {
+      padding-left: 20px;
+    }
+    .summary {
+      font-size: 17px;
+      border-left: 4px solid var(--accent);
+      padding-left: 14px;
+    }
+    .warn {
+      color: var(--warn);
+    }
+    .graph-panel {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfd;
+      padding: 14px;
+    }
+    .graph-caption {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 8px 0 0;
+    }
+    .graph-node text {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 11px;
+      fill: #172033;
+    }
+    .graph-node .ref {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 10px;
+      fill: #475569;
+    }
+    .graph-node {
+      cursor: pointer;
+    }
+    .graph-node:hover rect,
+    .graph-node:focus rect {
+      filter: drop-shadow(0 2px 4px rgb(15 23 42 / 0.18));
+    }
+    .graph-node .value {
+      font-size: 10px;
+      fill: #334155;
+    }
+    .graph-node .delta {
+      font-size: 10px;
+      font-weight: 700;
+      fill: #0f766e;
+    }
+    .graph-detail-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .graph-detail-list details {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 8px 10px;
+    }
+    .graph-detail-list summary {
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .path-line {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 8px 0 0;
+    }
+    .graph-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+    .legend-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      margin-right: 5px;
+      vertical-align: -1px;
+    }
+  </style>
+  <script>
+    function toggleGraphDetail(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.open = !el.open;
+      el.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Workbook Diff Report</h1>
+    <div class="meta">
+      <div>Baseline: <code>ai_arr_capex_model_v1_march.xlsx</code> 191e2e4e18e4</div>
+      <div>Candidate: <code>ai_arr_capex_model_v2_may.xlsx</code> f26069df8d8d</div>
+      <div>Generated: 2026-05-05T21:17:16.751604+00:00</div>
+      <div>Overall confidence: <strong>high</strong></div>
+    </div>
+  </header>
+  <main>
+    <section>
+      <div class="cards"><div class='card'><div>Direct changes</div><strong>34</strong></div><div class='card'><div>Formula changes</div><strong>6</strong></div><div class='card'><div>Outputs changed</div><strong>96</strong></div><div class='card'><div>Unexplained</div><strong>0</strong></div><div class='card'><div>Shifted cells</div><strong>0</strong></div><div class='card'><div>Opaque formulas</div><strong>no</strong></div><div class='card'><div>Macros or links</div><strong>no</strong></div></div>
+      <p class="summary">Summary!D6 2027 market coverage changed from 0.261522095556 to 0.34370748144 (+8.22 pp / +31.4%), associated with Assumptions!B14 Anchor ARR Anthropic changing from 19 to 30 and 7 other top direct change(s); 0 unexplained value changes were detected.</p>
+    </section>
+    <section>
+      <h2>Direct Changes</h2>
+      <table><thead><tr><th>Type</th><th>Location</th><th>Label</th><th>Old</th><th>New</th><th>Delta</th></tr></thead><tbody><tr><td>constant_changed</td><td><code>Assumptions!B14</code></td><td>Anchor ARR Anthropic</td><td>19</td><td>30</td><td>+11.0 / +57.9%</td></tr><tr><td>constant_changed</td><td><code>Assumptions!D13</code></td><td>2026 exit growth S1</td><td>0.4</td><td>0.6</td><td>+20.0 pp</td></tr><tr><td>constant_changed</td><td><code>Assumptions!D14</code></td><td>2026 exit growth S2/S3</td><td>0.58</td><td>0.73</td><td>+15.0 pp</td></tr><tr><td>constant_changed</td><td><code>Assumptions!E14</code></td><td>2027 ARR growth S2/S3</td><td>0.83</td><td>0.63</td><td>-20.0 pp</td></tr><tr><td>constant_changed</td><td><code>Assumptions!F13</code></td><td>Compute spend / ARR S1</td><td>0.55</td><td>0.58</td><td>+3.00 pp</td></tr><tr><td>constant_changed</td><td><code>Assumptions!C8</code></td><td>2027E Capex support multiple</td><td>4</td><td>4.5</td><td>+0.50 / +12.5%</td></tr><tr><td>constant_changed</td><td><code>Assumptions!F14</code></td><td>Compute spend / ARR S2/S3</td><td>0.65</td><td>0.68</td><td>+3.00 pp</td></tr><tr><td>constant_changed</td><td><code>Assumptions!G13</code></td><td>Hyperscaler-hosted share S1</td><td>0.8</td><td>0.82</td><td>+2.00 pp</td></tr><tr><td>formula_reference_changed</td><td><code>Capex_Model!G11</code></td><td>Capex_Model</td><td>=G8*G10</td><td>=G8*G9*G10</td><td>+108.3 / +46.0%</td></tr><tr><td>constant_changed</td><td><code>Assumptions!G14</code></td><td>Hyperscaler-hosted share S2/S3</td><td>0.85</td><td>0.88</td><td>+3.00 pp</td></tr><tr><td>constant_changed</td><td><code>Assumptions!B8</code></td><td>2026E Capex support multiple</td><td>4</td><td>4.5</td><td>+0.50 / +12.5%</td></tr><tr><td>constant_changed</td><td><code>Assumptions!B7</code></td><td>2026E Hyperscaler capex market</td><td>610</td><td>725</td><td>+115.0 / +18.9%</td></tr><tr><td>constant_changed</td><td><code>Assumptions!C9</code></td><td>2027E Capex realization factor</td><td>1</td><td>0.9</td><td>-10.00 pp</td></tr><tr><td>formula_reference_changed</td><td><code>Capex_Model!F11</code></td><td>Supportable hyperscaler capex ($B)</td><td>=F8*F10</td><td>=F8*F9*F10</td><td>+79.4 / +62.1%</td></tr><tr><td>formula_reference_changed</td><td><code>Capex_Model!E11</code></td><td>Supportable hyperscaler capex ($B)</td><td>=E8*E10</td><td>=E8*E9*E10</td><td>+83.6 / +68.9%</td></tr><tr><td>formula_reference_changed</td><td><code>Capex_Model!D11</code></td><td>Supportable hyperscaler capex ($B)</td><td>=D8*D10</td><td>=D8*D9*D10</td><td>+62.2 / +93.8%</td></tr><tr><td>formula_reference_changed</td><td><code>Capex_Model!B11</code></td><td>Supportable hyperscaler capex ($B)</td><td>=B8*B10</td><td>=B8*B9*B10</td><td>+17.2 / +27.9%</td></tr><tr><td>constant_changed</td><td><code>Assumptions!B9</code></td><td>2026E Capex realization factor</td><td>1</td><td>0.92</td><td>-8.00 pp</td></tr><tr><td>formula_reference_changed</td><td><code>Capex_Model!C11</code></td><td>Supportable hyperscaler capex ($B)</td><td>=C8*C10</td><td>=C8*C9*C10</td><td>+24.7 / +21.7%</td></tr><tr><td>constant_changed</td><td><code>Assumptions!C7</code></td><td>2027E Hyperscaler capex market</td><td>900</td><td>1000</td><td>+100.0 / +11.1%</td></tr><tr><td>constant_changed</td><td><code>Assumptions!E13</code></td><td>2027 ARR growth S1</td><td>0.85</td><td>0.8</td><td>-5.00 pp</td></tr><tr><td>constant_changed</td><td><code>Assumptions!C10</code></td><td>2027E All-in capex per GW equivalent</td><td>45</td><td>52</td><td>+7.00 / +15.6%</td></tr><tr><td>constant_changed</td><td><code>Assumptions!B10</code></td><td>2026E All-in capex per GW equivalent</td><td>45</td><td>50</td><td>+5.00 / +11.1%</td></tr><tr><td>constant_changed</td><td><code>Assumptions!B3</code></td><td>Model version</td><td>v1 March baseline</td><td>v2 May update</td><td></td></tr><tr><td>constant_changed</td><td><code>Assumptions!B4</code></td><td>v2 May update Source set</td><td>March 2026 public run-rate anchor</td><td>May 2026 public update and Q1 capex reset</td><td></td></tr></tbody></table>
+    </section>
+    
+    <section>
+      <h2>Impacted Outputs</h2>
+      <table><thead><tr><th>Output</th><th>Location</th><th>Old</th><th>New</th><th>Delta</th><th>Strength</th><th>Explanation</th></tr></thead><tbody><tr><td>Anthropic 2026E Anchor ARR / prior-year ARR ($B)</td><td><code>Capex_Model!D4</code></td><td>19</td><td>30</td><td>+11.0 / +57.9%</td><td>strong</td><td>Capex_Model!D4 changed and has one detected upstream direct change on a dependency path; this likely explains the movement.</td></tr><tr><td>Anthropic 2026E Exit ARR ($B)</td><td><code>Capex_Model!D5</code></td><td>30.02</td><td>51.9</td><td>+21.9 / +72.9%</td><td>moderate</td><td>Capex_Model!D5 changed and is associated with 2 upstream direct change(s).</td></tr><tr><td>OpenAI 2026E Exit ARR ($B)</td><td><code>Capex_Model!B5</code></td><td>35</td><td>40</td><td>+5.00 / +14.3%</td><td>strong</td><td>Capex_Model!B5 changed and has one detected upstream direct change on a dependency path; this likely explains the movement.</td></tr><tr><td>Anthropic 2027E Exit ARR ($B)</td><td><code>Capex_Model!E5</code></td><td>54.9366</td><td>84.597</td><td>+29.7 / +54.0%</td><td>moderate</td><td>Capex_Model!E5 changed and is associated with 3 upstream direct change(s).</td></tr><tr><td>Anthropic 2027E Annual hyperscaler AI service revenue ($B)</td><td><code>Capex_Model!E8</code></td><td>30.3524715</td><td>50.6228448</td><td>+20.3 / +66.8%</td><td>moderate</td><td>Capex_Model!E8 changed and is associated with 5 upstream direct change(s).</td></tr><tr><td>Anthropic 2026E Annual hyperscaler AI service revenue ($B)</td><td><code>Capex_Model!D8</code></td><td>16.58605</td><td>31.05696</td><td>+14.5 / +87.2%</td><td>moderate</td><td>Capex_Model!D8 changed and is associated with 4 upstream direct change(s).</td></tr><tr><td>OpenAI 2026E Annual hyperscaler AI service revenue ($B)</td><td><code>Capex_Model!B8</code></td><td>15.4</td><td>19.024</td><td>+3.62 / +23.5%</td><td>moderate</td><td>Capex_Model!B8 changed and is associated with 3 upstream direct change(s).</td></tr><tr><td>OpenAI 2027E Annual hyperscaler AI service revenue ($B)</td><td><code>Capex_Model!C8</code></td><td>28.49</td><td>34.2432</td><td>+5.75 / +20.2%</td><td>moderate</td><td>Capex_Model!C8 changed and is associated with 4 upstream direct change(s).</td></tr><tr><td>Total 2027E</td><td><code>Capex_Model!G8</code></td><td>58.8424715</td><td>84.8660448</td><td>+26.0 / +44.2%</td><td>moderate</td><td>Capex_Model!G8 changed and is associated with 9 upstream direct change(s).</td></tr><tr><td>Total 2026E Annual hyperscaler AI service revenue ($B)</td><td><code>Capex_Model!F8</code></td><td>31.98605</td><td>50.08096</td><td>+18.1 / +56.6%</td><td>moderate</td><td>Capex_Model!F8 changed and is associated with 7 upstream direct change(s).</td></tr><tr><td>Actual 2027 support total ties to companies</td><td><code>Checks!B6</code></td><td>235.369886</td><td>343.70748144</td><td>+108.3 / +46.0%</td><td>moderate</td><td>Checks!B6 changed and is associated with 12 upstream direct change(s).</td></tr><tr><td>Expected 2027 support total ties to companies</td><td><code>Checks!C6</code></td><td>235.369886</td><td>343.70748144</td><td>+108.3 / +46.0%</td><td>moderate</td><td>Checks!C6 changed and is associated with 13 upstream direct change(s).</td></tr><tr><td>Actual 2026 support total ties to companies</td><td><code>Checks!B5</code></td><td>127.9442</td><td>207.3351744</td><td>+79.4 / +62.1%</td><td>moderate</td><td>Checks!B5 changed and is associated with 10 upstream direct change(s).</td></tr><tr><td>Expected 2026 support total ties to companies</td><td><code>Checks!C5</code></td><td>127.9442</td><td>207.3351744</td><td>+79.4 / +62.1%</td><td>moderate</td><td>Checks!C5 changed and is associated with 11 upstream direct change(s).</td></tr><tr><td>OpenAI 2027E Exit ARR ($B)</td><td><code>Capex_Model!C5</code></td><td>64.75</td><td>72</td><td>+7.25 / +11.2%</td><td>moderate</td><td>Capex_Model!C5 changed and is associated with 2 upstream direct change(s).</td></tr><tr><td>Total 2027E</td><td><code>Capex_Model!G5</code></td><td>119.6866</td><td>156.597</td><td>+36.9 / +30.8%</td><td>moderate</td><td>Capex_Model!G5 changed and is associated with 5 upstream direct change(s).</td></tr><tr><td>Total 2026E Exit ARR ($B)</td><td><code>Capex_Model!F5</code></td><td>65.02</td><td>91.9</td><td>+26.9 / +41.3%</td><td>moderate</td><td>Capex_Model!F5 changed and is associated with 3 upstream direct change(s).</td></tr><tr><td>Combined supportable capex 2027E</td><td><code>Summary!B6</code></td><td>235.369886</td><td>343.70748144</td><td>+108.3 / +46.0%</td><td>moderate</td><td>Summary!B6 changed and is associated with 12 upstream direct change(s).</td></tr><tr><td>2027 supportable capex</td><td><code>Summary!E12</code></td><td>121.409886</td><td>205.02252144</td><td>+83.6 / +68.9%</td><td>moderate</td><td>Summary!E12 changed and is associated with 8 upstream direct change(s).</td></tr><tr><td>Combined supportable capex 2026E</td><td><code>Summary!A6</code></td><td>127.9442</td><td>207.3351744</td><td>+79.4 / +62.1%</td><td>moderate</td><td>Summary!A6 changed and is associated with 10 upstream direct change(s).</td></tr><tr><td>2026 supportable capex</td><td><code>Summary!D12</code></td><td>66.3442</td><td>128.5758144</td><td>+62.2 / +93.8%</td><td>moderate</td><td>Summary!D12 changed and is associated with 7 upstream direct change(s).</td></tr><tr><td>Anthropic 2027E Anchor ARR / prior-year ARR ($B)</td><td><code>Capex_Model!E4</code></td><td>30.02</td><td>51.9</td><td>+21.9 / +72.9%</td><td>moderate</td><td>Capex_Model!E4 changed and is associated with 2 upstream direct change(s).</td></tr><tr><td>2026 supportable capex</td><td><code>Summary!D11</code></td><td>61.6</td><td>78.75936</td><td>+17.2 / +27.9%</td><td>moderate</td><td>Summary!D11 changed and is associated with 6 upstream direct change(s).</td></tr><tr><td>2027E</td><td><code>Summary!C15</code></td><td>235.369886</td><td>343.70748144</td><td>+108.3 / +46.0%</td><td>moderate</td><td>Summary!C15 changed and is associated with 12 upstream direct change(s).</td></tr><tr><td>2027 Supported by OpenAI + Anthropic</td><td><code>Summary!G19</code></td><td>235.369886</td><td>343.70748144</td><td>+108.3 / +46.0%</td><td>moderate</td><td>Summary!G19 changed and is associated with 12 upstream direct change(s).</td></tr></tbody></table>
+    </section>
+    <section>
+      <h2>Change DAG</h2>
+      <div class="graph-panel">
+      <div class="graph-legend">
+        <span><span class="legend-dot" style="background:#0f766e"></span>Direct change</span>
+        <span><span class="legend-dot" style="background:#dc2626"></span>Final/output variable</span>
+        <span>Lines are collapsed dependency paths, not individual cell-by-cell edges.</span>
+      </div>
+    <svg role="img" aria-label="Focused change impact graph" viewBox="0 0 1096 764" width="1096" height="764" xmlns="http://www.w3.org/2000/svg"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="strokeWidth"><path d="M 0 0 L 8 4 L 0 8 z" fill="#94a3b8" /></marker></defs><path d="M 338.0 76.0 C 383.0 76.0, 383.0 382.0, 428.0 382.0" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrow)" /><path d="M 338.0 178.0 C 383.0 178.0, 383.0 382.0, 428.0 382.0" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrow)" /><path d="M 338.0 280.0 C 383.0 280.0, 383.0 382.0, 428.0 382.0" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrow)" /><path d="M 338.0 382.0 C 383.0 382.0, 383.0 382.0, 428.0 382.0" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrow)" /><path d="M 338.0 484.0 C 383.0 484.0, 383.0 382.0, 428.0 382.0" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrow)" /><path d="M 338.0 586.0 C 383.0 586.0, 383.0 382.0, 428.0 382.0" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrow)" /><path d="M 338.0 688.0 C 383.0 688.0, 383.0 382.0, 428.0 382.0" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrow)" /><path d="M 668.0 382.0 C 713.0 382.0, 713.0 76.0, 758.0 76.0" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrow)" /><path d="M 668.0 382.0 C 713.0 382.0, 713.0 178.0, 758.0 178.0" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrow)" /><path d="M 668.0 382.0 C 713.0 382.0, 713.0 280.0, 758.0 280.0" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrow)" /><path d="M 668.0 382.0 C 713.0 382.0, 713.0 382.0, 758.0 382.0" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrow)" /><path d="M 668.0 382.0 C 713.0 382.0, 713.0 484.0, 758.0 484.0" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrow)" /><g class="graph-node"><title>Direct change: Assumptions!B14 Anchor ARR Anthropic</title><rect x="28.0" y="34.0" width="310" height="84" rx="8" fill="#ecfdf5" stroke="#0f766e" stroke-width="1.5" /><text x="40.0" y="54.0" font-weight="700">Anchor ARR Anthropic</text><text class="ref" x="40.0" y="72.0">Assumptions!B14</text><text class="value" x="40.0" y="92.0">19 → 30</text><text class="delta" x="40.0" y="109.0">+11.0 / +57.9%</text></g><g class="graph-node"><title>Direct change: Assumptions!D13 2026 exit growth S1</title><rect x="28.0" y="136.0" width="310" height="84" rx="8" fill="#ecfdf5" stroke="#0f766e" stroke-width="1.5" /><text x="40.0" y="156.0" font-weight="700">2026 exit growth S1</text><text class="ref" x="40.0" y="174.0">Assumptions!D13</text><text class="value" x="40.0" y="194.0">0.4 → 0.6</text><text class="delta" x="40.0" y="211.0">+20.0 pp / +50.0%</text></g><g class="graph-node"><title>Direct change: Assumptions!D14 2026 exit growth S2/S3</title><rect x="28.0" y="238.0" width="310" height="84" rx="8" fill="#ecfdf5" stroke="#0f766e" stroke-width="1.5" /><text x="40.0" y="258.0" font-weight="700">2026 exit growth S2/S3</text><text class="ref" x="40.0" y="276.0">Assumptions!D14</text><text class="value" x="40.0" y="296.0">0.58 → 0.73</text><text class="delta" x="40.0" y="313.0">+15.0 pp / +25.9%</text></g><g class="graph-node"><title>Direct change: Assumptions!E14 2027 ARR growth S2/S3</title><rect x="28.0" y="340.0" width="310" height="84" rx="8" fill="#ecfdf5" stroke="#0f766e" stroke-width="1.5" /><text x="40.0" y="360.0" font-weight="700">2027 ARR growth S2/S3</text><text class="ref" x="40.0" y="378.0">Assumptions!E14</text><text class="value" x="40.0" y="398.0">0.83 → 0.63</text><text class="delta" x="40.0" y="415.0">-20.0 pp / -24.1%</text></g><g class="graph-node"><title>Direct change: Assumptions!F13 Compute spend / ARR S1</title><rect x="28.0" y="442.0" width="310" height="84" rx="8" fill="#ecfdf5" stroke="#0f766e" stroke-width="1.5" /><text x="40.0" y="462.0" font-weight="700">Compute spend / ARR S1</text><text class="ref" x="40.0" y="480.0">Assumptions!F13</text><text class="value" x="40.0" y="500.0">0.55 → 0.58</text><text class="delta" x="40.0" y="517.0">+3.00 pp / +5.5%</text></g><g class="graph-node"><title>Direct change: Assumptions!C8 2027E Capex support multiple</title><rect x="28.0" y="544.0" width="310" height="84" rx="8" fill="#ecfdf5" stroke="#0f766e" stroke-width="1.5" /><text x="40.0" y="564.0" font-weight="700">2027E Capex support multiple</text><text class="ref" x="40.0" y="582.0">Assumptions!C8</text><text class="value" x="40.0" y="602.0">4 → 4.5</text><text class="delta" x="40.0" y="619.0">+0.50 / +12.5%</text></g><g class="graph-node"><title>Direct change: Assumptions!F14 Compute spend / ARR S2/S3</title><rect x="28.0" y="646.0" width="310" height="84" rx="8" fill="#ecfdf5" stroke="#0f766e" stroke-width="1.5" /><text x="40.0" y="666.0" font-weight="700">Compute spend / ARR S2/S3</text><text class="ref" x="40.0" y="684.0">Assumptions!F14</text><text class="value" x="40.0" y="704.0">0.65 → 0.68</text><text class="delta" x="40.0" y="721.0">+3.00 pp / +4.6%</text></g><g class="graph-node"><title>Collapsed dependency paths: Collapsed paths Model logic</title><rect x="428.0" y="334.0" width="240" height="96" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5" /><text x="440.0" y="354.0" font-weight="700">Model logic</text><text class="ref" x="440.0" y="372.0">Collapsed paths</text><text class="value" x="440.0" y="392.0">intermediate formulas hidden</text><text class="delta" x="440.0" y="409.0">click outputs for paths</text></g><g class="graph-node" onclick="toggleGraphDetail(&#x27;graph-detail-0&#x27;)" tabindex="0" role="button"><title>Output: Summary!D6 2027 market coverage</title><rect x="758.0" y="34.0" width="310" height="84" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5" /><text x="770.0" y="54.0" font-weight="700">2027 market coverage</text><text class="ref" x="770.0" y="72.0">Summary!D6</text><text class="value" x="770.0" y="92.0">0.261522095556 → 0.34370748144</text><text class="delta" x="770.0" y="109.0">+8.22 pp / +31.4%</text></g><g class="graph-node" onclick="toggleGraphDetail(&#x27;graph-detail-1&#x27;)" tabindex="0" role="button"><title>Output: Summary!B6 Combined supportable capex 2027E</title><rect x="758.0" y="136.0" width="310" height="84" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5" /><text x="770.0" y="156.0" font-weight="700">Combined supportable capex 2027E</text><text class="ref" x="770.0" y="174.0">Summary!B6</text><text class="value" x="770.0" y="194.0">235.369886 → 343.70748144</text><text class="delta" x="770.0" y="211.0">+108.3 / +46.0%</text></g><g class="graph-node" onclick="toggleGraphDetail(&#x27;graph-detail-2&#x27;)" tabindex="0" role="button"><title>Output: Summary!C6 2026 market coverage</title><rect x="758.0" y="238.0" width="310" height="84" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5" /><text x="770.0" y="258.0" font-weight="700">2026 market coverage</text><text class="ref" x="770.0" y="276.0">Summary!C6</text><text class="value" x="770.0" y="296.0">0.209744590164 → 0.285979550897</text><text class="delta" x="770.0" y="313.0">+7.62 pp / +36.3%</text></g><g class="graph-node" onclick="toggleGraphDetail(&#x27;graph-detail-3&#x27;)" tabindex="0" role="button"><title>Output: Summary!E12 2027 supportable capex</title><rect x="758.0" y="340.0" width="310" height="84" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5" /><text x="770.0" y="360.0" font-weight="700">2027 supportable capex</text><text class="ref" x="770.0" y="378.0">Summary!E12</text><text class="value" x="770.0" y="398.0">121.409886 → 205.02252144</text><text class="delta" x="770.0" y="415.0">+83.6 / +68.9%</text></g><g class="graph-node" onclick="toggleGraphDetail(&#x27;graph-detail-4&#x27;)" tabindex="0" role="button"><title>Output: Summary!A6 Combined supportable capex 2026E</title><rect x="758.0" y="442.0" width="310" height="84" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5" /><text x="770.0" y="462.0" font-weight="700">Combined supportable capex 2026E</text><text class="ref" x="770.0" y="480.0">Summary!A6</text><text class="value" x="770.0" y="500.0">127.9442 → 207.3351744</text><text class="delta" x="770.0" y="517.0">+79.4 / +62.1%</text></g><text x="28" y="754" fill="#64748b" font-size="12">Intermediate cells are collapsed into the model-logic node; click outputs for representative paths.</text></svg><div class="graph-detail-list"><details id="graph-detail-0"><summary><code>Summary!D6</code> 2027 market coverage: 0.261522095556 → 0.34370748144 +8.22 pp / +31.4%</summary><p>Summary!D6 changed and is associated with 13 upstream direct change(s).</p><div><div class="path-line"><code>Assumptions!B14</code> → <code>Capex_Model!D4</code> → <code>Capex_Model!D5</code> → <code>Capex_Model!E5</code> → <code>Capex_Model!E8</code> → <code>Capex_Model!G8</code> → <code>Capex_Model!G11</code> → <code>Capex_Model!G13</code> → <code>Summary!D6</code></div><div class="path-line"><code>Assumptions!D13</code> → <code>Capex_Model!B5</code> → <code>Capex_Model!C5</code> → <code>Capex_Model!C8</code> → <code>Capex_Model!G8</code> → <code>Capex_Model!G11</code> → <code>Capex_Model!G13</code> → <code>Summary!D6</code></div><div class="path-line"><code>Assumptions!D14</code> → <code>Capex_Model!D5</code> → <code>Capex_Model!E5</code> → <code>Capex_Model!E8</code> → <code>Capex_Model!G8</code> → <code>Capex_Model!G11</code> → <code>Capex_Model!G13</code> → <code>Summary!D6</code></div></div><ul><li><code>Assumptions!C7</code> 2027E Hyperscaler capex market: 900 → 1000 +100.0 / +11.1%</li><li><code>Assumptions!C8</code> 2027E Capex support multiple: 4 → 4.5 +0.50 / +12.5%</li><li><code>Assumptions!C9</code> 2027E Capex realization factor: 1 → 0.9 -10.00 pp</li><li><code>Assumptions!D13</code> 2026 exit growth S1: 0.4 → 0.6 +20.0 pp</li><li><code>Assumptions!E13</code> 2027 ARR growth S1: 0.85 → 0.8 -5.00 pp</li><li><code>Assumptions!F13</code> Compute spend / ARR S1: 0.55 → 0.58 +3.00 pp</li><li><code>Assumptions!G13</code> Hyperscaler-hosted share S1: 0.8 → 0.82 +2.00 pp</li><li><code>Assumptions!B14</code> Anchor ARR Anthropic: 19 → 30 +11.0 / +57.9%</li><li><code>Assumptions!D14</code> 2026 exit growth S2/S3: 0.58 → 0.73 +15.0 pp</li><li><code>Assumptions!E14</code> 2027 ARR growth S2/S3: 0.83 → 0.63 -20.0 pp</li><li><code>Assumptions!F14</code> Compute spend / ARR S2/S3: 0.65 → 0.68 +3.00 pp</li><li><code>Assumptions!G14</code> Hyperscaler-hosted share S2/S3: 0.85 → 0.88 +3.00 pp</li></ul></details><details id="graph-detail-1"><summary><code>Summary!B6</code> Combined supportable capex 2027E: 235.369886 → 343.70748144 +108.3 / +46.0%</summary><p>Summary!B6 changed and is associated with 12 upstream direct change(s).</p><div><div class="path-line"><code>Assumptions!B14</code> → <code>Capex_Model!D4</code> → <code>Capex_Model!D5</code> → <code>Capex_Model!E5</code> → <code>Capex_Model!E8</code> → <code>Capex_Model!G8</code> → <code>Capex_Model!G11</code> → <code>Summary!B6</code></div><div class="path-line"><code>Assumptions!D13</code> → <code>Capex_Model!B5</code> → <code>Capex_Model!C5</code> → <code>Capex_Model!C8</code> → <code>Capex_Model!G8</code> → <code>Capex_Model!G11</code> → <code>Summary!B6</code></div><div class="path-line"><code>Assumptions!D14</code> → <code>Capex_Model!D5</code> → <code>Capex_Model!E5</code> → <code>Capex_Model!E8</code> → <code>Capex_Model!G8</code> → <code>Capex_Model!G11</code> → <code>Summary!B6</code></div></div><ul><li><code>Assumptions!C8</code> 2027E Capex support multiple: 4 → 4.5 +0.50 / +12.5%</li><li><code>Assumptions!C9</code> 2027E Capex realization factor: 1 → 0.9 -10.00 pp</li><li><code>Assumptions!D13</code> 2026 exit growth S1: 0.4 → 0.6 +20.0 pp</li><li><code>Assumptions!E13</code> 2027 ARR growth S1: 0.85 → 0.8 -5.00 pp</li><li><code>Assumptions!F13</code> Compute spend / ARR S1: 0.55 → 0.58 +3.00 pp</li><li><code>Assumptions!G13</code> Hyperscaler-hosted share S1: 0.8 → 0.82 +2.00 pp</li><li><code>Assumptions!B14</code> Anchor ARR Anthropic: 19 → 30 +11.0 / +57.9%</li><li><code>Assumptions!D14</code> 2026 exit growth S2/S3: 0.58 → 0.73 +15.0 pp</li><li><code>Assumptions!E14</code> 2027 ARR growth S2/S3: 0.83 → 0.63 -20.0 pp</li><li><code>Assumptions!F14</code> Compute spend / ARR S2/S3: 0.65 → 0.68 +3.00 pp</li><li><code>Assumptions!G14</code> Hyperscaler-hosted share S2/S3: 0.85 → 0.88 +3.00 pp</li><li><code>Capex_Model!G11</code> Capex_Model: =G8*G10 → =G8*G9*G10 +108.3 / +46.0%</li></ul></details><details id="graph-detail-2"><summary><code>Summary!C6</code> 2026 market coverage: 0.209744590164 → 0.285979550897 +7.62 pp / +36.3%</summary><p>Summary!C6 changed and is associated with 11 upstream direct change(s).</p><div><div class="path-line"><code>Assumptions!B14</code> → <code>Capex_Model!D4</code> → <code>Capex_Model!D5</code> → <code>Capex_Model!D8</code> → <code>Capex_Model!F8</code> → <code>Capex_Model!F11</code> → <code>Capex_Model!F13</code> → <code>Summary!C6</code></div><div class="path-line"><code>Assumptions!D13</code> → <code>Capex_Model!B5</code> → <code>Capex_Model!B8</code> → <code>Capex_Model!F8</code> → <code>Capex_Model!F11</code> → <code>Capex_Model!F13</code> → <code>Summary!C6</code></div><div class="path-line"><code>Assumptions!D14</code> → <code>Capex_Model!D5</code> → <code>Capex_Model!D8</code> → <code>Capex_Model!F8</code> → <code>Capex_Model!F11</code> → <code>Capex_Model!F13</code> → <code>Summary!C6</code></div></div><ul><li><code>Assumptions!B7</code> 2026E Hyperscaler capex market: 610 → 725 +115.0 / +18.9%</li><li><code>Assumptions!B8</code> 2026E Capex support multiple: 4 → 4.5 +0.50 / +12.5%</li><li><code>Assumptions!B9</code> 2026E Capex realization factor: 1 → 0.92 -8.00 pp</li><li><code>Assumptions!D13</code> 2026 exit growth S1: 0.4 → 0.6 +20.0 pp</li><li><code>Assumptions!F13</code> Compute spend / ARR S1: 0.55 → 0.58 +3.00 pp</li><li><code>Assumptions!G13</code> Hyperscaler-hosted share S1: 0.8 → 0.82 +2.00 pp</li><li><code>Assumptions!B14</code> Anchor ARR Anthropic: 19 → 30 +11.0 / +57.9%</li><li><code>Assumptions!D14</code> 2026 exit growth S2/S3: 0.58 → 0.73 +15.0 pp</li><li><code>Assumptions!F14</code> Compute spend / ARR S2/S3: 0.65 → 0.68 +3.00 pp</li><li><code>Assumptions!G14</code> Hyperscaler-hosted share S2/S3: 0.85 → 0.88 +3.00 pp</li><li><code>Capex_Model!F11</code> Supportable hyperscaler capex ($B): =F8*F10 → =F8*F9*F10 +79.4 / +62.1%</li></ul></details><details id="graph-detail-3"><summary><code>Summary!E12</code> 2027 supportable capex: 121.409886 → 205.02252144 +83.6 / +68.9%</summary><p>Summary!E12 changed and is associated with 8 upstream direct change(s).</p><div><div class="path-line"><code>Assumptions!B14</code> → <code>Capex_Model!D4</code> → <code>Capex_Model!D5</code> → <code>Capex_Model!E5</code> → <code>Capex_Model!E8</code> → <code>Capex_Model!E11</code> → <code>Summary!E12</code></div><div class="path-line"><code>Assumptions!D14</code> → <code>Capex_Model!D5</code> → <code>Capex_Model!E5</code> → <code>Capex_Model!E8</code> → <code>Capex_Model!E11</code> → <code>Summary!E12</code></div><div class="path-line"><code>Assumptions!E14</code> → <code>Capex_Model!E5</code> → <code>Capex_Model!E8</code> → <code>Capex_Model!E11</code> → <code>Summary!E12</code></div></div><ul><li><code>Assumptions!C8</code> 2027E Capex support multiple: 4 → 4.5 +0.50 / +12.5%</li><li><code>Assumptions!C9</code> 2027E Capex realization factor: 1 → 0.9 -10.00 pp</li><li><code>Assumptions!B14</code> Anchor ARR Anthropic: 19 → 30 +11.0 / +57.9%</li><li><code>Assumptions!D14</code> 2026 exit growth S2/S3: 0.58 → 0.73 +15.0 pp</li><li><code>Assumptions!E14</code> 2027 ARR growth S2/S3: 0.83 → 0.63 -20.0 pp</li><li><code>Assumptions!F14</code> Compute spend / ARR S2/S3: 0.65 → 0.68 +3.00 pp</li><li><code>Assumptions!G14</code> Hyperscaler-hosted share S2/S3: 0.85 → 0.88 +3.00 pp</li><li><code>Capex_Model!E11</code> Supportable hyperscaler capex ($B): =E8*E10 → =E8*E9*E10 +83.6 / +68.9%</li></ul></details><details id="graph-detail-4"><summary><code>Summary!A6</code> Combined supportable capex 2026E: 127.9442 → 207.3351744 +79.4 / +62.1%</summary><p>Summary!A6 changed and is associated with 10 upstream direct change(s).</p><div><div class="path-line"><code>Assumptions!B14</code> → <code>Capex_Model!D4</code> → <code>Capex_Model!D5</code> → <code>Capex_Model!D8</code> → <code>Capex_Model!F8</code> → <code>Capex_Model!F11</code> → <code>Summary!A6</code></div><div class="path-line"><code>Assumptions!D13</code> → <code>Capex_Model!B5</code> → <code>Capex_Model!B8</code> → <code>Capex_Model!F8</code> → <code>Capex_Model!F11</code> → <code>Summary!A6</code></div><div class="path-line"><code>Assumptions!D14</code> → <code>Capex_Model!D5</code> → <code>Capex_Model!D8</code> → <code>Capex_Model!F8</code> → <code>Capex_Model!F11</code> → <code>Summary!A6</code></div></div><ul><li><code>Assumptions!B8</code> 2026E Capex support multiple: 4 → 4.5 +0.50 / +12.5%</li><li><code>Assumptions!B9</code> 2026E Capex realization factor: 1 → 0.92 -8.00 pp</li><li><code>Assumptions!D13</code> 2026 exit growth S1: 0.4 → 0.6 +20.0 pp</li><li><code>Assumptions!F13</code> Compute spend / ARR S1: 0.55 → 0.58 +3.00 pp</li><li><code>Assumptions!G13</code> Hyperscaler-hosted share S1: 0.8 → 0.82 +2.00 pp</li><li><code>Assumptions!B14</code> Anchor ARR Anthropic: 19 → 30 +11.0 / +57.9%</li><li><code>Assumptions!D14</code> 2026 exit growth S2/S3: 0.58 → 0.73 +15.0 pp</li><li><code>Assumptions!F14</code> Compute spend / ARR S2/S3: 0.65 → 0.68 +3.00 pp</li><li><code>Assumptions!G14</code> Hyperscaler-hosted share S2/S3: 0.85 → 0.88 +3.00 pp</li><li><code>Capex_Model!F11</code> Supportable hyperscaler capex ($B): =F8*F10 → =F8*F9*F10 +79.4 / +62.1%</li></ul></details></div></div>
+      <p class="graph-caption">Intermediate cells are collapsed. Click an output card to see representative dependency paths and upstream changes.</p>
+    </section>
+    <section>
+      <h2>Unexplained Changes</h2>
+      <p>These values changed, but the engine could not connect them to a detected upstream change.</p>
+      <ul></ul>
+    </section>
+    <section>
+      <h2>Diagnostics</h2>
+      <ul><li><strong>CACHED_VALUE_MODE</strong>: This report uses cached formula results. Numeric output deltas assume both workbooks were saved after recalculation.</li></ul>
+    </section>
+  </main>
+</body>
+</html>

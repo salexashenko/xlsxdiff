@@ -1,0 +1,33 @@
+workbook_diff:
+  name: "AI ARR to Hyperscaler Capex Support"
+  outputs:
+    - name: "Combined supportable capex 2026E"
+      ref: "Summary!A6"
+      materiality: high
+    - name: "Combined supportable capex 2027E"
+      ref: "Summary!B6"
+      materiality: high
+    - name: "2026 market coverage"
+      ref: "Summary!C6"
+      materiality: high
+    - name: "2027 market coverage"
+      ref: "Summary!D6"
+      materiality: high
+    - name: "OpenAI 2027 supportable capex"
+      ref: "Summary!E11"
+      materiality: high
+    - name: "Anthropic 2027 supportable capex"
+      ref: "Summary!E12"
+      materiality: high
+  assumption_ranges:
+    - "Assumptions!B7:C10"
+    - "Assumptions!B13:G14"
+  raw_data_sheets:
+    - "Sources"
+  graph:
+    max_visible_nodes: 80
+    max_range_expand_cells: 1000
+  output:
+    include_style_changes: false
+    include_hidden_sheets: true
+    include_formula_token_diff: true

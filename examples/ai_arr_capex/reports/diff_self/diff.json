@@ -1,0 +1,93 @@
+{
+  "schema_version": "0.1",
+  "baseline": {
+    "filename": "ai_arr_capex_model_v1_march.xlsx",
+    "sha256": "191e2e4e18e48e2c59089afb16ebd9c72874fa0bfb2b5ec69fa3d7ce162a87b7",
+    "file_size_bytes": 15940,
+    "workbook_type": "xlsx",
+    "has_macros": false,
+    "calc_mode": "unknown",
+    "full_calc_on_load": false,
+    "created_at": "2026-05-05T17:36:53.327438",
+    "modified_at": "2026-05-05T17:36:53.327438",
+    "app_version": null
+  },
+  "candidate": {
+    "filename": "ai_arr_capex_model_v1_march.xlsx",
+    "sha256": "191e2e4e18e48e2c59089afb16ebd9c72874fa0bfb2b5ec69fa3d7ce162a87b7",
+    "file_size_bytes": 15940,
+    "workbook_type": "xlsx",
+    "has_macros": false,
+    "calc_mode": "unknown",
+    "full_calc_on_load": false,
+    "created_at": "2026-05-05T17:36:53.354352",
+    "modified_at": "2026-05-05T17:36:53.354352",
+    "app_version": null
+  },
+  "summary": {
+    "direct_change_count": 0,
+    "propagated_change_count": 0,
+    "unexplained_change_count": 0,
+    "sheets_added": 0,
+    "sheets_deleted": 0,
+    "formulas_changed": 0,
+    "constants_changed": 0,
+    "cached_values_changed": 0,
+    "outputs_changed": 0,
+    "has_macros": false,
+    "has_external_links": false,
+    "has_opaque_formulas": false,
+    "confidence": "high",
+    "one_sentence_summary": "No workbook changes were detected."
+  },
+  "llm_summary": {
+    "schema_version": "0.1",
+    "intended_use": "A compact, deterministic context object for LLMs to answer a user with one sentence plus optional evidence.",
+    "one_sentence_summary": "No workbook changes were detected.",
+    "confidence": "high",
+    "counts": {
+      "direct_changes": 0,
+      "propagated_changes": 0,
+      "unexplained_changes": 0,
+      "formula_changes": 0,
+      "outputs_changed": 0
+    },
+    "top_direct_changes": [],
+    "top_impacted_outputs": [],
+    "caveats": [
+      "Uses cached workbook formula values; numeric deltas assume both workbooks were saved after recalculation."
+    ],
+    "safe_response_rules": [
+      "Use the one_sentence_summary verbatim or paraphrase it without adding unsupported causality.",
+      "Say 'likely explains' only when explanation_strength is strong.",
+      "Say 'associated with' for moderate or weak paths.",
+      "Always include cell references for material claims."
+    ]
+  },
+  "changes": [],
+  "grouped_changes": [],
+  "dependency_graph_stats": {
+    "baseline_node_count": 333,
+    "baseline_edge_count": 228,
+    "candidate_node_count": 333,
+    "candidate_edge_count": 228
+  },
+  "change_impact_dag": {
+    "roots": [],
+    "outputs": [],
+    "nodes": {},
+    "edges": [],
+    "collapsed_node_count": 0,
+    "omitted_node_count": 333
+  },
+  "top_direct_changes": [],
+  "top_impacted_outputs": [],
+  "unexplained_changes": [],
+  "diagnostics": [
+    {
+      "severity": "info",
+      "code": "CACHED_VALUE_MODE",
+      "message": "This report uses cached formula results. Numeric output deltas assume both workbooks were saved after recalculation."
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xlsxdiff"
+version = "0.1.0"
+description = "Semantic Excel workbook diff engine for humans and LLM agents."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "openpyxl>=3.1.0",
+  "PyYAML>=6.0",
+]
+keywords = ["excel", "xlsx", "diff", "spreadsheet", "llm", "workbook"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.9",
+  "Topic :: Office/Business :: Financial :: Spreadsheet",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+]
+
+[project.scripts]
+workbook-diff = "workbook_diff.cli:main"
+xlsxdiff = "workbook_diff.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,1016 @@
+{
+  "schema_version": "0.1",
+  "intended_use": "A compact, deterministic context object for LLMs to answer a user with one sentence plus optional evidence.",
+  "one_sentence_summary": "Summary!D6 2027 market coverage changed from 0.261522095556 to 0.34370748144 (+8.22 pp / +31.4%), associated with Assumptions!B14 Anchor ARR Anthropic changing from 19 to 30 and 7 other top direct change(s); 0 unexplained value changes were detected.",
+  "confidence": "high",
+  "counts": {
+    "direct_changes": 34,
+    "propagated_changes": 96,
+    "unexplained_changes": 0,
+    "formula_changes": 6,
+    "outputs_changed": 96,
+    "shifted_semantic_matches": 0
+  },
+  "top_direct_changes": [
+    {
+      "id": "chg_0021",
+      "kind": "constant_changed",
+      "ref": "Assumptions!B14",
+      "old_ref": "Assumptions!B14",
+      "new_ref": "Assumptions!B14",
+      "address_changed": false,
+      "semantic_id": "cell::assumptions::intersection::anthropic::anchor_arr",
+      "label": "Anchor ARR Anthropic",
+      "old": "19",
+      "new": "30",
+      "delta": "+11.0 / +57.9%",
+      "semantic_role": "assumption",
+      "materiality_score": 105.011,
+      "confidence": 0.95
+    },
+    {
+      "id": "chg_0016",
+      "kind": "constant_changed",
+      "ref": "Assumptions!D13",
+      "old_ref": "Assumptions!D13",
+      "new_ref": "Assumptions!D13",
+      "address_changed": false,
+      "semantic_id": "cell::assumptions::intersection::s1::2026_exit_growth",
+      "label": "2026 exit growth S1",
+      "old": "0.4",
+      "new": "0.6",
+      "delta": "+20.0 pp / +50.0%",
+      "semantic_role": "assumption",
+      "materiality_score": 104.5,
+      "confidence": 0.95
+    },
+    {
+      "id": "chg_0023",
+      "kind": "constant_changed",
+      "ref": "Assumptions!D14",
+      "old_ref": "Assumptions!D14",
+      "new_ref": "Assumptions!D14",
+      "address_changed": false,
+      "semantic_id": "cell::assumptions::intersection::s2_s3::2026_exit_growth",
+      "label": "2026 exit growth S2/S3",
+      "old": "0.58",
+      "new": "0.73",
+      "delta": "+15.0 pp / +25.9%",
+      "semantic_role": "assumption",
+      "materiality_score": 104.5,
+      "confidence": 0.95
+    },
+    {
+      "id": "chg_0024",
+      "kind": "constant_changed",
+      "ref": "Assumptions!E14",
+      "old_ref": "Assumptions!E14",
+      "new_ref": "Assumptions!E14",
+      "address_changed": false,
+      "semantic_id": "cell::assumptions::intersection::s2_s3::2027_arr_growth",
+      "label": "2027 ARR growth S2/S3",
+      "old": "0.83",
+      "new": "0.63",
+      "delta": "-20.0 pp / -24.1%",
+      "semantic_role": "assumption",
+      "materiality_score": 90.097,
+      "confidence": 0.95
+    },
+    {
+      "id": "chg_0018",
+      "kind": "constant_changed",
+      "ref": "Assumptions!F13",
+      "old_ref": "Assumptions!F13",
+      "new_ref": "Assumptions!F13",
+      "address_changed": false,
+      "semantic_id": "cell::assumptions::intersection::s1::compute_spend_arr",
+      "label": "Compute spend / ARR S1",
+      "old": "0.55",
+      "new": "0.58",
+      "delta": "+3.00 pp / +5.5%",
+      "semantic_role": "assumption",
+      "materiality_score": 81.955,
+      "confidence": 0.95
+    },
+    {
+      "id": "chg_0008",
+      "kind": "constant_changed",
+      "ref": "Assumptions!C8",
+      "old_ref": "Assumptions!C8",
+      "new_ref": "Assumptions!C8",
+      "address_changed": false,
+      "semantic_id": "cell::assumptions::intersection::capex_support_multiple::2027e",
+      "label": "2027E Capex support multiple",
+      "old": "4",
+      "new": "4.5",
+      "delta": "+0.50 / +12.5%",
+      "semantic_role": "assumption",
+      "materiality_score": 80.001,
+      "confidence": 0.95
+    },
+    {
+      "id": "chg_0025",
+      "kind": "constant_changed",
+      "ref": "Assumptions!F14",
+      "old_ref": "Assumptions!F14",
+      "new_ref": "Assumptions!F14",
+      "address_changed": false,
+      "semantic_id": "cell::assumptions::intersection::s2_s3::compute_spend_arr",
+      "label": "Compute spend / ARR S2/S3",
+      "old": "0.65",
+      "new": "0.68",
+      "delta": "+3.00 pp / +4.6%",
+      "semantic_role": "assumption",
+      "materiality_score": 79.115,
+      "confidence": 0.95
+    },
+    {
+      "id": "chg_0019",
+      "kind": "constant_changed",
+      "ref": "Assumptions!G13",
+      "old_ref": "Assumptions!G13",
+      "new_ref": "Assumptions!G13",
+      "address_changed": false,
+      "semantic_id": "cell::assumptions::intersection::s1::hyperscaler_hosted_share",
+      "label": "Hyperscaler-hosted share S1",
+      "old": "0.8",
+      "new": "0.82",
+      "delta": "+2.00 pp / +2.5%",
+      "semantic_role": "assumption",
+      "materiality_score": 79.0,
+      "confidence": 0.95
+    }
+  ],
+  "top_change_groups": [
+    {
+      "id": "grp_002",
+      "group_type": "contiguous_range",
+      "label": "4 cached-value changes on Checks",
+      "range_ref": "Checks!B5:C6",
+      "change_count": 4,
+      "summary": "4 cached-value changes detected in Checks!B5:C6.",
+      "materiality_score": 108.094
+    },
+    {
+      "id": "grp_001",
+      "group_type": "contiguous_range",
+      "label": "27 cached-value changes on Capex_Model",
+      "range_ref": "Capex_Model!B4:G10",
+      "change_count": 27,
+      "summary": "27 cached-value changes detected in Capex_Model!B4:G10.",
+      "materiality_score": 107.506
+    },
+    {
+      "id": "grp_003",
+      "group_type": "contiguous_range",
+      "label": "27 cached-value changes on Summary",
+      "range_ref": "Summary!A6:G20",
+      "change_count": 27,
+      "summary": "27 cached-value changes detected in Summary!A6:G20.",
+      "materiality_score": 101.252
+    },
+    {
+      "id": "grp_005",
+      "group_type": "formula_block",
+      "label": "6 formula changes on Capex_Model",
+      "range_ref": "Capex_Model!B11:G11",
+      "change_count": 6,
+      "summary": "6 formula changes detected in Capex_Model!B11:G11.",
+      "materiality_score": 76.178
+    },
+    {
+      "id": "grp_004",
+      "group_type": "assumption_block",
+      "label": "27 cell changes on Assumptions",
+      "range_ref": "Assumptions!B3:H14",
+      "change_count": 27,
+      "summary": "27 cell changes detected in Assumptions!B3:H14.",
+      "materiality_score": 69.757
+    },
+    {
+      "id": "grp_006",
+      "group_type": "contiguous_range",
+      "label": "36 cached-value changes on Capex_Model",
+      "range_ref": "Capex_Model!B7:G15",
+      "change_count": 36,
+      "summary": "36 cached-value changes detected in Capex_Model!B7:G15.",
+      "materiality_score": 46.715
+    }
+  ],
+  "top_impacted_outputs": [
+    {
+      "ref": "Summary!D6",
+      "old_ref": "Summary!D6",
+      "new_ref": "Summary!D6",
+      "address_changed": false,
+      "semantic_id": "cell::summary::column_value::2027_market_coverage",
+      "label": "2027 market coverage",
+      "old": "0.261522095556",
+      "new": "0.34370748144",
+      "delta": "+8.22 pp / +31.4%",
+      "explanation_strength": "moderate",
+      "upstream_change_ids": [
+        "chg_0004",
+        "chg_0008",
+        "chg_0011",
+        "chg_0016",
+        "chg_0017",
+        "chg_0018",
+        "chg_0019",
+        "chg_0021",
+        "chg_0023",
+        "chg_0024",
+        "chg_0025",
+        "chg_0026",
+        "chg_0072"
+      ],
+      "representative_paths": [
+        {
+          "id": "path_001_036",
+          "from": "Assumptions!B14",
+          "to": "Summary!D6",
+          "nodes": [
+            "Assumptions!B14",
+            "Capex_Model!D4",
+            "Capex_Model!D5",
+            "Capex_Model!E5",
+            "Capex_Model!E8",
+            "Capex_Model!G8",
+            "Capex_Model!G11",
+            "Capex_Model!G13",
+            "Summary!D6"
+          ],
+          "edges": [
+            "e000031",
+            "e000041",
+            "e000043",
+            "e000076",
+            "e000082",
+            "e000110",
+            "e000129",
+            "e000004"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        },
+        {
+          "id": "path_002_036",
+          "from": "Assumptions!D13",
+          "to": "Summary!D6",
+          "nodes": [
+            "Assumptions!D13",
+            "Capex_Model!B5",
+            "Capex_Model!C5",
+            "Capex_Model!C8",
+            "Capex_Model!G8",
+            "Capex_Model!G11",
+            "Capex_Model!G13",
+            "Summary!D6"
+          ],
+          "edges": [
+            "e000038",
+            "e000039",
+            "e000070",
+            "e000081",
+            "e000110",
+            "e000129",
+            "e000004"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        },
+        {
+          "id": "path_003_036",
+          "from": "Assumptions!D14",
+          "to": "Summary!D6",
+          "nodes": [
+            "Assumptions!D14",
+            "Capex_Model!D5",
+            "Capex_Model!E5",
+            "Capex_Model!E8",
+            "Capex_Model!G8",
+            "Capex_Model!G11",
+            "Capex_Model!G13",
+            "Summary!D6"
+          ],
+          "edges": [
+            "e000042",
+            "e000043",
+            "e000076",
+            "e000082",
+            "e000110",
+            "e000129",
+            "e000004"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        }
+      ],
+      "explanation": "Summary!D6 changed and is associated with 13 upstream direct change(s)."
+    },
+    {
+      "ref": "Summary!B6",
+      "old_ref": "Summary!B6",
+      "new_ref": "Summary!B6",
+      "address_changed": false,
+      "semantic_id": "cell::summary::column_value::combined_supportable_capex_2027e",
+      "label": "Combined supportable capex 2027E",
+      "old": "235.369886",
+      "new": "343.70748144",
+      "delta": "+108.3 / +46.0%",
+      "explanation_strength": "moderate",
+      "upstream_change_ids": [
+        "chg_0008",
+        "chg_0011",
+        "chg_0016",
+        "chg_0017",
+        "chg_0018",
+        "chg_0019",
+        "chg_0021",
+        "chg_0023",
+        "chg_0024",
+        "chg_0025",
+        "chg_0026",
+        "chg_0072"
+      ],
+      "representative_paths": [
+        {
+          "id": "path_001_018",
+          "from": "Assumptions!B14",
+          "to": "Summary!B6",
+          "nodes": [
+            "Assumptions!B14",
+            "Capex_Model!D4",
+            "Capex_Model!D5",
+            "Capex_Model!E5",
+            "Capex_Model!E8",
+            "Capex_Model!G8",
+            "Capex_Model!G11",
+            "Summary!B6"
+          ],
+          "edges": [
+            "e000031",
+            "e000041",
+            "e000043",
+            "e000076",
+            "e000082",
+            "e000110",
+            "e000002"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        },
+        {
+          "id": "path_002_018",
+          "from": "Assumptions!D13",
+          "to": "Summary!B6",
+          "nodes": [
+            "Assumptions!D13",
+            "Capex_Model!B5",
+            "Capex_Model!C5",
+            "Capex_Model!C8",
+            "Capex_Model!G8",
+            "Capex_Model!G11",
+            "Summary!B6"
+          ],
+          "edges": [
+            "e000038",
+            "e000039",
+            "e000070",
+            "e000081",
+            "e000110",
+            "e000002"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        },
+        {
+          "id": "path_003_018",
+          "from": "Assumptions!D14",
+          "to": "Summary!B6",
+          "nodes": [
+            "Assumptions!D14",
+            "Capex_Model!D5",
+            "Capex_Model!E5",
+            "Capex_Model!E8",
+            "Capex_Model!G8",
+            "Capex_Model!G11",
+            "Summary!B6"
+          ],
+          "edges": [
+            "e000042",
+            "e000043",
+            "e000076",
+            "e000082",
+            "e000110",
+            "e000002"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        }
+      ],
+      "explanation": "Summary!B6 changed and is associated with 12 upstream direct change(s)."
+    },
+    {
+      "ref": "Summary!C6",
+      "old_ref": "Summary!C6",
+      "new_ref": "Summary!C6",
+      "address_changed": false,
+      "semantic_id": "cell::summary::column_value::2026_market_coverage",
+      "label": "2026 market coverage",
+      "old": "0.209744590164",
+      "new": "0.285979550897",
+      "delta": "+7.62 pp / +36.3%",
+      "explanation_strength": "moderate",
+      "upstream_change_ids": [
+        "chg_0003",
+        "chg_0007",
+        "chg_0010",
+        "chg_0016",
+        "chg_0018",
+        "chg_0019",
+        "chg_0021",
+        "chg_0023",
+        "chg_0025",
+        "chg_0026",
+        "chg_0071"
+      ],
+      "representative_paths": [
+        {
+          "id": "path_001_035",
+          "from": "Assumptions!B14",
+          "to": "Summary!C6",
+          "nodes": [
+            "Assumptions!B14",
+            "Capex_Model!D4",
+            "Capex_Model!D5",
+            "Capex_Model!D8",
+            "Capex_Model!F8",
+            "Capex_Model!F11",
+            "Capex_Model!F13",
+            "Summary!C6"
+          ],
+          "edges": [
+            "e000031",
+            "e000041",
+            "e000073",
+            "e000080",
+            "e000107",
+            "e000127",
+            "e000003"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        },
+        {
+          "id": "path_002_035",
+          "from": "Assumptions!D13",
+          "to": "Summary!C6",
+          "nodes": [
+            "Assumptions!D13",
+            "Capex_Model!B5",
+            "Capex_Model!B8",
+            "Capex_Model!F8",
+            "Capex_Model!F11",
+            "Capex_Model!F13",
+            "Summary!C6"
+          ],
+          "edges": [
+            "e000038",
+            "e000067",
+            "e000079",
+            "e000107",
+            "e000127",
+            "e000003"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        },
+        {
+          "id": "path_003_035",
+          "from": "Assumptions!D14",
+          "to": "Summary!C6",
+          "nodes": [
+            "Assumptions!D14",
+            "Capex_Model!D5",
+            "Capex_Model!D8",
+            "Capex_Model!F8",
+            "Capex_Model!F11",
+            "Capex_Model!F13",
+            "Summary!C6"
+          ],
+          "edges": [
+            "e000042",
+            "e000073",
+            "e000080",
+            "e000107",
+            "e000127",
+            "e000003"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        }
+      ],
+      "explanation": "Summary!C6 changed and is associated with 11 upstream direct change(s)."
+    },
+    {
+      "ref": "Summary!E12",
+      "old_ref": "Summary!E12",
+      "new_ref": "Summary!E12",
+      "address_changed": false,
+      "semantic_id": "cell::summary::column_value::2027_supportable_capex",
+      "label": "2027 supportable capex",
+      "old": "121.409886",
+      "new": "205.02252144",
+      "delta": "+83.6 / +68.9%",
+      "explanation_strength": "moderate",
+      "upstream_change_ids": [
+        "chg_0008",
+        "chg_0011",
+        "chg_0021",
+        "chg_0023",
+        "chg_0024",
+        "chg_0025",
+        "chg_0026",
+        "chg_0070"
+      ],
+      "representative_paths": [
+        {
+          "id": "path_001_019",
+          "from": "Assumptions!B14",
+          "to": "Summary!E12",
+          "nodes": [
+            "Assumptions!B14",
+            "Capex_Model!D4",
+            "Capex_Model!D5",
+            "Capex_Model!E5",
+            "Capex_Model!E8",
+            "Capex_Model!E11",
+            "Summary!E12"
+          ],
+          "edges": [
+            "e000031",
+            "e000041",
+            "e000043",
+            "e000076",
+            "e000104",
+            "e000014"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        },
+        {
+          "id": "path_002_019",
+          "from": "Assumptions!D14",
+          "to": "Summary!E12",
+          "nodes": [
+            "Assumptions!D14",
+            "Capex_Model!D5",
+            "Capex_Model!E5",
+            "Capex_Model!E8",
+            "Capex_Model!E11",
+            "Summary!E12"
+          ],
+          "edges": [
+            "e000042",
+            "e000043",
+            "e000076",
+            "e000104",
+            "e000014"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        },
+        {
+          "id": "path_003_019",
+          "from": "Assumptions!E14",
+          "to": "Summary!E12",
+          "nodes": [
+            "Assumptions!E14",
+            "Capex_Model!E5",
+            "Capex_Model!E8",
+            "Capex_Model!E11",
+            "Summary!E12"
+          ],
+          "edges": [
+            "e000044",
+            "e000076",
+            "e000104",
+            "e000014"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        }
+      ],
+      "explanation": "Summary!E12 changed and is associated with 8 upstream direct change(s)."
+    },
+    {
+      "ref": "Summary!A6",
+      "old_ref": "Summary!A6",
+      "new_ref": "Summary!A6",
+      "address_changed": false,
+      "semantic_id": "cell::summary::column_value::combined_supportable_capex_2026e",
+      "label": "Combined supportable capex 2026E",
+      "old": "127.9442",
+      "new": "207.3351744",
+      "delta": "+79.4 / +62.1%",
+      "explanation_strength": "moderate",
+      "upstream_change_ids": [
+        "chg_0007",
+        "chg_0010",
+        "chg_0016",
+        "chg_0018",
+        "chg_0019",
+        "chg_0021",
+        "chg_0023",
+        "chg_0025",
+        "chg_0026",
+        "chg_0071"
+      ],
+      "representative_paths": [
+        {
+          "id": "path_001_020",
+          "from": "Assumptions!B14",
+          "to": "Summary!A6",
+          "nodes": [
+            "Assumptions!B14",
+            "Capex_Model!D4",
+            "Capex_Model!D5",
+            "Capex_Model!D8",
+            "Capex_Model!F8",
+            "Capex_Model!F11",
+            "Summary!A6"
+          ],
+          "edges": [
+            "e000031",
+            "e000041",
+            "e000073",
+            "e000080",
+            "e000107",
+            "e000001"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        },
+        {
+          "id": "path_002_020",
+          "from": "Assumptions!D13",
+          "to": "Summary!A6",
+          "nodes": [
+            "Assumptions!D13",
+            "Capex_Model!B5",
+            "Capex_Model!B8",
+            "Capex_Model!F8",
+            "Capex_Model!F11",
+            "Summary!A6"
+          ],
+          "edges": [
+            "e000038",
+            "e000067",
+            "e000079",
+            "e000107",
+            "e000001"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        },
+        {
+          "id": "path_003_020",
+          "from": "Assumptions!D14",
+          "to": "Summary!A6",
+          "nodes": [
+            "Assumptions!D14",
+            "Capex_Model!D5",
+            "Capex_Model!D8",
+            "Capex_Model!F8",
+            "Capex_Model!F11",
+            "Summary!A6"
+          ],
+          "edges": [
+            "e000042",
+            "e000073",
+            "e000080",
+            "e000107",
+            "e000001"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        }
+      ],
+      "explanation": "Summary!A6 changed and is associated with 10 upstream direct change(s)."
+    },
+    {
+      "ref": "Summary!E11",
+      "old_ref": "Summary!E11",
+      "new_ref": "Summary!E11",
+      "address_changed": false,
+      "semantic_id": "cell::summary::column_value::2027_supportable_capex",
+      "label": "2027 supportable capex",
+      "old": "113.96",
+      "new": "138.68496",
+      "delta": "+24.7 / +21.7%",
+      "explanation_strength": "moderate",
+      "upstream_change_ids": [
+        "chg_0008",
+        "chg_0011",
+        "chg_0016",
+        "chg_0017",
+        "chg_0018",
+        "chg_0019",
+        "chg_0068"
+      ],
+      "representative_paths": [
+        {
+          "id": "path_001_039",
+          "from": "Assumptions!D13",
+          "to": "Summary!E11",
+          "nodes": [
+            "Assumptions!D13",
+            "Capex_Model!B5",
+            "Capex_Model!C5",
+            "Capex_Model!C8",
+            "Capex_Model!C11",
+            "Summary!E11"
+          ],
+          "edges": [
+            "e000038",
+            "e000039",
+            "e000070",
+            "e000098",
+            "e000009"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        },
+        {
+          "id": "path_002_039",
+          "from": "Assumptions!F13",
+          "to": "Summary!E11",
+          "nodes": [
+            "Assumptions!F13",
+            "Capex_Model!C6",
+            "Capex_Model!C8",
+            "Capex_Model!C11",
+            "Summary!E11"
+          ],
+          "edges": [
+            "e000050",
+            "e000071",
+            "e000098",
+            "e000009"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        },
+        {
+          "id": "path_003_039",
+          "from": "Assumptions!C8",
+          "to": "Summary!E11",
+          "nodes": [
+            "Assumptions!C8",
+            "Capex_Model!C10",
+            "Capex_Model!C11",
+            "Summary!E11"
+          ],
+          "edges": [
+            "e000090",
+            "e000100",
+            "e000009"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        }
+      ],
+      "explanation": "Summary!E11 changed and is associated with 7 upstream direct change(s)."
+    },
+    {
+      "ref": "Summary!E15",
+      "old_ref": "Summary!E15",
+      "new_ref": "Summary!E15",
+      "address_changed": false,
+      "semantic_id": "cell::summary::column_value::coverage",
+      "label": "Coverage",
+      "old": "0.261522095556",
+      "new": "0.34370748144",
+      "delta": "+8.22 pp / +31.4%",
+      "explanation_strength": "moderate",
+      "upstream_change_ids": [
+        "chg_0004",
+        "chg_0008",
+        "chg_0011",
+        "chg_0016",
+        "chg_0017",
+        "chg_0018",
+        "chg_0019",
+        "chg_0021",
+        "chg_0023",
+        "chg_0024",
+        "chg_0025",
+        "chg_0026",
+        "chg_0072"
+      ],
+      "representative_paths": [
+        {
+          "id": "path_001_038",
+          "from": "Assumptions!B14",
+          "to": "Summary!E15",
+          "nodes": [
+            "Assumptions!B14",
+            "Capex_Model!D4",
+            "Capex_Model!D5",
+            "Capex_Model!E5",
+            "Capex_Model!E8",
+            "Capex_Model!G8",
+            "Capex_Model!G11",
+            "Capex_Model!G13",
+            "Summary!E15"
+          ],
+          "edges": [
+            "e000031",
+            "e000041",
+            "e000043",
+            "e000076",
+            "e000082",
+            "e000110",
+            "e000129",
+            "e000019"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        },
+        {
+          "id": "path_002_038",
+          "from": "Assumptions!D13",
+          "to": "Summary!E15",
+          "nodes": [
+            "Assumptions!D13",
+            "Capex_Model!B5",
+            "Capex_Model!C5",
+            "Capex_Model!C8",
+            "Capex_Model!G8",
+            "Capex_Model!G11",
+            "Capex_Model!G13",
+            "Summary!E15"
+          ],
+          "edges": [
+            "e000038",
+            "e000039",
+            "e000070",
+            "e000081",
+            "e000110",
+            "e000129",
+            "e000019"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        },
+        {
+          "id": "path_003_038",
+          "from": "Assumptions!D14",
+          "to": "Summary!E15",
+          "nodes": [
+            "Assumptions!D14",
+            "Capex_Model!D5",
+            "Capex_Model!E5",
+            "Capex_Model!E8",
+            "Capex_Model!G8",
+            "Capex_Model!G11",
+            "Capex_Model!G13",
+            "Summary!E15"
+          ],
+          "edges": [
+            "e000042",
+            "e000043",
+            "e000076",
+            "e000082",
+            "e000110",
+            "e000129",
+            "e000019"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        }
+      ],
+      "explanation": "Summary!E15 changed and is associated with 13 upstream direct change(s)."
+    },
+    {
+      "ref": "Summary!F15",
+      "old_ref": "Summary!F15",
+      "new_ref": "Summary!F15",
+      "address_changed": false,
+      "semantic_id": "cell::summary::column_value::implication",
+      "label": "Implication",
+      "old": "These two labs support 26.2% of modeled 2027 hyperscaler capex.",
+      "new": "These two labs support 34.4% of modeled 2027 hyperscaler capex.",
+      "delta": "",
+      "explanation_strength": "moderate",
+      "upstream_change_ids": [
+        "chg_0004",
+        "chg_0008",
+        "chg_0011",
+        "chg_0016",
+        "chg_0017",
+        "chg_0018",
+        "chg_0019",
+        "chg_0021",
+        "chg_0023",
+        "chg_0024",
+        "chg_0025",
+        "chg_0026",
+        "chg_0072"
+      ],
+      "representative_paths": [
+        {
+          "id": "path_001_058",
+          "from": "Assumptions!B14",
+          "to": "Summary!F15",
+          "nodes": [
+            "Assumptions!B14",
+            "Capex_Model!D4",
+            "Capex_Model!D5",
+            "Capex_Model!E5",
+            "Capex_Model!E8",
+            "Capex_Model!G8",
+            "Capex_Model!G11",
+            "Capex_Model!G13",
+            "Summary!F15"
+          ],
+          "edges": [
+            "e000031",
+            "e000041",
+            "e000043",
+            "e000076",
+            "e000082",
+            "e000110",
+            "e000129",
+            "e000020"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        },
+        {
+          "id": "path_002_058",
+          "from": "Assumptions!D13",
+          "to": "Summary!F15",
+          "nodes": [
+            "Assumptions!D13",
+            "Capex_Model!B5",
+            "Capex_Model!C5",
+            "Capex_Model!C8",
+            "Capex_Model!G8",
+            "Capex_Model!G11",
+            "Capex_Model!G13",
+            "Summary!F15"
+          ],
+          "edges": [
+            "e000038",
+            "e000039",
+            "e000070",
+            "e000081",
+            "e000110",
+            "e000129",
+            "e000020"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        },
+        {
+          "id": "path_003_058",
+          "from": "Assumptions!D14",
+          "to": "Summary!F15",
+          "nodes": [
+            "Assumptions!D14",
+            "Capex_Model!D5",
+            "Capex_Model!E5",
+            "Capex_Model!E8",
+            "Capex_Model!G8",
+            "Capex_Model!G11",
+            "Capex_Model!G13",
+            "Summary!F15"
+          ],
+          "edges": [
+            "e000042",
+            "e000043",
+            "e000076",
+            "e000082",
+            "e000110",
+            "e000129",
+            "e000020"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        }
+      ],
+      "explanation": "Summary!F15 changed and is associated with 13 upstream direct change(s)."
+    }
+  ],
+  "caveats": [
+    "Uses cached workbook formula values; numeric deltas assume both workbooks were saved after recalculation."
+  ],
+  "safe_response_rules": [
+    "Use the one_sentence_summary verbatim or paraphrase it without adding unsupported causality.",
+    "Say 'likely explains' only when explanation_strength is strong.",
+    "Say 'associated with' for moderate or weak paths.",
+    "Always include cell references for material claims."
+  ]
+}

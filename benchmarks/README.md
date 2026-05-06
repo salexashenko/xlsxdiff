@@ -1,4 +1,4 @@
-# xlsxdiff Public Benchmarks
+# diffsheet Public Benchmarks
 
 These fixtures are small, real-world-shaped workbook changes used as public regression cases. Each case contains:
 
@@ -13,6 +13,12 @@ Regenerate all benchmark fixtures and the checked-in sample report with:
 
 ```bash
 python benchmarks/generate_benchmarks.py
+```
+
+Run the scored benchmark with:
+
+```bash
+python benchmarks/run_benchmark.py
 ```
 
 The fixtures are intentionally committed. They are not generated example output; they are the public regression set for the library.

@@ -1,6 +1,6 @@
-# xlsxdiff
+# diffsheet
 
-`xlsxdiff` is a semantic diff engine for Excel workbooks. It compares two `.xlsx` or `.xlsm` files, identifies changed constants and formulas, traces formula dependencies to impacted outputs, and writes reports for humans and LLM agents.
+`diffsheet` is a semantic diff engine for Excel workbooks. It compares two `.xlsx` or `.xlsm` files, identifies changed constants and formulas, traces formula dependencies to impacted outputs, and writes reports for humans and LLM agents.
 
 The project is designed for spreadsheet review workflows where a plain cell-by-cell diff is too noisy: financial models, planning workbooks, operating dashboards, and generated Excel artifacts.
 
@@ -22,7 +22,7 @@ Summary!G31 Total LTV changed from 1180 to 1220 (+40.0 / +3.4%), likely explaine
 ## Install
 
 ```bash
-pip install xlsxdiff
+pip install diffsheet
 ```
 
 For local development:
@@ -34,10 +34,10 @@ pip install -e ".[dev]"
 ## CLI
 
 ```bash
-xlsxdiff old.xlsx new.xlsx --out diff_out
+diffsheet old.xlsx new.xlsx --out diff_out
 ```
 
-`workbook-diff` is also installed as a backwards-compatible CLI alias.
+`xlsxdiff` and `workbook-diff` are also installed as CLI aliases.
 
 By default the output directory includes:
 
@@ -89,7 +89,8 @@ For agent workflows, read `llm_summary.json` or `result["llm_summary"]` instead 
 - `one_sentence_summary`: a ready-to-send summary sentence.
 - `top_direct_changes`: important changed assumptions, formulas, inputs, or metadata.
 - `top_change_groups`: grouped edits such as inserted/deleted modeling steps.
-- `top_impacted_outputs`: ranked final variables with old value, new value, delta, and upstream change IDs.
+- `final_outputs`: ranked final variables with old value, new value, delta, and upstream change IDs.
+- `impacted_intermediates`: lower-level calculations that moved on the way to final outputs.
 - `claims`: structured evidence-backed claims that support the one-sentence summary.
 - `caveats`: diagnostics that should temper the answer.
 
@@ -125,7 +126,7 @@ Generated example reports are ignored by Git.
 
 ## Security and Limitations
 
-`xlsxdiff` reads workbook files as Office Open XML packages. It does not execute macros, external links, or workbook code.
+`diffsheet` reads workbook files as Office Open XML packages. It does not execute macros, external links, or workbook code.
 
 Formula values are compared from cached workbook values. The engine does not currently recalculate Excel formulas itself, so stale cached values can produce stale value diffs. Formula dependency parsing covers common Excel references and ranges, but dynamic references such as `INDIRECT`, complex structured references, and some newer Excel functions are reported with diagnostics rather than fully expanded.
 
@@ -143,6 +144,12 @@ Public benchmark fixtures and the checked-in sample report can be regenerated wi
 python benchmarks/generate_benchmarks.py
 ```
 
+Run the scored benchmark with:
+
+```bash
+python benchmarks/run_benchmark.py
+```
+
 ## License
 
-`xlsxdiff` is released under the Zero-Clause BSD license. See `LICENSE`.
+`diffsheet` is released under the Zero-Clause BSD license. See `LICENSE`.

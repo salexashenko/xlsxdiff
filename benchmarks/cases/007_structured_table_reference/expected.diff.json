@@ -74,6 +74,8 @@
       "unexplained_changes": 0,
       "formula_changes": 0,
       "outputs_changed": 1,
+      "final_outputs_changed": 1,
+      "impacted_intermediates": 0,
       "shifted_semantic_matches": 0
     },
     "top_direct_changes": [
@@ -95,6 +97,62 @@
       }
     ],
     "top_change_groups": [],
+    "final_outputs": [
+      {
+        "ref": "Summary!B2",
+        "old_ref": "Summary!B2",
+        "new_ref": "Summary!B2",
+        "address_changed": false,
+        "change_id": "chg_0002",
+        "change_kind": "cached_value_changed",
+        "semantic_id": "cell::summary::intersection::booked_arr::2027e",
+        "label": "Booked ARR",
+        "old": "100",
+        "new": "125",
+        "delta": "+25.0 / +25.0%",
+        "explanation_strength": "moderate",
+        "dependency_confidence": "moderate",
+        "value_delta_confidence": "high",
+        "confidence_factors": [],
+        "upstream_change_ids": [
+          "chg_0001"
+        ],
+        "representative_paths": [
+          {
+            "id": "path_001_001",
+            "from": "Bookings!B2",
+            "to": "Summary!B2",
+            "nodes": [
+              "Bookings!B2",
+              "Summary!B2"
+            ],
+            "display_nodes": [
+              {
+                "id": "Bookings!B2",
+                "ref": "Bookings!B2",
+                "label": "Amount Acme",
+                "node_type": "cell",
+                "semantic_role": "raw_data"
+              },
+              {
+                "id": "Summary!B2",
+                "ref": "Summary!B2",
+                "label": "Booked ARR",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
+            "edges": [
+              "e000008"
+            ],
+            "collapsed": false,
+            "confidence": 0.8
+          }
+        ],
+        "explanation": "Summary!B2 changed and is associated with 1 upstream direct change(s)."
+      }
+    ],
+    "impacted_intermediates": [],
     "top_impacted_outputs": [
       {
         "ref": "Summary!B2",
@@ -135,7 +193,7 @@
               {
                 "id": "Summary!B2",
                 "ref": "Summary!B2",
-                "label": "2027E Booked ARR",
+                "label": "Booked ARR",
                 "node_type": "cell",
                 "semantic_role": "output"
               }
@@ -200,7 +258,7 @@
               {
                 "id": "Summary!B2",
                 "ref": "Summary!B2",
-                "label": "2027E Booked ARR",
+                "label": "Booked ARR",
                 "node_type": "cell",
                 "semantic_role": "output"
               }
@@ -867,7 +925,7 @@
             {
               "id": "Summary!B2",
               "ref": "Summary!B2",
-              "label": "2027E Booked ARR",
+              "label": "Booked ARR",
               "node_type": "cell",
               "semantic_role": "output"
             }
@@ -888,6 +946,83 @@
       "semantic_role": "output"
     }
   ],
+  "final_outputs": [
+    {
+      "ref": "Summary!B2",
+      "old_ref": "Summary!B2",
+      "new_ref": "Summary!B2",
+      "address_changed": false,
+      "change_id": "chg_0002",
+      "change_kind": "cached_value_changed",
+      "semantic_id": "cell::summary::intersection::booked_arr::2027e",
+      "label": "Booked ARR",
+      "old_value": {
+        "raw": 100,
+        "typed_value": 100,
+        "display_value": "100",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "new_value": {
+        "raw": 125,
+        "typed_value": 125,
+        "display_value": "125",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "delta": {
+        "old_number": 100.0,
+        "new_number": 125.0,
+        "absolute_delta": 25.0,
+        "display_delta": "+25.0",
+        "relative_delta": 0.25,
+        "display_relative_delta": "+25.0%"
+      },
+      "upstream_change_ids": [
+        "chg_0001"
+      ],
+      "representative_paths": [
+        {
+          "id": "path_001_001",
+          "from": "Bookings!B2",
+          "to": "Summary!B2",
+          "nodes": [
+            "Bookings!B2",
+            "Summary!B2"
+          ],
+          "display_nodes": [
+            {
+              "id": "Bookings!B2",
+              "ref": "Bookings!B2",
+              "label": "Amount Acme",
+              "node_type": "cell",
+              "semantic_role": "raw_data"
+            },
+            {
+              "id": "Summary!B2",
+              "ref": "Summary!B2",
+              "label": "Booked ARR",
+              "node_type": "cell",
+              "semantic_role": "output"
+            }
+          ],
+          "edges": [
+            "e000008"
+          ],
+          "collapsed": false,
+          "confidence": 0.8
+        }
+      ],
+      "explanation_strength": "moderate",
+      "dependency_confidence": "moderate",
+      "value_delta_confidence": "high",
+      "confidence_factors": [],
+      "explanation": "Summary!B2 changed and is associated with 1 upstream direct change(s).",
+      "materiality_score": 105.025,
+      "semantic_role": "output"
+    }
+  ],
+  "impacted_intermediates": [],
   "unexplained_changes": [],
   "diagnostics": [
     {

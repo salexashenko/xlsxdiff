@@ -12,13 +12,15 @@ Summary!B2 Total raw amount changed from 10 to 15 (+5.00 / +50.0%), likely expla
 - unexplained_changes: 0
 - formula_changes: 0
 - outputs_changed: 1
+- final_outputs_changed: 1
+- impacted_intermediates: 0
 - shifted_semantic_matches: 0
 
 ## Top Direct Changes
 
 - `RawData!C582` RawData: 10 -> 15 +5.00 / +50.0%
 
-## Top Impacted Outputs
+## Final Outputs
 
 - `Summary!B2` Total raw amount: 10 -> 15 +5.00 / +50.0%; strength=strong; dependency=high; value_delta=high
 

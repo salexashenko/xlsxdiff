@@ -12,7 +12,7 @@ from .reporting import write_artifacts
 
 
 def main(argv: Optional[Sequence[str]] = None) -> None:
-    parser = argparse.ArgumentParser(prog="xlsxdiff", description="Compare two Excel workbooks and generate semantic diff reports.")
+    parser = argparse.ArgumentParser(prog="diffsheet", description="Compare two Excel workbooks and generate semantic diff reports.")
     parser.add_argument("baseline", type=Path, help="Baseline .xlsx or .xlsm workbook")
     parser.add_argument("candidate", type=Path, help="Candidate .xlsx or .xlsm workbook")
     parser.add_argument("--config", type=Path, help="Optional YAML config file")

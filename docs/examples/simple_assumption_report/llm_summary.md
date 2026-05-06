@@ -12,15 +12,20 @@ Summary!G31 Total LTV changed from 1180 to 1220 (+40.0 / +3.4%), likely explaine
 - unexplained_changes: 0
 - formula_changes: 0
 - outputs_changed: 2
+- final_outputs_changed: 1
+- impacted_intermediates: 1
 - shifted_semantic_matches: 0
 
 ## Top Direct Changes
 
 - `Assumptions!D14` 2026 Growth Rate: 0.18 -> 0.22 +4.00 pp / +22.2%
 
-## Top Impacted Outputs
+## Final Outputs
 
 - `Summary!G31` Total LTV: 1180 -> 1220 +40.0 / +3.4%; strength=strong; dependency=high; value_delta=high
+
+## Impacted Intermediates
+
 - `Revenue!G22` 2027 Revenue: 1180 -> 1220 +40.0 / +3.4%; strength=strong; dependency=high; value_delta=high
 
 ## Caveats

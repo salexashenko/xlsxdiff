@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/salexashenko/xlsxdiff/schemas/diff.schema.v0.1.json",
-  "title": "xlsxdiff diff.json v0.1",
+  "title": "diffsheet diff.json v0.1",
   "type": "object",
   "required": [
     "schema_version",
@@ -85,6 +85,18 @@
       }
     },
     "top_impacted_outputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/impactedOutput"
+      }
+    },
+    "final_outputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/impactedOutput"
+      }
+    },
+    "impacted_intermediates": {
       "type": "array",
       "items": {
         "$ref": "#/$defs/impactedOutput"
@@ -223,7 +235,7 @@
       "additionalProperties": true
     },
     "delta": {
-      "type": "object",
+      "type": ["object", "null"],
       "properties": {
         "absolute_delta": {
           "type": ["number", "null"]
@@ -343,7 +355,7 @@
         "edges": {
           "type": "array",
           "items": {
-            "type": "object"
+            "type": ["string", "object"]
           }
         },
         "path_confidence": {

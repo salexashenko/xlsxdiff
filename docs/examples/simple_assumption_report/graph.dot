@@ -2,8 +2,8 @@ digraph WorkbookDiff {
   rankdir=LR;
   node [shape=box, style=rounded];
   "Summary!G31" [label="Summary\nSummary!G31", color="#b91c1c"];
-  "Revenue!G22" [label="2027 Revenue\nRevenue!G22", color="#b91c1c"];
   "Assumptions!D14" [label="2026 Growth Rate\nAssumptions!D14", color="#0f766e"];
+  "Revenue!G22" [label="2027 Revenue\nRevenue!G22", color="#b91c1c"];
   "Assumptions!D14" -> "Revenue!G22" [label="Assumptions!D14"];
   "Revenue!G22" -> "Summary!G31" [label="Revenue!G22"];
 }

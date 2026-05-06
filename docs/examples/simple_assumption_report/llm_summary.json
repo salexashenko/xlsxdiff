@@ -10,6 +10,8 @@
     "unexplained_changes": 0,
     "formula_changes": 0,
     "outputs_changed": 2,
+    "final_outputs_changed": 1,
+    "impacted_intermediates": 1,
     "shifted_semantic_matches": 0
   },
   "top_direct_changes": [
@@ -31,7 +33,7 @@
     }
   ],
   "top_change_groups": [],
-  "top_impacted_outputs": [
+  "final_outputs": [
     {
       "ref": "Summary!G31",
       "old_ref": "Summary!G31",
@@ -79,7 +81,7 @@
             {
               "id": "Summary!G31",
               "ref": "Summary!G31",
-              "label": "Summary",
+              "label": "Total LTV",
               "node_type": "cell",
               "semantic_role": "output"
             }
@@ -93,7 +95,9 @@
         }
       ],
       "explanation": "Summary!G31 changed and has one detected upstream direct change on a dependency path; this likely explains the movement."
-    },
+    }
+  ],
+  "impacted_intermediates": [
     {
       "ref": "Revenue!G22",
       "old_ref": "Revenue!G22",
@@ -146,6 +150,70 @@
         }
       ],
       "explanation": "Revenue!G22 changed and has one detected upstream direct change on a dependency path; this likely explains the movement."
+    }
+  ],
+  "top_impacted_outputs": [
+    {
+      "ref": "Summary!G31",
+      "old_ref": "Summary!G31",
+      "new_ref": "Summary!G31",
+      "address_changed": false,
+      "change_id": "chg_0003",
+      "change_kind": "cached_value_changed",
+      "semantic_id": null,
+      "label": "Total LTV",
+      "old": "1180",
+      "new": "1220",
+      "delta": "+40.0 / +3.4%",
+      "explanation_strength": "strong",
+      "dependency_confidence": "high",
+      "value_delta_confidence": "high",
+      "confidence_factors": [],
+      "upstream_change_ids": [
+        "chg_0001"
+      ],
+      "representative_paths": [
+        {
+          "id": "path_001_002",
+          "from": "Assumptions!D14",
+          "to": "Summary!G31",
+          "nodes": [
+            "Assumptions!D14",
+            "Revenue!G22",
+            "Summary!G31"
+          ],
+          "display_nodes": [
+            {
+              "id": "Assumptions!D14",
+              "ref": "Assumptions!D14",
+              "label": "2026 Growth Rate",
+              "node_type": "cell",
+              "semantic_role": "assumption"
+            },
+            {
+              "id": "Revenue!G22",
+              "ref": "Revenue!G22",
+              "label": "2027 Revenue",
+              "node_type": "cell",
+              "semantic_role": "output"
+            },
+            {
+              "id": "Summary!G31",
+              "ref": "Summary!G31",
+              "label": "Total LTV",
+              "node_type": "cell",
+              "semantic_role": "output"
+            }
+          ],
+          "edges": [
+            "e000002",
+            "e000003"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        }
+      ],
+      "explanation": "Summary!G31 changed and has one detected upstream direct change on a dependency path; this likely explains the movement."
     }
   ],
   "claims": [
@@ -206,7 +274,7 @@
             {
               "id": "Summary!G31",
               "ref": "Summary!G31",
-              "label": "Summary",
+              "label": "Total LTV",
               "node_type": "cell",
               "semantic_role": "output"
             }
@@ -214,73 +282,6 @@
           "edges": [
             "e000002",
             "e000003"
-          ],
-          "collapsed": false,
-          "confidence": 1.0
-        }
-      ],
-      "evidence_type": "dependency_path",
-      "confidence": "strong",
-      "dependency_confidence": "high",
-      "value_delta_confidence": "high",
-      "caveats": []
-    },
-    {
-      "claim": "2027 Revenue changed from 1180 to 1220",
-      "refs": [
-        "Revenue!G22"
-      ],
-      "old_value": 1180,
-      "new_value": 1220,
-      "delta": {
-        "old_number": 1180.0,
-        "new_number": 1220.0,
-        "absolute_delta": 40.0,
-        "display_delta": "+40.0",
-        "relative_delta": 0.03389830508474567,
-        "display_relative_delta": "+3.4%"
-      },
-      "evidence_type": "cached_value_diff",
-      "confidence": "high",
-      "caveats": [
-        "cached_value_mode"
-      ]
-    },
-    {
-      "claim": "Detected upstream changes are associated with 2027 Revenue",
-      "refs": [
-        "Revenue!G22"
-      ],
-      "root_change_ids": [
-        "chg_0001"
-      ],
-      "representative_paths": [
-        {
-          "id": "path_001_001",
-          "from": "Assumptions!D14",
-          "to": "Revenue!G22",
-          "nodes": [
-            "Assumptions!D14",
-            "Revenue!G22"
-          ],
-          "display_nodes": [
-            {
-              "id": "Assumptions!D14",
-              "ref": "Assumptions!D14",
-              "label": "2026 Growth Rate",
-              "node_type": "cell",
-              "semantic_role": "assumption"
-            },
-            {
-              "id": "Revenue!G22",
-              "ref": "Revenue!G22",
-              "label": "2027 Revenue",
-              "node_type": "cell",
-              "semantic_role": "output"
-            }
-          ],
-          "edges": [
-            "e000002"
           ],
           "collapsed": false,
           "confidence": 1.0

@@ -12,13 +12,15 @@ Summary!B4 Total Revenue changed from 300 to 325 (+25.0 / +8.3%), associated wit
 - unexplained_changes: 0
 - formula_changes: 1
 - outputs_changed: 1
+- final_outputs_changed: 1
+- impacted_intermediates: 0
 - shifted_semantic_matches: 0
 
 ## Top Direct Changes
 
 - `Summary!B4` 2027E Total Revenue: 300 -> 325 +25.0 / +8.3%
 
-## Top Impacted Outputs
+## Final Outputs
 
 - `Summary!B4` Total Revenue: 300 -> 325 +25.0 / +8.3%; strength=moderate; dependency=high; value_delta=moderate
 

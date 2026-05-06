@@ -12,13 +12,15 @@ Summary!B2 External Input changed from 10 to 12 (+2.00 / +20.0%), associated wit
 - unexplained_changes: 0
 - formula_changes: 1
 - outputs_changed: 1
+- final_outputs_changed: 1
+- impacted_intermediates: 0
 - shifted_semantic_matches: 0
 
 ## Top Direct Changes
 
 - `Summary!B2` 2027E External input: ='[budget_old.xlsx]Inputs'!A1 -> ='[budget_new.xlsx]Inputs'!A1 +2.00 / +20.0%
 
-## Top Impacted Outputs
+## Final Outputs
 
 - `Summary!B2` External Input: 10 -> 12 +2.00 / +20.0%; strength=weak; dependency=weak; value_delta=moderate
 

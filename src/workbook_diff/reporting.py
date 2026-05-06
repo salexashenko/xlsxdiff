@@ -183,9 +183,31 @@ def render_llm_summary_markdown(llm_summary: Dict[str, Any]) -> str:
                 )
             else:
                 lines.append(f"- {group.get('label') or group.get('group_type')}: {group.get('summary') or ''}".rstrip())
-    if llm_summary.get("top_impacted_outputs"):
-        lines.extend(["", "## Top Impacted Outputs", ""])
+    if llm_summary.get("final_outputs"):
+        lines.extend(["", "## Final Outputs", ""])
+        for output in llm_summary["final_outputs"]:
+            delta = output.get("delta") or ""
+            movement = f"{output.get('old') or ''} -> {output.get('new') or ''}"
+            if delta:
+                movement += f" {delta}"
+            lines.append(
+                f"- `{output['ref']}` {output.get('label') or ''}: {movement}; strength={output.get('explanation_strength')}; "
+                f"dependency={output.get('dependency_confidence')}; value_delta={output.get('value_delta_confidence')}"
+            )
+    elif llm_summary.get("top_impacted_outputs"):
+        lines.extend(["", "## Final Outputs", ""])
         for output in llm_summary["top_impacted_outputs"]:
+            delta = output.get("delta") or ""
+            movement = f"{output.get('old') or ''} -> {output.get('new') or ''}"
+            if delta:
+                movement += f" {delta}"
+            lines.append(
+                f"- `{output['ref']}` {output.get('label') or ''}: {movement}; strength={output.get('explanation_strength')}; "
+                f"dependency={output.get('dependency_confidence')}; value_delta={output.get('value_delta_confidence')}"
+            )
+    if llm_summary.get("impacted_intermediates"):
+        lines.extend(["", "## Impacted Intermediates", ""])
+        for output in llm_summary["impacted_intermediates"]:
             delta = output.get("delta") or ""
             movement = f"{output.get('old') or ''} -> {output.get('new') or ''}"
             if delta:
@@ -514,7 +536,7 @@ def render_dot(dag: Dict[str, Any]) -> str:
 def render_focused_graph_html(result: Dict[str, Any], max_roots: int = 7, max_outputs: int = 5) -> str:
     llm_summary = result.get("llm_summary", {})
     roots = list(llm_summary.get("top_direct_changes", []))[:max_roots]
-    outputs = list(llm_summary.get("top_impacted_outputs", []))[:max_outputs]
+    outputs = list(llm_summary.get("final_outputs") or llm_summary.get("top_impacted_outputs", []))[:max_outputs]
     if not roots and not outputs:
         return "<div>No material change-impact graph to display.</div>"
 

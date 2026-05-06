@@ -144,6 +144,7 @@ def diff_snapshots(
     changes.sort(key=lambda item: (-item["materiality_score"], item["id"]))
     grouped_changes = group_changes(changes, baseline, candidate)
     impacted_outputs = build_impacted_outputs(changes, baseline, candidate, baseline_graph, candidate_graph, root_change_ids_by_ref, config)
+    final_outputs, impacted_intermediates = split_impacted_outputs(impacted_outputs, config)
     impact_dag = build_change_impact_dag(changes, impacted_outputs, candidate_graph, baseline_graph)
 
     diagnostics.append(
@@ -182,6 +183,8 @@ def diff_snapshots(
         "change_impact_dag": impact_dag,
         "top_direct_changes": direct_changes[:25],
         "top_impacted_outputs": impacted_outputs[:25],
+        "final_outputs": final_outputs[:25],
+        "impacted_intermediates": impacted_intermediates[:50],
         "unexplained_changes": unexplained_changes[:50],
         "diagnostics": diagnostics,
         "_artifacts": {
@@ -500,15 +503,22 @@ def representative_path(root: str, target: str, graph: Dict[str, Any], max_depth
     return None
 
 
-def _path_display_nodes(node_ids: Sequence[str], candidate_graph: Dict[str, Any], baseline_graph: Dict[str, Any]) -> List[Dict[str, Any]]:
+def _path_display_nodes(
+    node_ids: Sequence[str],
+    candidate_graph: Dict[str, Any],
+    baseline_graph: Dict[str, Any],
+    label_overrides: Optional[Dict[str, str]] = None,
+) -> List[Dict[str, Any]]:
     display_nodes: List[Dict[str, Any]] = []
+    label_overrides = label_overrides or {}
     for node_id in node_ids:
         node = candidate_graph["nodes"].get(node_id) or baseline_graph["nodes"].get(node_id) or _placeholder_node_dict(node_id)
+        ref = node.get("ref") or node_id
         display_nodes.append(
             {
                 "id": node_id,
-                "ref": node.get("ref") or node_id,
-                "label": node.get("label") or node.get("ref") or node_id,
+                "ref": ref,
+                "label": label_overrides.get(ref) or label_overrides.get(node_id) or node.get("label") or ref,
                 "node_type": node.get("node_type", "unknown"),
                 "semantic_role": node.get("semantic_role", "unknown"),
             }
@@ -753,7 +763,7 @@ def build_impacted_outputs(
                     "from": root,
                     "to": ref,
                     "nodes": path["nodes"],
-                    "display_nodes": _path_display_nodes(path["nodes"], candidate_graph, baseline_graph),
+                    "display_nodes": _path_display_nodes(path["nodes"], candidate_graph, baseline_graph, configured_output_names),
                     "edges": path["edge_ids"],
                     "collapsed": False,
                     "confidence": path["confidence"],
@@ -811,6 +821,26 @@ def build_impacted_outputs(
         )
     outputs.sort(key=lambda item: (-item["materiality_score"], item["ref"]))
     return outputs
+
+
+def split_impacted_outputs(
+    impacted_outputs: Sequence[Dict[str, Any]],
+    config: Optional[Dict[str, Any]] = None,
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    ranked_outputs = _rank_outputs_for_summary(impacted_outputs, config or {})
+    configured_refs = _configured_output_refs(config or {})
+    intermediate_refs = _path_intermediate_output_refs(ranked_outputs)
+    final_outputs: List[Dict[str, Any]] = []
+    intermediates: List[Dict[str, Any]] = []
+    for output in ranked_outputs:
+        if _is_final_output(output, configured_refs, intermediate_refs):
+            final_outputs.append(output)
+        else:
+            intermediates.append(output)
+    if not final_outputs and ranked_outputs:
+        final_outputs = [ranked_outputs[0]]
+        intermediates = list(ranked_outputs[1:])
+    return final_outputs, intermediates
 
 
 def degrade_explanation_strength(
@@ -1156,19 +1186,9 @@ def build_llm_summary(
     direct_changes = [change for change in changes if change.get("directness") == "direct" and change.get("id") not in suppressed_ids]
     top_direct = direct_changes[:8]
     top_groups = list(grouped_changes[:8])
-    configured_output_refs = _configured_output_refs(config or {})
-    llm_ranked_outputs = sorted(
-        impacted_outputs,
-        key=lambda output: (
-            0 if output.get("ref") in configured_output_refs else 1,
-            _summary_output_priority(output.get("ref", "")),
-            0 if output.get("semantic_role") == "output" else 1,
-            -_output_path_length(output),
-            -float(output.get("materiality_score") or 0),
-            output.get("ref", ""),
-        ),
-    )
-    top_outputs = list(llm_ranked_outputs[:8])
+    final_outputs, impacted_intermediates = split_impacted_outputs(impacted_outputs, config or {})
+    top_outputs = list(final_outputs[:8])
+    top_intermediates = list(impacted_intermediates[:8])
     warning_codes = sorted({diagnostic.get("code", "") for diagnostic in diagnostics if diagnostic.get("severity") == "warning" and diagnostic.get("code")})
     caveats = [
         "Uses cached workbook formula values; numeric deltas assume both workbooks were saved after recalculation.",
@@ -1201,10 +1221,14 @@ def build_llm_summary(
             "unexplained_changes": summary.get("unexplained_change_count", 0),
             "formula_changes": summary.get("formulas_changed", 0),
             "outputs_changed": summary.get("outputs_changed", 0),
+            "final_outputs_changed": len(final_outputs),
+            "impacted_intermediates": len(impacted_intermediates),
             "shifted_semantic_matches": summary.get("shifted_semantic_matches", 0),
         },
         "top_direct_changes": [_llm_change_fact(change) for change in top_direct],
         "top_change_groups": [_llm_group_fact(group) for group in top_groups],
+        "final_outputs": [_llm_output_fact(output) for output in top_outputs],
+        "impacted_intermediates": [_llm_output_fact(output) for output in top_intermediates],
         "top_impacted_outputs": [_llm_output_fact(output) for output in top_outputs],
         "claims": _llm_claims(top_direct, top_groups, top_outputs),
         "caveats": caveats,
@@ -1291,6 +1315,45 @@ def _configured_output_names(config: Dict[str, Any]) -> Dict[str, str]:
         if ref and name:
             names[ref] = str(name)
     return names
+
+
+def _rank_outputs_for_summary(impacted_outputs: Sequence[Dict[str, Any]], config: Dict[str, Any]) -> List[Dict[str, Any]]:
+    configured_output_refs = _configured_output_refs(config)
+    return sorted(
+        impacted_outputs,
+        key=lambda output: (
+            0 if output.get("ref") in configured_output_refs else 1,
+            _summary_output_priority(output.get("ref", "")),
+            0 if output.get("semantic_role") == "output" else 1,
+            -_output_path_length(output),
+            -float(output.get("materiality_score") or 0),
+            output.get("ref", ""),
+        ),
+    )
+
+
+def _path_intermediate_output_refs(outputs: Sequence[Dict[str, Any]]) -> Set[str]:
+    output_refs = {output.get("ref") for output in outputs if output.get("ref")}
+    intermediate_refs: Set[str] = set()
+    for output in outputs:
+        for path in output.get("representative_paths", []) or []:
+            nodes = path.get("nodes") or []
+            for node_id in nodes[:-1]:
+                if node_id in output_refs:
+                    intermediate_refs.add(node_id)
+    return intermediate_refs
+
+
+def _is_final_output(output: Dict[str, Any], configured_refs: Set[str], intermediate_refs: Set[str]) -> bool:
+    ref = output.get("ref", "")
+    if ref in configured_refs:
+        return True
+    if ref in intermediate_refs:
+        return False
+    sheet, _address = split_cell_id(ref) if "!" in ref else ("", "")
+    if sheet.upper() in {"SUMMARY", "DASHBOARD", "OUTPUT", "BOARD", "KPIS", "REPORT"}:
+        return True
+    return output.get("semantic_role") == "output"
 
 
 def _summary_output_priority(ref: str) -> int:

@@ -4,8 +4,10 @@ import json
 from pathlib import Path
 
 import yaml
+from jsonschema import Draft202012Validator
 
 from workbook_diff import diff_workbooks
+from benchmarks.run_benchmark import main as run_benchmark
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -28,6 +30,25 @@ def test_public_benchmark_fixtures_match_expected_diffs() -> None:
         public_result = {key: value for key, value in result.items() if key != "_artifacts"}
         expected = json.loads((case_dir / "expected.diff.json").read_text(encoding="utf-8"))
         assert public_result == expected, case_dir.name
+
+
+def test_public_benchmark_artifacts_match_public_schemas() -> None:
+    diff_schema = json.loads((SCHEMA_DIR / "diff.schema.v0.1.json").read_text(encoding="utf-8"))
+    llm_schema = json.loads((SCHEMA_DIR / "llm_summary.schema.v0.1.json").read_text(encoding="utf-8"))
+    diff_schema = dict(diff_schema)
+    diff_schema["properties"] = dict(diff_schema["properties"])
+    diff_schema["properties"]["llm_summary"] = {"type": "object"}
+    diff_validator = Draft202012Validator(diff_schema)
+    llm_validator = Draft202012Validator(llm_schema)
+
+    for case_dir in sorted(path for path in BENCHMARK_CASES.iterdir() if path.is_dir()):
+        expected = json.loads((case_dir / "expected.diff.json").read_text(encoding="utf-8"))
+        diff_validator.validate(expected)
+        llm_validator.validate(expected["llm_summary"])
+
+
+def test_scored_public_benchmark_passes() -> None:
+    assert run_benchmark(["--cases-dir", str(BENCHMARK_CASES)]) == 0
 
 
 def test_public_json_schemas_are_valid_json() -> None:

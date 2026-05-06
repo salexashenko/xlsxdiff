@@ -74,6 +74,8 @@
       "unexplained_changes": 0,
       "formula_changes": 1,
       "outputs_changed": 1,
+      "final_outputs_changed": 1,
+      "impacted_intermediates": 0,
       "shifted_semantic_matches": 0
     },
     "top_direct_changes": [
@@ -95,6 +97,71 @@
       }
     ],
     "top_change_groups": [],
+    "final_outputs": [
+      {
+        "ref": "Summary!B2",
+        "old_ref": "Summary!B2",
+        "new_ref": "Summary!B2",
+        "address_changed": false,
+        "change_id": "chg_0001",
+        "change_kind": "formula_external_reference_changed",
+        "semantic_id": "cell::summary::intersection::external_input::2027e",
+        "label": "External Input",
+        "old": "10",
+        "new": "12",
+        "delta": "+2.00 / +20.0%",
+        "explanation_strength": "weak",
+        "dependency_confidence": "weak",
+        "value_delta_confidence": "moderate",
+        "confidence_factors": [
+          {
+            "code": "formula_and_value_changed",
+            "message": "The output formula and cached value both changed.",
+            "strength_cap": "moderate",
+            "confidence_area": "value_delta"
+          },
+          {
+            "code": "partial_formula_parse",
+            "message": "Formula dependency extraction was partial at Summary!B2.",
+            "strength_cap": "weak",
+            "confidence_area": "dependency"
+          },
+          {
+            "code": "external_reference",
+            "message": "Formula path includes an external workbook reference at Summary!B2.",
+            "strength_cap": "moderate",
+            "confidence_area": "dependency"
+          }
+        ],
+        "upstream_change_ids": [
+          "chg_0001"
+        ],
+        "representative_paths": [
+          {
+            "id": "path_001_001",
+            "from": "Summary!B2",
+            "to": "Summary!B2",
+            "nodes": [
+              "Summary!B2"
+            ],
+            "display_nodes": [
+              {
+                "id": "Summary!B2",
+                "ref": "Summary!B2",
+                "label": "External Input",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
+            "edges": [],
+            "collapsed": false,
+            "confidence": 1.0
+          }
+        ],
+        "explanation": "Summary!B2 changed and may be related to 1 upstream direct change(s), but dependency evidence is partial."
+      }
+    ],
+    "impacted_intermediates": [],
     "top_impacted_outputs": [
       {
         "ref": "Summary!B2",
@@ -146,7 +213,7 @@
               {
                 "id": "Summary!B2",
                 "ref": "Summary!B2",
-                "label": "2027E External input",
+                "label": "External Input",
                 "node_type": "cell",
                 "semantic_role": "output"
               }
@@ -204,7 +271,7 @@
               {
                 "id": "Summary!B2",
                 "ref": "Summary!B2",
-                "label": "2027E External input",
+                "label": "External Input",
                 "node_type": "cell",
                 "semantic_role": "output"
               }
@@ -675,7 +742,7 @@
             {
               "id": "Summary!B2",
               "ref": "Summary!B2",
-              "label": "2027E External input",
+              "label": "External Input",
               "node_type": "cell",
               "semantic_role": "output"
             }
@@ -713,6 +780,92 @@
       "semantic_role": "output"
     }
   ],
+  "final_outputs": [
+    {
+      "ref": "Summary!B2",
+      "old_ref": "Summary!B2",
+      "new_ref": "Summary!B2",
+      "address_changed": false,
+      "change_id": "chg_0001",
+      "change_kind": "formula_external_reference_changed",
+      "semantic_id": "cell::summary::intersection::external_input::2027e",
+      "label": "External Input",
+      "old_value": {
+        "raw": 10,
+        "typed_value": 10,
+        "display_value": "10",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "new_value": {
+        "raw": 12,
+        "typed_value": 12,
+        "display_value": "12",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "delta": {
+        "old_number": 10.0,
+        "new_number": 12.0,
+        "absolute_delta": 2.0,
+        "display_delta": "+2.00",
+        "relative_delta": 0.19999999999999996,
+        "display_relative_delta": "+20.0%"
+      },
+      "upstream_change_ids": [
+        "chg_0001"
+      ],
+      "representative_paths": [
+        {
+          "id": "path_001_001",
+          "from": "Summary!B2",
+          "to": "Summary!B2",
+          "nodes": [
+            "Summary!B2"
+          ],
+          "display_nodes": [
+            {
+              "id": "Summary!B2",
+              "ref": "Summary!B2",
+              "label": "External Input",
+              "node_type": "cell",
+              "semantic_role": "output"
+            }
+          ],
+          "edges": [],
+          "collapsed": false,
+          "confidence": 1.0
+        }
+      ],
+      "explanation_strength": "weak",
+      "dependency_confidence": "weak",
+      "value_delta_confidence": "moderate",
+      "confidence_factors": [
+        {
+          "code": "formula_and_value_changed",
+          "message": "The output formula and cached value both changed.",
+          "strength_cap": "moderate",
+          "confidence_area": "value_delta"
+        },
+        {
+          "code": "partial_formula_parse",
+          "message": "Formula dependency extraction was partial at Summary!B2.",
+          "strength_cap": "weak",
+          "confidence_area": "dependency"
+        },
+        {
+          "code": "external_reference",
+          "message": "Formula path includes an external workbook reference at Summary!B2.",
+          "strength_cap": "moderate",
+          "confidence_area": "dependency"
+        }
+      ],
+      "explanation": "Summary!B2 changed and may be related to 1 upstream direct change(s), but dependency evidence is partial.",
+      "materiality_score": 115.002,
+      "semantic_role": "output"
+    }
+  ],
+  "impacted_intermediates": [],
   "unexplained_changes": [],
   "diagnostics": [
     {

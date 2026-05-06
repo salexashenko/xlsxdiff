@@ -12,6 +12,8 @@ Summary!B2 2027 Revenue changed from 110 to 120 (+10.0 / +9.1%), associated with
 - unexplained_changes: 0
 - formula_changes: 0
 - outputs_changed: 1
+- final_outputs_changed: 1
+- impacted_intermediates: 0
 - shifted_semantic_matches: 1
 
 ## Top Direct Changes
@@ -22,7 +24,7 @@ Summary!B2 2027 Revenue changed from 110 to 120 (+10.0 / +9.1%), associated with
 
 - Named range `Growth_2027` was rebound from `Assumptions!D13` to `Assumptions!D14`; effective value 0.1 -> 0.2 +10.0 pp.
 
-## Top Impacted Outputs
+## Final Outputs
 
 - `Summary!B2` 2027 Revenue: 110 -> 120 +10.0 / +9.1%; strength=moderate; dependency=moderate; value_delta=moderate
 

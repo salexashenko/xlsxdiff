@@ -74,6 +74,8 @@
       "unexplained_changes": 0,
       "formula_changes": 0,
       "outputs_changed": 1,
+      "final_outputs_changed": 1,
+      "impacted_intermediates": 0,
       "shifted_semantic_matches": 0
     },
     "top_direct_changes": [
@@ -95,6 +97,62 @@
       }
     ],
     "top_change_groups": [],
+    "final_outputs": [
+      {
+        "ref": "Summary!B2",
+        "old_ref": "Summary!B2",
+        "new_ref": "Summary!B2",
+        "address_changed": false,
+        "change_id": "chg_0002",
+        "change_kind": "cached_value_changed",
+        "semantic_id": "cell::summary::intersection::visible_kpi::value",
+        "label": "Visible KPI",
+        "old": "20",
+        "new": "30",
+        "delta": "+10.0 / +50.0%",
+        "explanation_strength": "strong",
+        "dependency_confidence": "high",
+        "value_delta_confidence": "high",
+        "confidence_factors": [],
+        "upstream_change_ids": [
+          "chg_0001"
+        ],
+        "representative_paths": [
+          {
+            "id": "path_001_001",
+            "from": "HiddenCalc!B2",
+            "to": "Summary!B2",
+            "nodes": [
+              "HiddenCalc!B2",
+              "Summary!B2"
+            ],
+            "display_nodes": [
+              {
+                "id": "HiddenCalc!B2",
+                "ref": "HiddenCalc!B2",
+                "label": "Internal driver",
+                "node_type": "cell",
+                "semantic_role": "raw_data"
+              },
+              {
+                "id": "Summary!B2",
+                "ref": "Summary!B2",
+                "label": "Visible KPI",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
+            "edges": [
+              "e000001"
+            ],
+            "collapsed": false,
+            "confidence": 1.0
+          }
+        ],
+        "explanation": "Summary!B2 changed and has one detected upstream direct change on a dependency path; this likely explains the movement."
+      }
+    ],
+    "impacted_intermediates": [],
     "top_impacted_outputs": [
       {
         "ref": "Summary!B2",
@@ -135,7 +193,7 @@
               {
                 "id": "Summary!B2",
                 "ref": "Summary!B2",
-                "label": "Value Visible KPI",
+                "label": "Visible KPI",
                 "node_type": "cell",
                 "semantic_role": "output"
               }
@@ -200,7 +258,7 @@
               {
                 "id": "Summary!B2",
                 "ref": "Summary!B2",
-                "label": "Value Visible KPI",
+                "label": "Visible KPI",
                 "node_type": "cell",
                 "semantic_role": "output"
               }
@@ -819,7 +877,7 @@
             {
               "id": "Summary!B2",
               "ref": "Summary!B2",
-              "label": "Value Visible KPI",
+              "label": "Visible KPI",
               "node_type": "cell",
               "semantic_role": "output"
             }
@@ -840,6 +898,83 @@
       "semantic_role": "output"
     }
   ],
+  "final_outputs": [
+    {
+      "ref": "Summary!B2",
+      "old_ref": "Summary!B2",
+      "new_ref": "Summary!B2",
+      "address_changed": false,
+      "change_id": "chg_0002",
+      "change_kind": "cached_value_changed",
+      "semantic_id": "cell::summary::intersection::visible_kpi::value",
+      "label": "Visible KPI",
+      "old_value": {
+        "raw": 20,
+        "typed_value": 20,
+        "display_value": "20",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "new_value": {
+        "raw": 30,
+        "typed_value": 30,
+        "display_value": "30",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "delta": {
+        "old_number": 20.0,
+        "new_number": 30.0,
+        "absolute_delta": 10.0,
+        "display_delta": "+10.0",
+        "relative_delta": 0.5,
+        "display_relative_delta": "+50.0%"
+      },
+      "upstream_change_ids": [
+        "chg_0001"
+      ],
+      "representative_paths": [
+        {
+          "id": "path_001_001",
+          "from": "HiddenCalc!B2",
+          "to": "Summary!B2",
+          "nodes": [
+            "HiddenCalc!B2",
+            "Summary!B2"
+          ],
+          "display_nodes": [
+            {
+              "id": "HiddenCalc!B2",
+              "ref": "HiddenCalc!B2",
+              "label": "Internal driver",
+              "node_type": "cell",
+              "semantic_role": "raw_data"
+            },
+            {
+              "id": "Summary!B2",
+              "ref": "Summary!B2",
+              "label": "Visible KPI",
+              "node_type": "cell",
+              "semantic_role": "output"
+            }
+          ],
+          "edges": [
+            "e000001"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        }
+      ],
+      "explanation_strength": "strong",
+      "dependency_confidence": "high",
+      "value_delta_confidence": "high",
+      "confidence_factors": [],
+      "explanation": "Summary!B2 changed and has one detected upstream direct change on a dependency path; this likely explains the movement.",
+      "materiality_score": 105.01,
+      "semantic_role": "output"
+    }
+  ],
+  "impacted_intermediates": [],
   "unexplained_changes": [],
   "diagnostics": [
     {

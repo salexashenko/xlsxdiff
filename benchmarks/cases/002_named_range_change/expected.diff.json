@@ -74,6 +74,8 @@
       "unexplained_changes": 0,
       "formula_changes": 0,
       "outputs_changed": 1,
+      "final_outputs_changed": 1,
+      "impacted_intermediates": 0,
       "shifted_semantic_matches": 1
     },
     "top_direct_changes": [
@@ -120,6 +122,78 @@
         }
       }
     ],
+    "final_outputs": [
+      {
+        "ref": "Summary!B2",
+        "old_ref": "Summary!B2",
+        "new_ref": "Summary!B2",
+        "address_changed": false,
+        "change_id": "chg_0003",
+        "change_kind": "cached_value_changed",
+        "semantic_id": "cell::summary::intersection::revenue::2027e",
+        "label": "2027 Revenue",
+        "old": "110",
+        "new": "120",
+        "delta": "+10.0 / +9.1%",
+        "explanation_strength": "moderate",
+        "dependency_confidence": "moderate",
+        "value_delta_confidence": "moderate",
+        "confidence_factors": [
+          {
+            "code": "non_cell_root",
+            "message": "At least one upstream root is a named range, table, or workbook object.",
+            "strength_cap": "moderate",
+            "confidence_area": "explanation"
+          }
+        ],
+        "upstream_change_ids": [
+          "chg_0001"
+        ],
+        "representative_paths": [
+          {
+            "id": "path_001_001",
+            "from": "name:GROWTH_2027",
+            "to": "Summary!B2",
+            "nodes": [
+              "name:GROWTH_2027",
+              "Assumptions!D14",
+              "Summary!B2"
+            ],
+            "display_nodes": [
+              {
+                "id": "name:GROWTH_2027",
+                "ref": "Growth_2027",
+                "label": "Growth_2027",
+                "node_type": "defined_name",
+                "semantic_role": "unknown"
+              },
+              {
+                "id": "Assumptions!D14",
+                "ref": "Assumptions!D14",
+                "label": "Growth_2027",
+                "node_type": "cell",
+                "semantic_role": "assumption"
+              },
+              {
+                "id": "Summary!B2",
+                "ref": "Summary!B2",
+                "label": "2027 Revenue",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
+            "edges": [
+              "e000001",
+              "e000002"
+            ],
+            "collapsed": false,
+            "confidence": 0.85
+          }
+        ],
+        "explanation": "Summary!B2 changed and is associated with 1 upstream direct change(s)."
+      }
+    ],
+    "impacted_intermediates": [],
     "top_impacted_outputs": [
       {
         "ref": "Summary!B2",
@@ -175,7 +249,7 @@
               {
                 "id": "Summary!B2",
                 "ref": "Summary!B2",
-                "label": "2027E Revenue",
+                "label": "2027 Revenue",
                 "node_type": "cell",
                 "semantic_role": "output"
               }
@@ -266,7 +340,7 @@
               {
                 "id": "Summary!B2",
                 "ref": "Summary!B2",
-                "label": "2027E Revenue",
+                "label": "2027 Revenue",
                 "node_type": "cell",
                 "semantic_role": "output"
               }
@@ -700,95 +774,6 @@
       "Summary!B2"
     ],
     "nodes": {
-      "Summary!B2": {
-        "id": "Summary!B2",
-        "ref": "Summary!B2",
-        "node_type": "cell",
-        "label": "2027E Revenue",
-        "semantic_id": "cell::summary::intersection::revenue::2027e",
-        "semantic_identity": {
-          "semantic_id": "cell::summary::intersection::revenue::2027e",
-          "kind": "row_column_intersection",
-          "row_headers": [
-            "Revenue"
-          ],
-          "column_headers": [
-            "2027E"
-          ],
-          "labels": [
-            "Revenue",
-            "2027E"
-          ],
-          "source_refs": [
-            "Summary!A2",
-            "Summary!B1"
-          ],
-          "confidence": 0.9
-        },
-        "semantic_role": "output",
-        "sheet_name": "Summary",
-        "old_value": null,
-        "new_value": {
-          "raw": 120,
-          "typed_value": 120,
-          "display_value": "120",
-          "value_type": "number",
-          "number_format": "General"
-        },
-        "old_formula": null,
-        "new_formula": {
-          "raw": "=100*(1+Growth_2027)",
-          "normalized": "100*(1+GROWTH_2027)",
-          "formula_type": "normal",
-          "tokens": [
-            {
-              "type": "defined_name",
-              "text": "Growth_2027",
-              "target": "Assumptions!D14"
-            },
-            {
-              "type": "number",
-              "text": "1"
-            },
-            {
-              "type": "number",
-              "text": "100"
-            }
-          ],
-          "precedents": [
-            {
-              "raw": "Growth_2027",
-              "ref": "Growth_2027",
-              "sheet_name": "Summary",
-              "kind": "defined_name_reference",
-              "target": "Assumptions!D14",
-              "confidence": 0.9
-            }
-          ],
-          "has_volatile_function": false,
-          "has_dynamic_reference": false,
-          "has_external_reference": false,
-          "parse_status": "ok",
-          "parse_warnings": []
-        },
-        "changes": [
-          "chg_0003"
-        ],
-        "materiality_score": 0,
-        "confidence": 1.0
-      },
-      "name:GROWTH_2027": {
-        "id": "name:GROWTH_2027",
-        "ref": "Growth_2027",
-        "node_type": "defined_name",
-        "label": "Growth_2027",
-        "semantic_role": "unknown",
-        "changes": [
-          "chg_0001"
-        ],
-        "materiality_score": 0,
-        "confidence": 0.85
-      },
       "Assumptions!D13": {
         "id": "Assumptions!D13",
         "ref": "Assumptions!D13",
@@ -862,6 +847,95 @@
         "changes": [
           "chg_0002",
           "chg_0005"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      },
+      "name:GROWTH_2027": {
+        "id": "name:GROWTH_2027",
+        "ref": "Growth_2027",
+        "node_type": "defined_name",
+        "label": "Growth_2027",
+        "semantic_role": "unknown",
+        "changes": [
+          "chg_0001"
+        ],
+        "materiality_score": 0,
+        "confidence": 0.85
+      },
+      "Summary!B2": {
+        "id": "Summary!B2",
+        "ref": "Summary!B2",
+        "node_type": "cell",
+        "label": "2027E Revenue",
+        "semantic_id": "cell::summary::intersection::revenue::2027e",
+        "semantic_identity": {
+          "semantic_id": "cell::summary::intersection::revenue::2027e",
+          "kind": "row_column_intersection",
+          "row_headers": [
+            "Revenue"
+          ],
+          "column_headers": [
+            "2027E"
+          ],
+          "labels": [
+            "Revenue",
+            "2027E"
+          ],
+          "source_refs": [
+            "Summary!A2",
+            "Summary!B1"
+          ],
+          "confidence": 0.9
+        },
+        "semantic_role": "output",
+        "sheet_name": "Summary",
+        "old_value": null,
+        "new_value": {
+          "raw": 120,
+          "typed_value": 120,
+          "display_value": "120",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": {
+          "raw": "=100*(1+Growth_2027)",
+          "normalized": "100*(1+GROWTH_2027)",
+          "formula_type": "normal",
+          "tokens": [
+            {
+              "type": "defined_name",
+              "text": "Growth_2027",
+              "target": "Assumptions!D14"
+            },
+            {
+              "type": "number",
+              "text": "1"
+            },
+            {
+              "type": "number",
+              "text": "100"
+            }
+          ],
+          "precedents": [
+            {
+              "raw": "Growth_2027",
+              "ref": "Growth_2027",
+              "sheet_name": "Summary",
+              "kind": "defined_name_reference",
+              "target": "Assumptions!D14",
+              "confidence": 0.9
+            }
+          ],
+          "has_volatile_function": false,
+          "has_dynamic_reference": false,
+          "has_external_reference": false,
+          "parse_status": "ok",
+          "parse_warnings": []
+        },
+        "changes": [
+          "chg_0003"
         ],
         "materiality_score": 0,
         "confidence": 1.0
@@ -1134,7 +1208,7 @@
             {
               "id": "Summary!B2",
               "ref": "Summary!B2",
-              "label": "2027E Revenue",
+              "label": "2027 Revenue",
               "node_type": "cell",
               "semantic_role": "output"
             }
@@ -1163,6 +1237,99 @@
       "semantic_role": "output"
     }
   ],
+  "final_outputs": [
+    {
+      "ref": "Summary!B2",
+      "old_ref": "Summary!B2",
+      "new_ref": "Summary!B2",
+      "address_changed": false,
+      "change_id": "chg_0003",
+      "change_kind": "cached_value_changed",
+      "semantic_id": "cell::summary::intersection::revenue::2027e",
+      "label": "2027 Revenue",
+      "old_value": {
+        "raw": 110,
+        "typed_value": 110,
+        "display_value": "110",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "new_value": {
+        "raw": 120,
+        "typed_value": 120,
+        "display_value": "120",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "delta": {
+        "old_number": 110.0,
+        "new_number": 120.0,
+        "absolute_delta": 10.0,
+        "display_delta": "+10.0",
+        "relative_delta": 0.09090909090909083,
+        "display_relative_delta": "+9.1%"
+      },
+      "upstream_change_ids": [
+        "chg_0001"
+      ],
+      "representative_paths": [
+        {
+          "id": "path_001_001",
+          "from": "name:GROWTH_2027",
+          "to": "Summary!B2",
+          "nodes": [
+            "name:GROWTH_2027",
+            "Assumptions!D14",
+            "Summary!B2"
+          ],
+          "display_nodes": [
+            {
+              "id": "name:GROWTH_2027",
+              "ref": "Growth_2027",
+              "label": "Growth_2027",
+              "node_type": "defined_name",
+              "semantic_role": "unknown"
+            },
+            {
+              "id": "Assumptions!D14",
+              "ref": "Assumptions!D14",
+              "label": "Growth_2027",
+              "node_type": "cell",
+              "semantic_role": "assumption"
+            },
+            {
+              "id": "Summary!B2",
+              "ref": "Summary!B2",
+              "label": "2027 Revenue",
+              "node_type": "cell",
+              "semantic_role": "output"
+            }
+          ],
+          "edges": [
+            "e000001",
+            "e000002"
+          ],
+          "collapsed": false,
+          "confidence": 0.85
+        }
+      ],
+      "explanation_strength": "moderate",
+      "dependency_confidence": "moderate",
+      "value_delta_confidence": "moderate",
+      "confidence_factors": [
+        {
+          "code": "non_cell_root",
+          "message": "At least one upstream root is a named range, table, or workbook object.",
+          "strength_cap": "moderate",
+          "confidence_area": "explanation"
+        }
+      ],
+      "explanation": "Summary!B2 changed and is associated with 1 upstream direct change(s).",
+      "materiality_score": 89.101,
+      "semantic_role": "output"
+    }
+  ],
+  "impacted_intermediates": [],
   "unexplained_changes": [],
   "diagnostics": [
     {

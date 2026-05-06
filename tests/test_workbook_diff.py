@@ -29,7 +29,7 @@ def test_simple_assumption_impact_builds_path(tmp_path: Path) -> None:
     _make_assumption_workbook(baseline, growth=0.18, revenue=1180, summary=1180)
     _make_assumption_workbook(candidate, growth=0.22, revenue=1220, summary=1220)
 
-    result = diff_workbooks(baseline, candidate)
+    result = diff_workbooks(baseline, candidate, config={"outputs": [{"ref": "Summary!G31", "name": "Total LTV"}]})
 
     direct = _find_change(result, "Assumptions!D14")
     assert direct["kind"] == "constant_changed"
@@ -39,7 +39,11 @@ def test_simple_assumption_impact_builds_path(tmp_path: Path) -> None:
     assert output["delta"]["absolute_delta"] == 40
     path_nodes = output["representative_paths"][0]["nodes"]
     assert path_nodes == ["Assumptions!D14", "Revenue!G22", "Summary!G31"]
-    assert result["llm_summary"]["one_sentence_summary"].startswith("Summary!G31")
+    assert output["representative_paths"][0]["display_nodes"][-1]["label"] == "Total LTV"
+    assert result["llm_summary"]["final_outputs"][0]["ref"] == "Summary!G31"
+    assert not any(item["ref"] == "Revenue!G22" for item in result["llm_summary"]["final_outputs"])
+    assert any(item["ref"] == "Revenue!G22" for item in result["llm_summary"]["impacted_intermediates"])
+    assert result["llm_summary"]["one_sentence_summary"].startswith("Summary!G31 Total LTV")
     assert "Assumptions!D14" in result["llm_summary"]["one_sentence_summary"]
 
 

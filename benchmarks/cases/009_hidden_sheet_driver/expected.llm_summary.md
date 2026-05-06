@@ -12,13 +12,15 @@ Summary!B2 Visible KPI changed from 20 to 30 (+10.0 / +50.0%), likely explained 
 - unexplained_changes: 0
 - formula_changes: 0
 - outputs_changed: 1
+- final_outputs_changed: 1
+- impacted_intermediates: 0
 - shifted_semantic_matches: 0
 
 ## Top Direct Changes
 
 - `HiddenCalc!B2` Internal driver: 10 -> 15 +5.00 / +50.0%
 
-## Top Impacted Outputs
+## Final Outputs
 
 - `Summary!B2` Visible KPI: 20 -> 30 +10.0 / +50.0%; strength=strong; dependency=high; value_delta=high
 

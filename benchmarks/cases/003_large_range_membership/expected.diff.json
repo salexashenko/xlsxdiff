@@ -74,6 +74,8 @@
       "unexplained_changes": 0,
       "formula_changes": 0,
       "outputs_changed": 1,
+      "final_outputs_changed": 1,
+      "impacted_intermediates": 0,
       "shifted_semantic_matches": 0
     },
     "top_direct_changes": [
@@ -95,6 +97,71 @@
       }
     ],
     "top_change_groups": [],
+    "final_outputs": [
+      {
+        "ref": "Summary!B2",
+        "old_ref": "Summary!B2",
+        "new_ref": "Summary!B2",
+        "address_changed": false,
+        "change_id": "chg_0002",
+        "change_kind": "cached_value_changed",
+        "semantic_id": "cell::summary::intersection::total_raw_amount::value",
+        "label": "Total raw amount",
+        "old": "10",
+        "new": "15",
+        "delta": "+5.00 / +50.0%",
+        "explanation_strength": "strong",
+        "dependency_confidence": "high",
+        "value_delta_confidence": "high",
+        "confidence_factors": [],
+        "upstream_change_ids": [
+          "chg_0001"
+        ],
+        "representative_paths": [
+          {
+            "id": "path_001_001",
+            "from": "RawData!C582",
+            "to": "Summary!B2",
+            "nodes": [
+              "RawData!C582",
+              "RawData!A1:Z10000",
+              "Summary!B2"
+            ],
+            "display_nodes": [
+              {
+                "id": "RawData!C582",
+                "ref": "RawData!C582",
+                "label": "RawData",
+                "node_type": "cell",
+                "semantic_role": "raw_data"
+              },
+              {
+                "id": "RawData!A1:Z10000",
+                "ref": "RawData!A1:Z10000",
+                "label": "RawData!A1:Z10000",
+                "node_type": "range",
+                "semantic_role": "unknown"
+              },
+              {
+                "id": "Summary!B2",
+                "ref": "Summary!B2",
+                "label": "Total raw amount",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
+            "edges": [
+              "vrange_000002",
+              "e000001"
+            ],
+            "collapsed": false,
+            "confidence": 0.9
+          }
+        ],
+        "explanation": "Summary!B2 changed and has one detected upstream direct change on a dependency path; this likely explains the movement."
+      }
+    ],
+    "impacted_intermediates": [],
     "top_impacted_outputs": [
       {
         "ref": "Summary!B2",
@@ -143,7 +210,7 @@
               {
                 "id": "Summary!B2",
                 "ref": "Summary!B2",
-                "label": "Value Total raw amount",
+                "label": "Total raw amount",
                 "node_type": "cell",
                 "semantic_role": "output"
               }
@@ -217,7 +284,7 @@
               {
                 "id": "Summary!B2",
                 "ref": "Summary!B2",
-                "label": "Value Total raw amount",
+                "label": "Total raw amount",
                 "node_type": "cell",
                 "semantic_role": "output"
               }
@@ -441,6 +508,39 @@
         "materiality_score": 0,
         "confidence": 1.0
       },
+      "RawData!C582": {
+        "id": "RawData!C582",
+        "ref": "RawData!C582",
+        "node_type": "cell",
+        "label": "RawData",
+        "semantic_id": null,
+        "semantic_identity": {
+          "semantic_id": null,
+          "kind": "address_only",
+          "row_headers": [],
+          "column_headers": [],
+          "labels": [],
+          "source_refs": [],
+          "confidence": 0.0
+        },
+        "semantic_role": "raw_data",
+        "sheet_name": "RawData",
+        "old_value": null,
+        "new_value": {
+          "raw": 15,
+          "typed_value": 15,
+          "display_value": "15",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": null,
+        "changes": [
+          "chg_0001"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      },
       "Summary!B2": {
         "id": "Summary!B2",
         "ref": "Summary!B2",
@@ -510,39 +610,6 @@
         },
         "changes": [
           "chg_0002"
-        ],
-        "materiality_score": 0,
-        "confidence": 1.0
-      },
-      "RawData!C582": {
-        "id": "RawData!C582",
-        "ref": "RawData!C582",
-        "node_type": "cell",
-        "label": "RawData",
-        "semantic_id": null,
-        "semantic_identity": {
-          "semantic_id": null,
-          "kind": "address_only",
-          "row_headers": [],
-          "column_headers": [],
-          "labels": [],
-          "source_refs": [],
-          "confidence": 0.0
-        },
-        "semantic_role": "raw_data",
-        "sheet_name": "RawData",
-        "old_value": null,
-        "new_value": {
-          "raw": 15,
-          "typed_value": 15,
-          "display_value": "15",
-          "value_type": "number",
-          "number_format": "General"
-        },
-        "old_formula": null,
-        "new_formula": null,
-        "changes": [
-          "chg_0001"
         ],
         "materiality_score": 0,
         "confidence": 1.0
@@ -849,7 +916,7 @@
             {
               "id": "Summary!B2",
               "ref": "Summary!B2",
-              "label": "Value Total raw amount",
+              "label": "Total raw amount",
               "node_type": "cell",
               "semantic_role": "output"
             }
@@ -871,6 +938,92 @@
       "semantic_role": "output"
     }
   ],
+  "final_outputs": [
+    {
+      "ref": "Summary!B2",
+      "old_ref": "Summary!B2",
+      "new_ref": "Summary!B2",
+      "address_changed": false,
+      "change_id": "chg_0002",
+      "change_kind": "cached_value_changed",
+      "semantic_id": "cell::summary::intersection::total_raw_amount::value",
+      "label": "Total raw amount",
+      "old_value": {
+        "raw": 10,
+        "typed_value": 10,
+        "display_value": "10",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "new_value": {
+        "raw": 15,
+        "typed_value": 15,
+        "display_value": "15",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "delta": {
+        "old_number": 10.0,
+        "new_number": 15.0,
+        "absolute_delta": 5.0,
+        "display_delta": "+5.00",
+        "relative_delta": 0.5,
+        "display_relative_delta": "+50.0%"
+      },
+      "upstream_change_ids": [
+        "chg_0001"
+      ],
+      "representative_paths": [
+        {
+          "id": "path_001_001",
+          "from": "RawData!C582",
+          "to": "Summary!B2",
+          "nodes": [
+            "RawData!C582",
+            "RawData!A1:Z10000",
+            "Summary!B2"
+          ],
+          "display_nodes": [
+            {
+              "id": "RawData!C582",
+              "ref": "RawData!C582",
+              "label": "RawData",
+              "node_type": "cell",
+              "semantic_role": "raw_data"
+            },
+            {
+              "id": "RawData!A1:Z10000",
+              "ref": "RawData!A1:Z10000",
+              "label": "RawData!A1:Z10000",
+              "node_type": "range",
+              "semantic_role": "unknown"
+            },
+            {
+              "id": "Summary!B2",
+              "ref": "Summary!B2",
+              "label": "Total raw amount",
+              "node_type": "cell",
+              "semantic_role": "output"
+            }
+          ],
+          "edges": [
+            "vrange_000002",
+            "e000001"
+          ],
+          "collapsed": false,
+          "confidence": 0.9
+        }
+      ],
+      "explanation_strength": "strong",
+      "dependency_confidence": "high",
+      "value_delta_confidence": "high",
+      "confidence_factors": [],
+      "explanation": "Summary!B2 changed and has one detected upstream direct change on a dependency path; this likely explains the movement.",
+      "materiality_score": 105.005,
+      "semantic_role": "output"
+    }
+  ],
+  "impacted_intermediates": [],
   "unexplained_changes": [],
   "diagnostics": [
     {

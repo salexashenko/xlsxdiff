@@ -79,6 +79,49 @@
       "materiality_score": 0,
       "confidence": 1.0
     },
+    "Assumptions!D14": {
+      "id": "Assumptions!D14",
+      "ref": "Assumptions!D14",
+      "node_type": "cell",
+      "label": "2026 Growth Rate",
+      "semantic_id": "cell::assumptions::intersection::growth_rate::2026",
+      "semantic_identity": {
+        "semantic_id": "cell::assumptions::intersection::growth_rate::2026",
+        "kind": "row_column_intersection",
+        "row_headers": [
+          "Growth Rate"
+        ],
+        "column_headers": [
+          "2026"
+        ],
+        "labels": [
+          "Growth Rate",
+          "2026"
+        ],
+        "source_refs": [
+          "Assumptions!A14",
+          "Assumptions!D13"
+        ],
+        "confidence": 0.9
+      },
+      "semantic_role": "assumption",
+      "sheet_name": "Assumptions",
+      "old_value": null,
+      "new_value": {
+        "raw": 0.22,
+        "typed_value": 0.22,
+        "display_value": "0.22",
+        "value_type": "number",
+        "number_format": "0.0%"
+      },
+      "old_formula": null,
+      "new_formula": null,
+      "changes": [
+        "chg_0001"
+      ],
+      "materiality_score": 0,
+      "confidence": 1.0
+    },
     "Revenue!G22": {
       "id": "Revenue!G22",
       "ref": "Revenue!G22",
@@ -157,49 +200,6 @@
       },
       "changes": [
         "chg_0002"
-      ],
-      "materiality_score": 0,
-      "confidence": 1.0
-    },
-    "Assumptions!D14": {
-      "id": "Assumptions!D14",
-      "ref": "Assumptions!D14",
-      "node_type": "cell",
-      "label": "2026 Growth Rate",
-      "semantic_id": "cell::assumptions::intersection::growth_rate::2026",
-      "semantic_identity": {
-        "semantic_id": "cell::assumptions::intersection::growth_rate::2026",
-        "kind": "row_column_intersection",
-        "row_headers": [
-          "Growth Rate"
-        ],
-        "column_headers": [
-          "2026"
-        ],
-        "labels": [
-          "Growth Rate",
-          "2026"
-        ],
-        "source_refs": [
-          "Assumptions!A14",
-          "Assumptions!D13"
-        ],
-        "confidence": 0.9
-      },
-      "semantic_role": "assumption",
-      "sheet_name": "Assumptions",
-      "old_value": null,
-      "new_value": {
-        "raw": 0.22,
-        "typed_value": 0.22,
-        "display_value": "0.22",
-        "value_type": "number",
-        "number_format": "0.0%"
-      },
-      "old_formula": null,
-      "new_formula": null,
-      "changes": [
-        "chg_0001"
       ],
       "materiality_score": 0,
       "confidence": 1.0

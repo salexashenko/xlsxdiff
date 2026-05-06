@@ -74,6 +74,8 @@
       "unexplained_changes": 0,
       "formula_changes": 1,
       "outputs_changed": 1,
+      "final_outputs_changed": 1,
+      "impacted_intermediates": 0,
       "shifted_semantic_matches": 0
     },
     "top_direct_changes": [
@@ -95,6 +97,59 @@
       }
     ],
     "top_change_groups": [],
+    "final_outputs": [
+      {
+        "ref": "Summary!B4",
+        "old_ref": "Summary!B4",
+        "new_ref": "Summary!B4",
+        "address_changed": false,
+        "change_id": "chg_0001",
+        "change_kind": "formula_to_constant",
+        "semantic_id": "cell::summary::intersection::total_revenue::2027e",
+        "label": "Total Revenue",
+        "old": "300",
+        "new": "325",
+        "delta": "+25.0 / +8.3%",
+        "explanation_strength": "moderate",
+        "dependency_confidence": "high",
+        "value_delta_confidence": "moderate",
+        "confidence_factors": [
+          {
+            "code": "formula_and_value_changed",
+            "message": "The output formula and cached value both changed.",
+            "strength_cap": "moderate",
+            "confidence_area": "value_delta"
+          }
+        ],
+        "upstream_change_ids": [
+          "chg_0001"
+        ],
+        "representative_paths": [
+          {
+            "id": "path_001_001",
+            "from": "Summary!B4",
+            "to": "Summary!B4",
+            "nodes": [
+              "Summary!B4"
+            ],
+            "display_nodes": [
+              {
+                "id": "Summary!B4",
+                "ref": "Summary!B4",
+                "label": "Total Revenue",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
+            "edges": [],
+            "collapsed": false,
+            "confidence": 1.0
+          }
+        ],
+        "explanation": "Summary!B4 changed and is associated with 1 upstream direct change(s)."
+      }
+    ],
+    "impacted_intermediates": [],
     "top_impacted_outputs": [
       {
         "ref": "Summary!B4",
@@ -134,7 +189,7 @@
               {
                 "id": "Summary!B4",
                 "ref": "Summary!B4",
-                "label": "2027E Total Revenue",
+                "label": "Total Revenue",
                 "node_type": "cell",
                 "semantic_role": "output"
               }
@@ -190,7 +245,7 @@
               {
                 "id": "Summary!B4",
                 "ref": "Summary!B4",
-                "label": "2027E Total Revenue",
+                "label": "Total Revenue",
                 "node_type": "cell",
                 "semantic_role": "output"
               }
@@ -662,7 +717,7 @@
             {
               "id": "Summary!B4",
               "ref": "Summary!B4",
-              "label": "2027E Total Revenue",
+              "label": "Total Revenue",
               "node_type": "cell",
               "semantic_role": "output"
             }
@@ -688,6 +743,80 @@
       "semantic_role": "output"
     }
   ],
+  "final_outputs": [
+    {
+      "ref": "Summary!B4",
+      "old_ref": "Summary!B4",
+      "new_ref": "Summary!B4",
+      "address_changed": false,
+      "change_id": "chg_0001",
+      "change_kind": "formula_to_constant",
+      "semantic_id": "cell::summary::intersection::total_revenue::2027e",
+      "label": "Total Revenue",
+      "old_value": {
+        "raw": 300,
+        "typed_value": 300,
+        "display_value": "300",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "new_value": {
+        "raw": 325,
+        "typed_value": 325,
+        "display_value": "325",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "delta": {
+        "old_number": 300.0,
+        "new_number": 325.0,
+        "absolute_delta": 25.0,
+        "display_delta": "+25.0",
+        "relative_delta": 0.08333333333333326,
+        "display_relative_delta": "+8.3%"
+      },
+      "upstream_change_ids": [
+        "chg_0001"
+      ],
+      "representative_paths": [
+        {
+          "id": "path_001_001",
+          "from": "Summary!B4",
+          "to": "Summary!B4",
+          "nodes": [
+            "Summary!B4"
+          ],
+          "display_nodes": [
+            {
+              "id": "Summary!B4",
+              "ref": "Summary!B4",
+              "label": "Total Revenue",
+              "node_type": "cell",
+              "semantic_role": "output"
+            }
+          ],
+          "edges": [],
+          "collapsed": false,
+          "confidence": 1.0
+        }
+      ],
+      "explanation_strength": "moderate",
+      "dependency_confidence": "high",
+      "value_delta_confidence": "moderate",
+      "confidence_factors": [
+        {
+          "code": "formula_and_value_changed",
+          "message": "The output formula and cached value both changed.",
+          "strength_cap": "moderate",
+          "confidence_area": "value_delta"
+        }
+      ],
+      "explanation": "Summary!B4 changed and is associated with 1 upstream direct change(s).",
+      "materiality_score": 103.358,
+      "semantic_role": "output"
+    }
+  ],
+  "impacted_intermediates": [],
   "unexplained_changes": [],
   "diagnostics": [
     {

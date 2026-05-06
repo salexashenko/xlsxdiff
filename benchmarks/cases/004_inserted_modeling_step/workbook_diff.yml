@@ -1,0 +1,7 @@
+config:
+  outputs:
+  - ref: Summary!B5
+    name: 2026 EBITDA
+  - ref: Summary!C5
+    name: 2027 EBITDA
+options: {}

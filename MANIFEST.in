@@ -1,0 +1,5 @@
+include LICENSE
+include README.md
+recursive-include schemas *.json
+recursive-include benchmarks *.md *.yml *.json *.xlsx
+recursive-include docs/examples *.html *.json *.md *.csv *.dot

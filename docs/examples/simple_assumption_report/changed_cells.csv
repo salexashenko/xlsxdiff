@@ -1,0 +1,4 @@
+id,kind,directness,object_ref,old_ref,new_ref,address_changed,semantic_id,sheet_name,label,semantic_role,old_display,new_display,delta,materiality_score,confidence
+chg_0002,cached_value_changed,propagated,Revenue!G22,Revenue!G22,Revenue!G22,False,cell::revenue::column_value::2027_revenue,Revenue,2027 Revenue,output,1180,1220,+40.0 / +3.4%,83.43,0.7
+chg_0003,cached_value_changed,propagated,Summary!G31,Summary!G31,Summary!G31,False,,Summary,Summary,output,1180,1220,+40.0 / +3.4%,83.43,0.7
+chg_0001,constant_changed,direct,Assumptions!D14,Assumptions!D14,Assumptions!D14,False,cell::assumptions::intersection::growth_rate::2026,Assumptions,2026 Growth Rate,assumption,0.18,0.22,+4.00 pp,73.222,0.95

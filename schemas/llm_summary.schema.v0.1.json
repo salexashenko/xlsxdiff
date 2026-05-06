@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/salexashenko/xlsxdiff/schemas/llm_summary.schema.v0.1.json",
+  "title": "xlsxdiff llm_summary.json v0.1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "one_sentence_summary",
+    "counts",
+    "top_direct_changes",
+    "top_change_groups",
+    "top_impacted_outputs",
+    "caveats"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "one_sentence_summary": {
+      "type": "string",
+      "description": "A concise natural-language summary suitable for an LLM agent to show directly to a user."
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": ["integer", "number", "boolean", "string", "null"]
+      }
+    },
+    "top_direct_changes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/summaryChange"
+      }
+    },
+    "top_change_groups": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/changeGroup"
+      }
+    },
+    "top_impacted_outputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/summaryOutput"
+      }
+    },
+    "caveats": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "summaryChange": {
+      "type": "object",
+      "required": ["id", "kind", "ref"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "ref": {
+          "type": "string"
+        },
+        "label": {
+          "type": ["string", "null"]
+        },
+        "old": {
+          "type": ["string", "number", "boolean", "null"]
+        },
+        "new": {
+          "type": ["string", "number", "boolean", "null"]
+        },
+        "delta": {
+          "type": ["string", "number", "null"]
+        },
+        "semantic_role": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "changeGroup": {
+      "type": "object",
+      "required": ["group_type", "summary"],
+      "properties": {
+        "group_type": {
+          "type": "string"
+        },
+        "label": {
+          "type": ["string", "null"]
+        },
+        "summary": {
+          "type": "string"
+        },
+        "change_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "summaryOutput": {
+      "type": "object",
+      "required": ["ref", "explanation_strength"],
+      "properties": {
+        "ref": {
+          "type": "string"
+        },
+        "label": {
+          "type": ["string", "null"]
+        },
+        "old": {
+          "type": ["string", "number", "boolean", "null"]
+        },
+        "new": {
+          "type": ["string", "number", "boolean", "null"]
+        },
+        "delta": {
+          "type": ["string", "number", "null"]
+        },
+        "explanation_strength": {
+          "enum": ["strong", "moderate", "weak", "unexplained"]
+        },
+        "upstream_change_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "confidence_factors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/confidenceFactor"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "confidenceFactor": {
+      "type": "object",
+      "required": ["code", "message"],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "strength_cap": {
+          "enum": ["strong", "moderate", "weak", "unexplained"]
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "schema_version": "0.1",
+  "intended_use": "A compact, deterministic context object for LLMs to answer a user with one sentence plus optional evidence.",
+  "one_sentence_summary": "Summary!G31 Total LTV changed from 1180 to 1220 (+40.0 / +3.4%), likely explained by Assumptions!D14 2026 Growth Rate changing from 0.18 to 0.22; 0 unexplained value changes were detected.",
+  "confidence": "high",
+  "counts": {
+    "direct_changes": 1,
+    "propagated_changes": 2,
+    "unexplained_changes": 0,
+    "formula_changes": 0,
+    "outputs_changed": 2,
+    "shifted_semantic_matches": 0
+  },
+  "top_direct_changes": [
+    {
+      "id": "chg_0001",
+      "kind": "constant_changed",
+      "ref": "Assumptions!D14",
+      "old_ref": "Assumptions!D14",
+      "new_ref": "Assumptions!D14",
+      "address_changed": false,
+      "semantic_id": "cell::assumptions::intersection::growth_rate::2026",
+      "label": "2026 Growth Rate",
+      "old": "0.18",
+      "new": "0.22",
+      "delta": "+4.00 pp / +22.2%",
+      "semantic_role": "assumption",
+      "materiality_score": 73.222,
+      "confidence": 0.95
+    }
+  ],
+  "top_change_groups": [],
+  "top_impacted_outputs": [
+    {
+      "ref": "Summary!G31",
+      "old_ref": "Summary!G31",
+      "new_ref": "Summary!G31",
+      "address_changed": false,
+      "semantic_id": null,
+      "label": "Total LTV",
+      "old": "1180",
+      "new": "1220",
+      "delta": "+40.0 / +3.4%",
+      "explanation_strength": "strong",
+      "confidence_factors": [],
+      "upstream_change_ids": [
+        "chg_0001"
+      ],
+      "representative_paths": [
+        {
+          "id": "path_001_002",
+          "from": "Assumptions!D14",
+          "to": "Summary!G31",
+          "nodes": [
+            "Assumptions!D14",
+            "Revenue!G22",
+            "Summary!G31"
+          ],
+          "edges": [
+            "e000002",
+            "e000003"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        }
+      ],
+      "explanation": "Summary!G31 changed and has one detected upstream direct change on a dependency path; this likely explains the movement."
+    },
+    {
+      "ref": "Revenue!G22",
+      "old_ref": "Revenue!G22",
+      "new_ref": "Revenue!G22",
+      "address_changed": false,
+      "semantic_id": "cell::revenue::column_value::2027_revenue",
+      "label": "2027 Revenue",
+      "old": "1180",
+      "new": "1220",
+      "delta": "+40.0 / +3.4%",
+      "explanation_strength": "strong",
+      "confidence_factors": [],
+      "upstream_change_ids": [
+        "chg_0001"
+      ],
+      "representative_paths": [
+        {
+          "id": "path_001_001",
+          "from": "Assumptions!D14",
+          "to": "Revenue!G22",
+          "nodes": [
+            "Assumptions!D14",
+            "Revenue!G22"
+          ],
+          "edges": [
+            "e000002"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        }
+      ],
+      "explanation": "Revenue!G22 changed and has one detected upstream direct change on a dependency path; this likely explains the movement."
+    }
+  ],
+  "caveats": [
+    "Uses cached workbook formula values; numeric deltas assume both workbooks were saved after recalculation."
+  ],
+  "safe_response_rules": [
+    "Use the one_sentence_summary verbatim or paraphrase it without adding unsupported causality.",
+    "Say 'likely explains' only when explanation_strength is strong.",
+    "Say 'associated with' for moderate or weak paths.",
+    "Always include cell references for material claims."
+  ]
+}

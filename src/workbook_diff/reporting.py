@@ -104,8 +104,8 @@ def render_markdown(result: Dict[str, Any]) -> str:
                 "",
                 "## Top impacted outputs",
                 "",
-                "| Output | Location | Old | New | Delta | Explanation strength | Likely upstream changes |",
-                "|---|---|---:|---:|---:|---|---|",
+                "| Output | Location | Old | New | Delta | Explanation strength | Likely upstream changes | Caveats |",
+                "|---|---|---:|---:|---:|---|---|---|",
             ]
         )
         changes_by_id = {change["id"]: change for change in result["changes"]}
@@ -114,7 +114,7 @@ def render_markdown(result: Dict[str, Any]) -> str:
                 f"`{changes_by_id[item]['object_ref']}`" for item in output.get("upstream_change_ids", []) if item in changes_by_id
             )
             lines.append(
-                "| {label} | `{ref}` | {old} | {new} | {delta} | {strength} | {upstream} |".format(
+                "| {label} | `{ref}` | {old} | {new} | {delta} | {strength} | {upstream} | {caveats} |".format(
                     label=_md(output["label"]),
                     ref=output["ref"],
                     old=_md((output.get("old_value") or {}).get("display_value", "")),
@@ -122,6 +122,7 @@ def render_markdown(result: Dict[str, Any]) -> str:
                     delta=_md(_delta_display(output)),
                     strength=output["explanation_strength"],
                     upstream=upstream or "none detected",
+                    caveats=_md(_confidence_factor_display(output)),
                 )
             )
 
@@ -204,7 +205,7 @@ def render_html(result: Dict[str, Any]) -> str:
         for change in result["top_direct_changes"][:50]
     )
     output_rows = "".join(
-        "<tr><td>{label}</td><td><code>{ref}</code></td><td>{old}</td><td>{new}</td><td>{delta}</td><td>{strength}</td><td>{explanation}</td></tr>".format(
+        "<tr><td>{label}</td><td><code>{ref}</code></td><td>{old}</td><td>{new}</td><td>{delta}</td><td>{strength}</td><td>{explanation}</td><td>{caveats}</td></tr>".format(
             label=escape_html(output["label"]),
             ref=escape_html(output["ref"]),
             old=escape_html((output.get("old_value") or {}).get("display_value", "")),
@@ -212,6 +213,7 @@ def render_html(result: Dict[str, Any]) -> str:
             delta=escape_html(_delta_display(output)),
             strength=escape_html(output["explanation_strength"]),
             explanation=escape_html(output["explanation"]),
+            caveats=escape_html(_confidence_factor_display(output)),
         )
         for output in result["top_impacted_outputs"][:50]
     )
@@ -447,7 +449,7 @@ def render_html(result: Dict[str, Any]) -> str:
     {structural_section}
     <section>
       <h2>Impacted Outputs</h2>
-      <table><thead><tr><th>Output</th><th>Location</th><th>Old</th><th>New</th><th>Delta</th><th>Strength</th><th>Explanation</th></tr></thead><tbody>{output_rows}</tbody></table>
+      <table><thead><tr><th>Output</th><th>Location</th><th>Old</th><th>New</th><th>Delta</th><th>Strength</th><th>Explanation</th><th>Caveats</th></tr></thead><tbody>{output_rows}</tbody></table>
     </section>
     <section>
       <h2>Change DAG</h2>
@@ -963,6 +965,11 @@ def _delta_display(item: Dict[str, Any]) -> str:
     return delta.get("display_point_delta") or " / ".join(
         value for value in [delta.get("display_delta"), delta.get("display_relative_delta")] if value
     )
+
+
+def _confidence_factor_display(item: Dict[str, Any]) -> str:
+    factors = item.get("confidence_factors") or []
+    return ", ".join(str(factor.get("code", "")) for factor in factors if factor.get("code"))
 
 
 def _md(value: Any) -> str:

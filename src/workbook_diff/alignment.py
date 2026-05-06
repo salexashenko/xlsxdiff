@@ -158,7 +158,7 @@ def _merge_nodes(existing: Optional[Dict[str, Any]], incoming: Dict[str, Any]) -
         return incoming
     merged = dict(existing)
     for key, value in incoming.items():
-        if key not in merged or merged[key] in {None, "", []}:
+        if key not in merged or merged[key] is None or merged[key] == "" or merged[key] == []:
             merged[key] = value
     return merged
 

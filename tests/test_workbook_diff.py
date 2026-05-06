@@ -9,6 +9,7 @@ import pytest
 from openpyxl import Workbook
 from openpyxl.comments import Comment
 from openpyxl.styles import PatternFill
+from openpyxl.workbook.defined_name import DefinedName
 
 from workbook_diff.diff import diff_workbooks
 from workbook_diff.reporting import write_artifacts
@@ -235,6 +236,53 @@ def test_external_workbook_formula_reference_change_is_classified(tmp_path: Path
     assert any(warning["type"] == "formula_diff" and warning["token_diff"][0]["type"] == "reference" for warning in change["evidence"])
 
 
+def test_named_range_change_propagates_as_non_cell_root(tmp_path: Path) -> None:
+    baseline = tmp_path / "name_old.xlsx"
+    candidate = tmp_path / "name_new.xlsx"
+    _make_named_range_driver_workbook(baseline, target_row=13, cached=110)
+    _make_named_range_driver_workbook(candidate, target_row=14, cached=120)
+
+    result = diff_workbooks(baseline, candidate)
+
+    name_change = _find_change(result, "Growth_2027")
+    assert name_change["kind"] == "defined_name_changed"
+    output_change = _find_change(result, "Summary!B2")
+    assert output_change["directness"] == "propagated"
+    output = next(item for item in result["top_impacted_outputs"] if item["ref"] == "Summary!B2")
+    assert output["explanation_strength"] == "moderate"
+    assert name_change["id"] in output["upstream_change_ids"]
+    assert any(path["nodes"][0] == "name:GROWTH_2027" for path in output["representative_paths"])
+    assert any(factor["code"] == "non_cell_root" for factor in output["confidence_factors"])
+
+
+def test_changed_cell_inside_large_range_reaches_output(tmp_path: Path) -> None:
+    baseline = tmp_path / "large_range_old.xlsx"
+    candidate = tmp_path / "large_range_new.xlsx"
+    _make_large_range_workbook(baseline, raw_value=10, cached=10)
+    _make_large_range_workbook(candidate, raw_value=15, cached=15)
+
+    result = diff_workbooks(baseline, candidate, options={"max_range_expand_cells": 100})
+
+    output_change = _find_change(result, "Summary!B2")
+    assert output_change["directness"] == "propagated"
+    output = next(item for item in result["top_impacted_outputs"] if item["ref"] == "Summary!B2")
+    assert output["explanation_strength"] == "strong"
+    assert output["representative_paths"][0]["nodes"] == ["RawData!C582", "RawData!A1:Z10000", "Summary!B2"]
+
+
+def test_manual_calculation_downgrades_output_confidence(tmp_path: Path) -> None:
+    baseline = tmp_path / "manual_old.xlsx"
+    candidate = tmp_path / "manual_new.xlsx"
+    _make_manual_calc_assumption_workbook(baseline, growth=0.18, revenue=1180, summary=1180)
+    _make_manual_calc_assumption_workbook(candidate, growth=0.22, revenue=1220, summary=1220)
+
+    result = diff_workbooks(baseline, candidate)
+
+    output = next(item for item in result["top_impacted_outputs"] if item["ref"] == "Summary!G31")
+    assert output["explanation_strength"] == "moderate"
+    assert any(factor["code"] == "manual_calculation_mode" for factor in output["confidence_factors"])
+
+
 def test_cli_artifacts_are_written(tmp_path: Path) -> None:
     baseline = tmp_path / "baseline.xlsx"
     candidate = tmp_path / "candidate.xlsx"
@@ -262,6 +310,7 @@ def test_cli_artifacts_are_written(tmp_path: Path) -> None:
 
 def _make_assumption_workbook(path: Path, growth: float, revenue: int, summary: int) -> None:
     wb = Workbook()
+    wb.calculation.fullCalcOnLoad = False
     ws = wb.active
     ws.title = "Assumptions"
     ws["A14"] = "Growth Rate"
@@ -493,6 +542,60 @@ def _make_external_reference_workbook(path: Path, formula: str, cached: int) -> 
     ws["B2"] = formula
     wb.save(path)
     _patch_cached_values(path, {"Summary": {"B2": cached}})
+
+
+def _make_named_range_driver_workbook(path: Path, target_row: int, cached: int) -> None:
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Assumptions"
+    ws["A13"] = "Old growth"
+    ws["D13"] = 0.10
+    ws["A14"] = "New growth"
+    ws["D14"] = 0.20
+    summary = wb.create_sheet("Summary")
+    summary["A1"] = "Metric"
+    summary["B1"] = "2027E"
+    summary["A2"] = "Revenue"
+    summary["B2"] = "=100*(1+Growth_2027)"
+    wb.defined_names.add(DefinedName("Growth_2027", attr_text=f"'Assumptions'!$D${target_row}"))
+    wb.save(path)
+    _patch_cached_values(path, {"Summary": {"B2": cached}})
+
+
+def _make_large_range_workbook(path: Path, raw_value: int, cached: int) -> None:
+    wb = Workbook()
+    wb.calculation.fullCalcOnLoad = False
+    ws = wb.active
+    ws.title = "RawData"
+    ws["A1"] = "Header"
+    ws["C582"] = raw_value
+    summary = wb.create_sheet("Summary")
+    summary["A1"] = "Metric"
+    summary["B1"] = "Value"
+    summary["A2"] = "Total raw amount"
+    summary["B2"] = "=SUM(RawData!A1:Z10000)"
+    wb.save(path)
+    _patch_cached_values(path, {"Summary": {"B2": cached}})
+
+
+def _make_manual_calc_assumption_workbook(path: Path, growth: float, revenue: int, summary: int) -> None:
+    wb = Workbook()
+    wb.calculation.calcMode = "manual"
+    ws = wb.active
+    ws.title = "Assumptions"
+    ws["A14"] = "Growth Rate"
+    ws["D13"] = "2026"
+    ws["D14"] = growth
+    rev = wb.create_sheet("Revenue")
+    rev["F22"] = 1000
+    rev["G22"] = "=Revenue!F22*(1+Assumptions!D14)"
+    customers = wb.create_sheet("Customers")
+    customers["G22"] = 1
+    summary_ws = wb.create_sheet("Summary")
+    summary_ws["A31"] = "Total LTV"
+    summary_ws["G31"] = "=Revenue!G22/Customers!G22"
+    wb.save(path)
+    _patch_cached_values(path, {"Revenue": {"G22": revenue}, "Summary": {"G31": summary}})
 
 
 def _find_change(result: dict, ref: str) -> dict:

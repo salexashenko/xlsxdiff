@@ -1,0 +1,7 @@
+config:
+  outputs:
+  - ref: Summary!G31
+    name: Total LTV
+  assumption_ranges:
+  - Assumptions!D14:D14
+options: {}

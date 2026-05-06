@@ -86,14 +86,21 @@ def diff_snapshots(baseline: Any, candidate: Any, config: Optional[Dict[str, Any
     change_counter = _diff_workbook_file_info(baseline, candidate, changes, change_counter)
     change_counter = _diff_cells(baseline, candidate, alignment, changes, change_counter, options)
 
-    root_refs = {change["object_ref"] for change in changes if change["directness"] == "direct" and change["scope"] == "cell"}
+    root_refs: Set[str] = set()
+    root_change_ids_by_ref = defaultdict(list)
+    for change in changes:
+        if change["directness"] != "direct":
+            continue
+        for root_ref in _change_graph_root_refs(change):
+            root_refs.add(root_ref)
+            root_change_ids_by_ref[root_ref].append(change["id"])
+    changed_cell_refs = {ref for ref in root_refs if _is_cell_ref(ref)}
+    add_virtual_range_membership_edges(baseline_graph, changed_cell_refs)
+    add_virtual_range_membership_edges(candidate_graph, changed_cell_refs)
+
     old_reachable = downstream_nodes(root_refs, baseline_graph)
     new_reachable = downstream_nodes(root_refs, candidate_graph)
     all_reachable = old_reachable | new_reachable
-    root_change_ids_by_ref = defaultdict(list)
-    for change in changes:
-        if change["directness"] == "direct":
-            root_change_ids_by_ref[change["object_ref"]].append(change["id"])
 
     for change in changes:
         if change["kind"] != "cached_value_changed":
@@ -118,7 +125,7 @@ def diff_snapshots(baseline: Any, candidate: Any, config: Optional[Dict[str, Any
 
     changes.sort(key=lambda item: (-item["materiality_score"], item["id"]))
     grouped_changes = group_changes(changes)
-    impacted_outputs = build_impacted_outputs(changes, baseline, candidate, baseline_graph, candidate_graph, root_change_ids_by_ref)
+    impacted_outputs = build_impacted_outputs(changes, baseline, candidate, baseline_graph, candidate_graph, root_change_ids_by_ref, config)
     impact_dag = build_change_impact_dag(changes, impacted_outputs, candidate_graph, baseline_graph)
 
     diagnostics.append(
@@ -176,6 +183,9 @@ def build_dependency_graph(snapshot: Any, max_range_expand_cells: int = 1000) ->
     for ref, cell in snapshot.cells.items():
         nodes[ref] = _dependency_node(ref, cell)
 
+    edge_counter = _add_defined_name_graph_nodes(snapshot, nodes, edges, edge_seen, edge_counter, max_range_expand_cells)
+    edge_counter = _add_table_graph_nodes(snapshot, nodes, edges, edge_seen, edge_counter, max_range_expand_cells)
+
     for formula_ref, cell in snapshot.cells.items():
         if cell.kind != "formula" or not cell.formula:
             continue
@@ -187,41 +197,31 @@ def build_dependency_graph(snapshot: Any, max_range_expand_cells: int = 1000) ->
                 for precedent_ref in expanded_cells:
                     if precedent_ref not in nodes:
                         nodes[precedent_ref] = _placeholder_node(precedent_ref)
-                    key = (precedent_ref, formula_ref, edge_type, precedent.get("raw", ""))
-                    if key in edge_seen:
-                        continue
-                    edge_seen.add(key)
-                    edges.append(
-                        {
-                            "id": f"e{edge_counter:06d}",
-                            "from": precedent_ref,
-                            "to": formula_ref,
-                            "edge_type": edge_type,
-                            "formula_ref": formula_ref,
-                            "evidence": precedent.get("raw"),
-                            "confidence": precedent.get("confidence", 1.0),
-                        }
+                    edge_counter = _add_dependency_edge(
+                        edges,
+                        edge_seen,
+                        edge_counter,
+                        precedent_ref,
+                        formula_ref,
+                        edge_type,
+                        precedent.get("raw"),
+                        precedent.get("confidence", 1.0),
+                        formula_ref=formula_ref,
                     )
-                    edge_counter += 1
             else:
                 if target not in nodes:
                     nodes[target] = _range_or_external_node(target, precedent)
-                key = (target, formula_ref, edge_type, precedent.get("raw", ""))
-                if key in edge_seen:
-                    continue
-                edge_seen.add(key)
-                edges.append(
-                    {
-                        "id": f"e{edge_counter:06d}",
-                        "from": target,
-                        "to": formula_ref,
-                        "edge_type": edge_type,
-                        "formula_ref": formula_ref,
-                        "evidence": precedent.get("raw"),
-                        "confidence": precedent.get("confidence", 1.0),
-                    }
+                edge_counter = _add_dependency_edge(
+                    edges,
+                    edge_seen,
+                    edge_counter,
+                    target,
+                    formula_ref,
+                    edge_type,
+                    precedent.get("raw"),
+                    precedent.get("confidence", 1.0),
+                    formula_ref=formula_ref,
                 )
-                edge_counter += 1
 
     return {
         "nodes": nodes,
@@ -229,6 +229,176 @@ def build_dependency_graph(snapshot: Any, max_range_expand_cells: int = 1000) ->
         "adjacency": _adjacency(edges),
         "reverse_adjacency": _reverse_adjacency(edges),
     }
+
+
+def _add_defined_name_graph_nodes(
+    snapshot: Any,
+    nodes: Dict[str, Dict[str, Any]],
+    edges: List[Dict[str, Any]],
+    edge_seen: Set[Tuple[str, str, str, str]],
+    edge_counter: int,
+    max_range_expand_cells: int,
+) -> int:
+    for defined_name in snapshot.defined_names:
+        name = defined_name.get("name")
+        target = defined_name.get("ref")
+        if not name or not target:
+            continue
+        node_id = _name_node_id(name)
+        nodes[node_id] = {
+            "id": node_id,
+            "ref": name,
+            "node_type": "defined_name",
+            "label": name,
+            "semantic_role": "unknown",
+            "changes": [],
+            "materiality_score": 0,
+            "confidence": 0.85,
+        }
+        edge_counter = _add_target_edges(
+            node_id,
+            target,
+            "defined_name_target",
+            defined_name.get("raw") or target,
+            0.85,
+            nodes,
+            edges,
+            edge_seen,
+            edge_counter,
+            max_range_expand_cells,
+        )
+    return edge_counter
+
+
+def _add_table_graph_nodes(
+    snapshot: Any,
+    nodes: Dict[str, Dict[str, Any]],
+    edges: List[Dict[str, Any]],
+    edge_seen: Set[Tuple[str, str, str, str]],
+    edge_counter: int,
+    max_range_expand_cells: int,
+) -> int:
+    for table in snapshot.tables:
+        name = table.get("name")
+        target = table.get("ref")
+        if not name or not target:
+            continue
+        node_id = _table_node_id(name)
+        nodes[node_id] = {
+            "id": node_id,
+            "ref": name,
+            "node_type": "table",
+            "label": name,
+            "semantic_role": "raw_data",
+            "sheet_name": table.get("sheet_name"),
+            "changes": [],
+            "materiality_score": 0,
+            "confidence": 0.85,
+        }
+        edge_counter = _add_target_edges(
+            node_id,
+            target,
+            "table_range_target",
+            target,
+            0.8,
+            nodes,
+            edges,
+            edge_seen,
+            edge_counter,
+            max_range_expand_cells,
+        )
+    return edge_counter
+
+
+def _add_target_edges(
+    source_ref: str,
+    target: str,
+    edge_type: str,
+    evidence: Any,
+    confidence: float,
+    nodes: Dict[str, Dict[str, Any]],
+    edges: List[Dict[str, Any]],
+    edge_seen: Set[Tuple[str, str, str, str]],
+    edge_counter: int,
+    max_range_expand_cells: int,
+) -> int:
+    expanded_cells, expanded = expand_reference_cells(target, max_range_expand_cells)
+    if expanded and expanded_cells:
+        for target_ref in expanded_cells:
+            if target_ref not in nodes:
+                nodes[target_ref] = _placeholder_node(target_ref)
+            edge_counter = _add_dependency_edge(edges, edge_seen, edge_counter, source_ref, target_ref, edge_type, evidence, confidence)
+        return edge_counter
+    if target not in nodes:
+        nodes[target] = _range_or_external_node(target, {"kind": "range", "confidence": confidence})
+    return _add_dependency_edge(edges, edge_seen, edge_counter, source_ref, target, edge_type, evidence, confidence)
+
+
+def _add_dependency_edge(
+    edges: List[Dict[str, Any]],
+    edge_seen: Set[Tuple[str, str, str, str]],
+    edge_counter: int,
+    from_ref: str,
+    to_ref: str,
+    edge_type: str,
+    evidence: Any,
+    confidence: float,
+    formula_ref: Optional[str] = None,
+) -> int:
+    evidence_text = "" if evidence is None else str(evidence)
+    key = (from_ref, to_ref, edge_type, evidence_text)
+    if key in edge_seen:
+        return edge_counter
+    edge_seen.add(key)
+    edges.append(
+        {
+            "id": f"e{edge_counter:06d}",
+            "from": from_ref,
+            "to": to_ref,
+            "edge_type": edge_type,
+            "formula_ref": formula_ref,
+            "evidence": evidence,
+            "confidence": confidence,
+        }
+    )
+    return edge_counter + 1
+
+
+def add_virtual_range_membership_edges(graph: Dict[str, Any], changed_cell_refs: Iterable[str]) -> None:
+    range_nodes = [
+        node_id
+        for node_id, node in graph.get("nodes", {}).items()
+        if node.get("node_type") == "range" and _is_range_ref(node_id)
+    ]
+    if not range_nodes:
+        return
+    edges = graph["edges"]
+    edge_seen = {(edge["from"], edge["to"], edge.get("edge_type", ""), edge.get("evidence", "")) for edge in edges}
+    edge_counter = len(edges) + 1
+    for cell_ref in sorted(changed_cell_refs, key=_ref_sort_key):
+        if cell_ref not in graph["nodes"]:
+            graph["nodes"][cell_ref] = _placeholder_node(cell_ref)
+        for range_ref in range_nodes:
+            if not _range_contains_cell(range_ref, cell_ref):
+                continue
+            key = (cell_ref, range_ref, "range_membership", "changed cell inside referenced range")
+            if key in edge_seen:
+                continue
+            edge_seen.add(key)
+            edges.append(
+                {
+                    "id": f"vrange_{edge_counter:06d}",
+                    "from": cell_ref,
+                    "to": range_ref,
+                    "edge_type": "range_membership",
+                    "formula_ref": None,
+                    "evidence": "changed cell inside referenced range",
+                    "confidence": 0.9,
+                }
+            )
+            edge_counter += 1
+    graph["adjacency"] = _adjacency(edges)
+    graph["reverse_adjacency"] = _reverse_adjacency(edges)
 
 
 def downstream_nodes(root_refs: Iterable[str], graph: Dict[str, Any]) -> Set[str]:
@@ -285,7 +455,10 @@ def materiality_score(change: Dict[str, Any], graph: Dict[str, Any], config: Dic
         score += 20
     if change.get("directness") == "unexplained":
         score += 18
-    score += min(len(downstream_nodes([change["object_ref"]], graph)) * 0.5, 30)
+    reachable: Set[str] = set()
+    for root_ref in _change_graph_root_refs(change):
+        reachable.update(downstream_nodes([root_ref], graph))
+    score += min(len(reachable) * 0.5, 30)
     if change.get("delta"):
         delta = change["delta"]
         if delta.get("relative_delta") is not None:
@@ -385,9 +558,11 @@ def build_impacted_outputs(
     baseline_graph: Dict[str, Any],
     candidate_graph: Dict[str, Any],
     root_change_ids_by_ref: Dict[str, List[str]],
+    config: Optional[Dict[str, Any]] = None,
 ) -> List[Dict[str, Any]]:
-    roots = [change for change in changes if change["directness"] == "direct" and change["scope"] == "cell"]
-    root_refs = [change["object_ref"] for change in roots]
+    changes_by_id = {change["id"]: change for change in changes}
+    root_refs = sorted(root_change_ids_by_ref)
+    configured_output_names = _configured_output_names(config or {})
     outputs: List[Dict[str, Any]] = []
     for change in changes:
         if change["scope"] != "cell":
@@ -427,6 +602,17 @@ def build_impacted_outputs(
             strength = "moderate"
         else:
             strength = "weak"
+        strength, confidence_factors = degrade_explanation_strength(
+            strength,
+            paths,
+            upstream_ids,
+            change,
+            changes_by_id,
+            baseline,
+            candidate,
+            baseline_graph,
+            candidate_graph,
+        )
 
         old_ref = change.get("old_ref") or ref
         new_ref = change.get("new_ref") or ref
@@ -439,13 +625,14 @@ def build_impacted_outputs(
                 "new_ref": new_ref,
                 "address_changed": bool(change.get("address_changed")),
                 "semantic_id": change.get("semantic_id"),
-                "label": _best_label_from_change(change),
+                "label": configured_output_names.get(ref) or _best_label_from_change(change),
                 "old_value": old_cell.value.to_dict() if old_cell else None,
                 "new_value": new_cell.value.to_dict() if new_cell else None,
                 "delta": change.get("delta"),
                 "upstream_change_ids": upstream_ids,
                 "representative_paths": paths[:5],
                 "explanation_strength": strength,
+                "confidence_factors": confidence_factors,
                 "explanation": _output_explanation(ref, change, upstream_ids, strength),
                 "materiality_score": change.get("materiality_score", 0),
                 "semantic_role": change.get("semantic_role", "unknown"),
@@ -453,6 +640,84 @@ def build_impacted_outputs(
         )
     outputs.sort(key=lambda item: (-item["materiality_score"], item["ref"]))
     return outputs
+
+
+def degrade_explanation_strength(
+    strength: str,
+    paths: Sequence[Dict[str, Any]],
+    upstream_ids: Sequence[str],
+    output_change: Dict[str, Any],
+    changes_by_id: Dict[str, Dict[str, Any]],
+    baseline: Any,
+    candidate: Any,
+    baseline_graph: Dict[str, Any],
+    candidate_graph: Dict[str, Any],
+) -> Tuple[str, List[Dict[str, Any]]]:
+    factors: List[Dict[str, Any]] = []
+
+    def add_factor(code: str, message: str, cap: str) -> None:
+        factors.append({"code": code, "message": message, "strength_cap": cap})
+
+    for workbook_name, snapshot in [("baseline", baseline), ("candidate", candidate)]:
+        if snapshot.file.get("calc_mode") == "manual":
+            add_factor("manual_calculation_mode", f"{workbook_name} workbook uses manual calculation mode.", "moderate")
+        if snapshot.file.get("full_calc_on_load"):
+            add_factor("full_calc_on_load", f"{workbook_name} workbook requests full recalculation on load.", "moderate")
+
+    upstream_changes = [changes_by_id[item] for item in upstream_ids if item in changes_by_id]
+    if len(upstream_changes) > 1:
+        add_factor("multiple_upstream_roots", "Multiple upstream direct changes converge on this output.", "moderate")
+    if any(change.get("scope") != "cell" for change in upstream_changes):
+        add_factor("non_cell_root", "At least one upstream root is a named range, table, or workbook object.", "moderate")
+    if output_change.get("kind", "").startswith("formula_") and output_change.get("delta"):
+        add_factor("formula_and_value_changed", "The output formula and cached value both changed.", "moderate")
+
+    for node_id in _path_node_ids(paths):
+        node = candidate_graph["nodes"].get(node_id) or baseline_graph["nodes"].get(node_id)
+        if not node:
+            continue
+        formula = node.get("new_formula") or node.get("old_formula")
+        if not formula:
+            continue
+        if formula.get("parse_status") and formula.get("parse_status") != "ok":
+            add_factor("partial_formula_parse", f"Formula dependency extraction was partial at {node_id}.", "weak")
+        if formula.get("has_dynamic_reference"):
+            add_factor("dynamic_reference", f"Formula path includes dynamic reference logic at {node_id}.", "weak")
+        if formula.get("has_external_reference"):
+            add_factor("external_reference", f"Formula path includes an external workbook reference at {node_id}.", "moderate")
+        if formula.get("has_volatile_function"):
+            add_factor("volatile_function", f"Formula path includes a volatile function at {node_id}.", "moderate")
+
+    capped = strength
+    for factor in factors:
+        capped = _cap_strength(capped, factor["strength_cap"])
+    return capped, _dedupe_confidence_factors(factors)
+
+
+def _path_node_ids(paths: Sequence[Dict[str, Any]]) -> Set[str]:
+    node_ids: Set[str] = set()
+    for path in paths:
+        node_ids.update(path.get("nodes", []))
+    return node_ids
+
+
+def _cap_strength(strength: str, cap: str) -> str:
+    order = {"unexplained": 0, "weak": 1, "moderate": 2, "strong": 3}
+    if order.get(strength, 0) <= order.get(cap, 0):
+        return strength
+    return cap
+
+
+def _dedupe_confidence_factors(factors: Sequence[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    seen = set()
+    result = []
+    for factor in factors:
+        key = (factor.get("code"), factor.get("message"))
+        if key in seen:
+            continue
+        seen.add(key)
+        result.append(factor)
+    return result
 
 
 def build_change_impact_dag(
@@ -463,7 +728,7 @@ def build_change_impact_dag(
 ) -> Dict[str, Any]:
     included_nodes: Set[str] = set()
     included_edges: Set[str] = set()
-    roots = [change["object_ref"] for change in changes if change["directness"] == "direct" and change["scope"] == "cell"][:40]
+    roots = _ordered_graph_roots(changes)[:40]
     outputs = [output["ref"] for output in impacted_outputs[:40]]
     for output in impacted_outputs[:40]:
         for path in output.get("representative_paths", []):
@@ -478,9 +743,9 @@ def build_change_impact_dag(
     for node_id in included_nodes:
         node = candidate_graph["nodes"].get(node_id) or baseline_graph["nodes"].get(node_id) or _placeholder_node_dict(node_id)
         node = dict(node)
-        node["changes"] = [change["id"] for change in changes if change["object_ref"] == node_id]
+        node["changes"] = [change["id"] for change in changes if node_id in _change_graph_root_refs(change) or change["object_ref"] == node_id]
         nodes[node_id] = node
-    edges = [graph_edges_by_id[edge_id] for edge_id in included_edges if edge_id in graph_edges_by_id]
+    edges = [graph_edges_by_id[edge_id] for edge_id in sorted(included_edges) if edge_id in graph_edges_by_id]
     return {
         "roots": [root for root in roots if root in nodes],
         "outputs": [output for output in outputs if output in nodes],
@@ -646,6 +911,19 @@ def _configured_output_refs(config: Dict[str, Any]) -> Set[str]:
     return refs
 
 
+def _configured_output_names(config: Dict[str, Any]) -> Dict[str, str]:
+    nested = config.get("workbook_diff", config)
+    names: Dict[str, str] = {}
+    for output in nested.get("outputs", []) or []:
+        if not isinstance(output, dict):
+            continue
+        ref = output.get("ref")
+        name = output.get("name") or output.get("label")
+        if ref and name:
+            names[ref] = str(name)
+    return names
+
+
 def _summary_output_priority(ref: str) -> int:
     sheet, address = split_cell_id(ref)
     digits = "".join(ch for ch in address if ch.isdigit())
@@ -698,6 +976,7 @@ def _llm_output_fact(output: Dict[str, Any]) -> Dict[str, Any]:
         "new": (output.get("new_value") or {}).get("display_value"),
         "delta": _delta_text(output),
         "explanation_strength": output.get("explanation_strength"),
+        "confidence_factors": output.get("confidence_factors", []),
         "upstream_change_ids": output.get("upstream_change_ids", []),
         "representative_paths": output.get("representative_paths", [])[:3],
         "explanation": output.get("explanation"),
@@ -1204,6 +1483,78 @@ def _edge_type(kind: str) -> str:
     if kind == "external_reference":
         return "external_reference"
     return "dynamic_reference"
+
+
+def _change_graph_root_refs(change: Dict[str, Any]) -> List[str]:
+    if change.get("directness") != "direct":
+        return []
+    scope = change.get("scope")
+    object_ref = change.get("object_ref")
+    if not object_ref:
+        return []
+    if scope == "cell":
+        return [object_ref]
+    if scope == "name":
+        return [_name_node_id(object_ref)]
+    if scope == "table":
+        return [_table_node_id(object_ref)]
+    return [object_ref]
+
+
+def _ordered_graph_roots(changes: Sequence[Dict[str, Any]]) -> List[str]:
+    roots: List[str] = []
+    seen: Set[str] = set()
+    for change in changes:
+        if change.get("directness") != "direct":
+            continue
+        for root in _change_graph_root_refs(change):
+            if root in seen:
+                continue
+            seen.add(root)
+            roots.append(root)
+    return roots
+
+
+def _name_node_id(name: Any) -> str:
+    return f"name:{str(name).upper()}"
+
+
+def _table_node_id(name: Any) -> str:
+    return f"table:{str(name).upper()}"
+
+
+def _is_cell_ref(ref: str) -> bool:
+    if "!" not in ref or ":" in ref or ref.startswith("["):
+        return False
+    try:
+        from openpyxl.utils.cell import coordinate_to_tuple
+
+        _, address = split_cell_id(ref)
+        coordinate_to_tuple(address)
+        return True
+    except Exception:
+        return False
+
+
+def _is_range_ref(ref: str) -> bool:
+    return "!" in ref and ":" in ref and not ref.startswith("[")
+
+
+def _range_contains_cell(range_ref: str, cell_ref: str) -> bool:
+    if not _is_range_ref(range_ref) or not _is_cell_ref(cell_ref):
+        return False
+    try:
+        from openpyxl.utils.cell import coordinate_to_tuple, range_boundaries
+
+        range_sheet, cells = split_cell_id(range_ref)
+        cell_sheet, address = split_cell_id(cell_ref)
+        if range_sheet != cell_sheet:
+            return False
+        row, col = coordinate_to_tuple(address)
+        min_col, min_row, max_col, max_row = range_boundaries(cells.replace("$", ""))
+        return min_row <= row <= max_row and min_col <= col <= max_col
+    except Exception:
+        return False
 
 
 def _alignment_diagnostics(alignment: Dict[str, Any]) -> List[Dict[str, Any]]:

@@ -1,0 +1,5 @@
+config:
+  outputs:
+  - ref: Summary!B2
+    name: 2027 Revenue
+options: {}

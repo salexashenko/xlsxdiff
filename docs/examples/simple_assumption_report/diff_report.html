@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Workbook Diff Report</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1f2933;
+      --muted: #5b6776;
+      --line: #d7dde5;
+      --panel: #f7f9fb;
+      --accent: #0f766e;
+      --warn: #9a3412;
+    }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: #ffffff;
+      line-height: 1.45;
+    }
+    header, main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px;
+    }
+    header {
+      border-bottom: 1px solid var(--line);
+    }
+    h1, h2 {
+      margin: 0 0 12px;
+      letter-spacing: 0;
+    }
+    .meta {
+      color: var(--muted);
+      display: grid;
+      gap: 4px;
+      font-size: 14px;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin: 20px 0 28px;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: var(--panel);
+      color: var(--muted);
+    }
+    .card strong {
+      display: block;
+      color: var(--ink);
+      font-size: 26px;
+      margin-top: 4px;
+    }
+    section {
+      margin: 30px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 9px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      color: var(--muted);
+      font-weight: 600;
+      background: #fbfcfd;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.92em;
+      background: #eef2f6;
+      border-radius: 4px;
+      padding: 1px 4px;
+    }
+    ul {
+      padding-left: 20px;
+    }
+    .summary {
+      font-size: 17px;
+      border-left: 4px solid var(--accent);
+      padding-left: 14px;
+    }
+    .warn {
+      color: var(--warn);
+    }
+    .graph-panel {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfd;
+      padding: 14px;
+    }
+    .graph-caption {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 8px 0 0;
+    }
+    .graph-node text {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 11px;
+      fill: #172033;
+    }
+    .graph-node .ref {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 10px;
+      fill: #475569;
+    }
+    .graph-node {
+      cursor: pointer;
+    }
+    .graph-node:hover rect,
+    .graph-node:focus rect {
+      filter: drop-shadow(0 2px 4px rgb(15 23 42 / 0.18));
+    }
+    .graph-node .value {
+      font-size: 10px;
+      fill: #334155;
+    }
+    .graph-node .delta {
+      font-size: 10px;
+      font-weight: 700;
+      fill: #0f766e;
+    }
+    .graph-detail-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .graph-detail-list details {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 8px 10px;
+    }
+    .graph-detail-list summary {
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .path-line {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 8px 0 0;
+    }
+    .graph-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+    .legend-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      margin-right: 5px;
+      vertical-align: -1px;
+    }
+  </style>
+  <script>
+    function toggleGraphDetail(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.open = !el.open;
+      el.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Workbook Diff Report</h1>
+    <div class="meta">
+      <div>Baseline: <code>baseline.xlsx</code> 464a8ca5f82b</div>
+      <div>Candidate: <code>candidate.xlsx</code> 6ef5c6c9dfe9</div>
+      <div>Generated: 2026-05-06T00:56:25.956378+00:00</div>
+      <div>Overall confidence: <strong>high</strong></div>
+    </div>
+  </header>
+  <main>
+    <section>
+      <div class="cards"><div class='card'><div>Direct changes</div><strong>1</strong></div><div class='card'><div>Formula changes</div><strong>0</strong></div><div class='card'><div>Outputs changed</div><strong>2</strong></div><div class='card'><div>Unexplained</div><strong>0</strong></div><div class='card'><div>Shifted cells</div><strong>0</strong></div><div class='card'><div>Opaque formulas</div><strong>no</strong></div><div class='card'><div>Macros or links</div><strong>no</strong></div></div>
+      <p class="summary">Summary!G31 Total LTV changed from 1180 to 1220 (+40.0 / +3.4%), likely explained by Assumptions!D14 2026 Growth Rate changing from 0.18 to 0.22; 0 unexplained value changes were detected.</p>
+    </section>
+    <section>
+      <h2>Direct Changes</h2>
+      <table><thead><tr><th>Type</th><th>Location</th><th>Label</th><th>Old</th><th>New</th><th>Delta</th></tr></thead><tbody><tr><td>constant_changed</td><td><code>Assumptions!D14</code></td><td>2026 Growth Rate</td><td>0.18</td><td>0.22</td><td>+4.00 pp</td></tr></tbody></table>
+    </section>
+    
+    <section>
+      <h2>Impacted Outputs</h2>
+      <table><thead><tr><th>Output</th><th>Location</th><th>Old</th><th>New</th><th>Delta</th><th>Strength</th><th>Explanation</th><th>Caveats</th></tr></thead><tbody><tr><td>2027 Revenue</td><td><code>Revenue!G22</code></td><td>1180</td><td>1220</td><td>+40.0 / +3.4%</td><td>strong</td><td>Revenue!G22 changed and has one detected upstream direct change on a dependency path; this likely explains the movement.</td><td></td></tr><tr><td>Total LTV</td><td><code>Summary!G31</code></td><td>1180</td><td>1220</td><td>+40.0 / +3.4%</td><td>strong</td><td>Summary!G31 changed and has one detected upstream direct change on a dependency path; this likely explains the movement.</td><td></td></tr></tbody></table>
+    </section>
+    <section>
+      <h2>Change DAG</h2>
+      <div class="graph-panel">
+      <div class="graph-legend">
+        <span><span class="legend-dot" style="background:#0f766e"></span>Direct change</span>
+        <span><span class="legend-dot" style="background:#dc2626"></span>Final/output variable</span>
+        <span>Lines are collapsed dependency paths, not individual cell-by-cell edges.</span>
+      </div>
+    <svg role="img" aria-label="Focused change impact graph" viewBox="0 0 1096 254" width="1096" height="254" xmlns="http://www.w3.org/2000/svg"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="strokeWidth"><path d="M 0 0 L 8 4 L 0 8 z" fill="#94a3b8" /></marker></defs><path d="M 338.0 76.0 C 383.0 76.0, 383.0 127.0, 428.0 127.0" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrow)" /><path d="M 668.0 127.0 C 713.0 127.0, 713.0 76.0, 758.0 76.0" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrow)" /><path d="M 668.0 127.0 C 713.0 127.0, 713.0 178.0, 758.0 178.0" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrow)" /><g class="graph-node"><title>Direct change: Assumptions!D14 2026 Growth Rate</title><rect x="28.0" y="34.0" width="310" height="84" rx="8" fill="#ecfdf5" stroke="#0f766e" stroke-width="1.5" /><text x="40.0" y="54.0" font-weight="700">2026 Growth Rate</text><text class="ref" x="40.0" y="72.0">Assumptions!D14</text><text class="value" x="40.0" y="92.0">0.18 → 0.22</text><text class="delta" x="40.0" y="109.0">+4.00 pp / +22.2%</text></g><g class="graph-node"><title>Collapsed dependency paths: Collapsed paths Model logic</title><rect x="428.0" y="79.0" width="240" height="96" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5" /><text x="440.0" y="99.0" font-weight="700">Model logic</text><text class="ref" x="440.0" y="117.0">Collapsed paths</text><text class="value" x="440.0" y="137.0">intermediate formulas hidden</text><text class="delta" x="440.0" y="154.0">click outputs for paths</text></g><g class="graph-node" onclick="toggleGraphDetail(&#x27;graph-detail-0&#x27;)" tabindex="0" role="button"><title>Output: Summary!G31 Total LTV</title><rect x="758.0" y="34.0" width="310" height="84" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5" /><text x="770.0" y="54.0" font-weight="700">Total LTV</text><text class="ref" x="770.0" y="72.0">Summary!G31</text><text class="value" x="770.0" y="92.0">1180 → 1220</text><text class="delta" x="770.0" y="109.0">+40.0 / +3.4%</text></g><g class="graph-node" onclick="toggleGraphDetail(&#x27;graph-detail-1&#x27;)" tabindex="0" role="button"><title>Output: Revenue!G22 2027 Revenue</title><rect x="758.0" y="136.0" width="310" height="84" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5" /><text x="770.0" y="156.0" font-weight="700">2027 Revenue</text><text class="ref" x="770.0" y="174.0">Revenue!G22</text><text class="value" x="770.0" y="194.0">1180 → 1220</text><text class="delta" x="770.0" y="211.0">+40.0 / +3.4%</text></g><text x="28" y="244" fill="#64748b" font-size="12">Intermediate cells are collapsed into the model-logic node; click outputs for representative paths.</text></svg><div class="graph-detail-list"><details id="graph-detail-0"><summary><code>Summary!G31</code> Total LTV: 1180 → 1220 +40.0 / +3.4%</summary><p>Summary!G31 changed and has one detected upstream direct change on a dependency path; this likely explains the movement.</p><div><div class="path-line"><code>Assumptions!D14</code> → <code>Revenue!G22</code> → <code>Summary!G31</code></div></div><ul><li><code>Assumptions!D14</code> 2026 Growth Rate: 0.18 → 0.22 +4.00 pp</li></ul></details><details id="graph-detail-1"><summary><code>Revenue!G22</code> 2027 Revenue: 1180 → 1220 +40.0 / +3.4%</summary><p>Revenue!G22 changed and has one detected upstream direct change on a dependency path; this likely explains the movement.</p><div><div class="path-line"><code>Assumptions!D14</code> → <code>Revenue!G22</code></div></div><ul><li><code>Assumptions!D14</code> 2026 Growth Rate: 0.18 → 0.22 +4.00 pp</li></ul></details></div></div>
+      <p class="graph-caption">Intermediate cells are collapsed. Click an output card to see representative dependency paths and upstream changes.</p>
+    </section>
+    <section>
+      <h2>Unexplained Changes</h2>
+      <p>These values changed, but the engine could not connect them to a detected upstream change.</p>
+      <ul></ul>
+    </section>
+    <section>
+      <h2>Diagnostics</h2>
+      <ul><li><strong>CACHED_VALUE_MODE</strong>: This report uses cached formula results. Numeric output deltas assume both workbooks were saved after recalculation.</li></ul>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,402 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/salexashenko/xlsxdiff/schemas/diff.schema.v0.1.json",
+  "title": "xlsxdiff diff.json v0.1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "baseline",
+    "candidate",
+    "summary",
+    "llm_summary",
+    "changes",
+    "grouped_changes",
+    "dependency_graph_stats",
+    "structural_alignment",
+    "change_impact_dag",
+    "top_direct_changes",
+    "top_impacted_outputs",
+    "unexplained_changes",
+    "diagnostics"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "baseline": {
+      "$ref": "#/$defs/workbookFile"
+    },
+    "candidate": {
+      "$ref": "#/$defs/workbookFile"
+    },
+    "summary": {
+      "$ref": "#/$defs/summary"
+    },
+    "llm_summary": {
+      "$ref": "llm_summary.schema.v0.1.json"
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/change"
+      }
+    },
+    "grouped_changes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/changeGroup"
+      }
+    },
+    "dependency_graph_stats": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer"
+      }
+    },
+    "structural_alignment": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "object"
+        },
+        "shifted_matches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shiftedMatch"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "change_impact_dag": {
+      "$ref": "#/$defs/changeImpactDag"
+    },
+    "top_direct_changes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/change"
+      }
+    },
+    "top_impacted_outputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/impactedOutput"
+      }
+    },
+    "unexplained_changes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/change"
+      }
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/diagnostic"
+      }
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "workbookFile": {
+      "type": "object",
+      "required": ["filename", "sha256", "file_size_bytes", "workbook_type"],
+      "properties": {
+        "filename": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "file_size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "workbook_type": {
+          "enum": ["xlsx", "xlsm"]
+        },
+        "has_macros": {
+          "type": "boolean"
+        },
+        "calc_mode": {
+          "type": ["string", "null"]
+        },
+        "full_calc_on_load": {
+          "type": ["boolean", "null"]
+        },
+        "created_at": {
+          "type": ["string", "null"]
+        },
+        "modified_at": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "one_sentence_summary",
+        "confidence",
+        "direct_change_count",
+        "outputs_changed",
+        "unexplained_change_count"
+      ],
+      "properties": {
+        "one_sentence_summary": {
+          "type": "string"
+        },
+        "confidence": {
+          "enum": ["high", "medium", "low"]
+        },
+        "direct_change_count": {
+          "type": "integer"
+        },
+        "outputs_changed": {
+          "type": "integer"
+        },
+        "unexplained_change_count": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": true
+    },
+    "change": {
+      "type": "object",
+      "required": ["id", "kind", "scope", "object_ref", "directness", "confidence"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "object_ref": {
+          "type": "string"
+        },
+        "old_ref": {
+          "type": ["string", "null"]
+        },
+        "new_ref": {
+          "type": ["string", "null"]
+        },
+        "directness": {
+          "enum": ["direct", "propagated", "unexplained"]
+        },
+        "semantic_role": {
+          "type": ["string", "null"]
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "delta": {
+          "$ref": "#/$defs/delta"
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/diagnostic"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "delta": {
+      "type": "object",
+      "properties": {
+        "absolute_delta": {
+          "type": ["number", "null"]
+        },
+        "percent_delta": {
+          "type": ["number", "null"]
+        },
+        "display_delta": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "changeGroup": {
+      "type": "object",
+      "required": ["group_type", "summary"],
+      "properties": {
+        "group_type": {
+          "type": "string"
+        },
+        "label": {
+          "type": ["string", "null"]
+        },
+        "summary": {
+          "type": "string"
+        },
+        "change_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "impactedOutput": {
+      "type": "object",
+      "required": ["ref", "label", "explanation_strength", "upstream_change_ids"],
+      "properties": {
+        "ref": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "old_value": {
+          "type": ["object", "null"]
+        },
+        "new_value": {
+          "type": ["object", "null"]
+        },
+        "delta": {
+          "$ref": "#/$defs/delta"
+        },
+        "explanation_strength": {
+          "enum": ["strong", "moderate", "weak", "unexplained"]
+        },
+        "explanation": {
+          "type": "string"
+        },
+        "upstream_change_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "confidence_factors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/confidenceFactor"
+          }
+        },
+        "representative_paths": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/path"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "confidenceFactor": {
+      "type": "object",
+      "required": ["code", "message"],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "strength_cap": {
+          "enum": ["strong", "moderate", "weak", "unexplained"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "path": {
+      "type": "object",
+      "required": ["nodes"],
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "path_confidence": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": true
+    },
+    "changeImpactDag": {
+      "type": "object",
+      "required": ["nodes", "edges"],
+      "properties": {
+        "nodes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["from", "to", "edge_type"],
+            "properties": {
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              },
+              "edge_type": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "shiftedMatch": {
+      "type": "object",
+      "required": ["old_ref", "new_ref"],
+      "properties": {
+        "old_ref": {
+          "type": "string"
+        },
+        "new_ref": {
+          "type": "string"
+        },
+        "matched_by": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": true
+    },
+    "diagnostic": {
+      "type": "object",
+      "required": ["severity", "code", "message"],
+      "properties": {
+        "severity": {
+          "enum": ["info", "warning", "error"]
+        },
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "object_ref": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

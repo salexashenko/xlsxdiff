@@ -9,7 +9,7 @@ The project is designed for spreadsheet review workflows where a plain cell-by-c
 - Detects changed constants, formulas, workbook metadata, defined names, tables, comments, hyperlinks, and optional style changes.
 - Parses formula references to build a dependency graph from changed inputs to impacted outputs.
 - Infers semantic cell identity from defined names, row headers, and column headers, so cells can be matched by meaning rather than only by A1 address.
-- Aligns shifted cells when rows or columns are inserted, reducing false delete/add noise.
+- Aligns many shifted model cells when stable semantic labels can be inferred from row/column headers, defined names, and nearby labels, reducing false delete/add noise.
 - Groups real modeling edits such as inserted model steps, raw data refreshes, and formula blocks.
 - Emits compact `llm_summary.json` output so agents can summarize a workbook diff without reading a full report.
 
@@ -43,6 +43,8 @@ By default the output directory includes:
 - `changed_cells.csv`: flat changed-cell table.
 - `diagnostics.json`: parser and model caveats.
 - `graph.dot`: Graphviz dependency graph.
+
+`diff.json` and `llm_summary.json` use `schema_version: "0.1"`. Draft public schemas live in `schemas/`.
 
 ## Python API
 
@@ -86,6 +88,24 @@ For agent workflows, read `llm_summary.json` or `result["llm_summary"]` instead 
 
 A useful agent response pattern is to use `one_sentence_summary` for the answer, mention one or two `top_direct_changes` or `top_change_groups` only when the user asks for detail, and surface `caveats` when the diff includes unexplained output changes or unsupported formula constructs.
 
+## Support Matrix
+
+| Feature | Current status |
+| --- | --- |
+| A1 references | Supported |
+| Cross-sheet references | Supported |
+| Small ranges | Supported and expanded into cell-level dependency edges |
+| Large ranges | Represented as range nodes; changed cells inside those ranges get virtual membership edges |
+| Defined names / named ranges | Detected and modeled as graph roots for downstream impact |
+| Structured table references | Partial; table ranges are detected, but structured-column semantics are limited |
+| External workbook references | Detected and modeled as opaque external references; external workbooks are not fetched |
+| Inserted rows/columns | Partial; shifted cells are aligned when stable semantic labels can be inferred |
+| `INDIRECT` / `OFFSET` | Reported as opaque or partial dependency extraction |
+| Volatile functions | Detected and treated as confidence caveats |
+| Dynamic arrays | Partial; dependency extraction may be incomplete |
+| Pivot tables | Not evaluated |
+| VBA macros / UDFs | Detected where possible, never executed |
+
 ## Regenerate Example Reports
 
 The repository includes example workbooks and a script that regenerates report artifacts locally:
@@ -106,6 +126,12 @@ Formula values are compared from cached workbook values. The engine does not cur
 
 ```bash
 python -m pytest -q
+```
+
+Public benchmark fixtures and the checked-in sample report can be regenerated with:
+
+```bash
+python benchmarks/generate_benchmarks.py
 ```
 
 ## License

@@ -1,0 +1,8 @@
+config:
+  outputs:
+  - ref: Summary!B2
+    name: Total raw amount
+  raw_data_sheets:
+  - RawData
+options:
+  max_range_expand_cells: 100

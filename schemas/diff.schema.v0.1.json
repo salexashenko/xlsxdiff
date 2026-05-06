@@ -5,6 +5,7 @@
   "type": "object",
   "required": [
     "schema_version",
+    "resource_budgets",
     "baseline",
     "candidate",
     "summary",
@@ -25,6 +26,12 @@
     },
     "baseline": {
       "$ref": "#/$defs/workbookFile"
+    },
+    "resource_budgets": {
+      "type": "object",
+      "additionalProperties": {
+        "type": ["integer", "number", "string", "boolean", "null"]
+      }
     },
     "candidate": {
       "$ref": "#/$defs/workbookFile"
@@ -110,6 +117,14 @@
           "pattern": "^[0-9a-f]{64}$"
         },
         "file_size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "parsed_cell_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "formula_count": {
           "type": "integer",
           "minimum": 0
         },
@@ -361,6 +376,49 @@
               },
               "edge_type": {
                 "type": "string"
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "compacted_nodes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "compacted_edges": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "compacted_paths": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "compaction_groups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "node_type", "member_count", "member_nodes"],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "node_type": {
+                "const": "collapsed_block"
+              },
+              "member_count": {
+                "type": "integer"
+              },
+              "member_nodes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
               }
             },
             "additionalProperties": true

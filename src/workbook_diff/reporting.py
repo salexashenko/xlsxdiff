@@ -56,6 +56,9 @@ def write_artifacts(result: Dict[str, Any], out_dir: Path, formats: Sequence[str
 
 def render_markdown(result: Dict[str, Any]) -> str:
     summary = result["summary"]
+    direct_limit = _report_limit(result, 15)
+    output_limit = _report_limit(result, 15)
+    detail_limit = _report_limit(result, 40)
     lines = [
         "# Workbook Diff Report",
         "",
@@ -75,7 +78,7 @@ def render_markdown(result: Dict[str, Any]) -> str:
 
     if result["top_direct_changes"]:
         lines.extend(["", "## Top direct changes", "", "| Type | Location | Label | Old | New | Delta |", "|---|---|---|---:|---:|---:|"])
-        for change in result["top_direct_changes"][:15]:
+        for change in result["top_direct_changes"][:direct_limit]:
             lines.append(
                 "| {kind} | `{ref}` | {label} | {old} | {new} | {delta} |".format(
                     kind=change["kind"],
@@ -95,7 +98,7 @@ def render_markdown(result: Dict[str, Any]) -> str:
             f"Semantic row/column matching aligned {summary.get('shifted_semantic_matches', len(shifted_matches))} shifted cell(s) before diffing."
         )
         lines.extend(["", "| Old location | New location | Matched by |", "|---|---|---|"])
-        for match in shifted_matches[:20]:
+        for match in shifted_matches[:_report_limit(result, 20)]:
             lines.append(f"| `{match['old_ref']}` | `{match['new_ref']}` | {match.get('matched_by', '')} |")
 
     if result["top_impacted_outputs"]:
@@ -109,7 +112,7 @@ def render_markdown(result: Dict[str, Any]) -> str:
             ]
         )
         changes_by_id = {change["id"]: change for change in result["changes"]}
-        for output in result["top_impacted_outputs"][:15]:
+        for output in result["top_impacted_outputs"][:output_limit]:
             upstream = ", ".join(
                 f"`{changes_by_id[item]['object_ref']}`" for item in output.get("upstream_change_ids", []) if item in changes_by_id
             )
@@ -128,18 +131,22 @@ def render_markdown(result: Dict[str, Any]) -> str:
 
     if result["change_impact_dag"]["edges"]:
         lines.extend(["", "## Change DAG", ""])
-        for edge in result["change_impact_dag"]["edges"][:40]:
+        for edge in result["change_impact_dag"]["edges"][:detail_limit]:
             lines.append(f"- `{edge['from']}` -> `{edge['to']}` ({edge['edge_type']})")
+        if result["change_impact_dag"].get("compaction_groups"):
+            lines.extend(["", "Compressed blocks:", ""])
+            for group in result["change_impact_dag"]["compaction_groups"][:detail_limit]:
+                lines.append(f"- `{group['id']}` {group.get('label', '')}: {group.get('member_count', 0)} node(s)")
 
     if result["unexplained_changes"]:
         lines.extend(["", "## Unexplained changes", ""])
         lines.append("These values changed, but the engine could not connect them to a detected upstream change.")
-        for change in result["unexplained_changes"][:15]:
+        for change in result["unexplained_changes"][:output_limit]:
             lines.append(f"- `{change['object_ref']}` {_label(change)}: {change.get('old_display', '')} -> {change.get('new_display', '')}")
 
     if result["diagnostics"]:
         lines.extend(["", "## Diagnostics", ""])
-        for diagnostic in result["diagnostics"][:40]:
+        for diagnostic in result["diagnostics"][:detail_limit]:
             ref = f" `{diagnostic['object_ref']}`" if diagnostic.get("object_ref") else ""
             lines.append(f"- **{diagnostic['code']}**{ref}: {diagnostic['message']}")
 
@@ -196,6 +203,7 @@ def render_llm_summary_markdown(llm_summary: Dict[str, Any]) -> str:
 def render_html(result: Dict[str, Any]) -> str:
     summary = result["summary"]
     graph_html = render_focused_graph_html(result)
+    row_limit = _report_limit(result, 50)
     cards = [
         ("Direct changes", summary["direct_change_count"]),
         ("Formula changes", summary["formulas_changed"]),
@@ -215,7 +223,7 @@ def render_html(result: Dict[str, Any]) -> str:
             new=escape_html(change.get("new_display", "")),
             delta=escape_html(_delta_display(change)),
         )
-        for change in result["top_direct_changes"][:50]
+        for change in result["top_direct_changes"][:row_limit]
     )
     output_rows = "".join(
         "<tr><td>{label}</td><td><code>{ref}</code></td><td>{old}</td><td>{new}</td><td>{delta}</td><td>{strength}</td><td>{explanation}</td><td>{caveats}</td></tr>".format(
@@ -228,11 +236,11 @@ def render_html(result: Dict[str, Any]) -> str:
             explanation=escape_html(output["explanation"]),
             caveats=escape_html(_confidence_factor_display(output)),
         )
-        for output in result["top_impacted_outputs"][:50]
+        for output in result["top_impacted_outputs"][:row_limit]
     )
     unexplained_items = "".join(
         f"<li><code>{escape_html(change['object_ref'])}</code> {escape_html(_label(change))}: {escape_html(change.get('old_display', ''))} -> {escape_html(change.get('new_display', ''))}</li>"
-        for change in result["unexplained_changes"][:50]
+        for change in result["unexplained_changes"][:row_limit]
     )
     diagnostics_items = "".join(
         "<li><strong>{code}</strong>{ref}: {message}</li>".format(
@@ -240,7 +248,7 @@ def render_html(result: Dict[str, Any]) -> str:
             ref=f" <code>{escape_html(diagnostic['object_ref'])}</code>" if diagnostic.get("object_ref") else "",
             message=escape_html(diagnostic["message"]),
         )
-        for diagnostic in result["diagnostics"][:80]
+        for diagnostic in result["diagnostics"][:_report_limit(result, 80)]
     )
     shifted_rows = "".join(
         "<tr><td><code>{old}</code></td><td><code>{new}</code></td><td>{by}</td><td>{confidence}</td></tr>".format(
@@ -249,7 +257,7 @@ def render_html(result: Dict[str, Any]) -> str:
             by=escape_html(match.get("matched_by", "")),
             confidence=escape_html(match.get("confidence", "")),
         )
-        for match in result.get("structural_alignment", {}).get("shifted_matches", [])[:50]
+        for match in result.get("structural_alignment", {}).get("shifted_matches", [])[:row_limit]
     )
     structural_section = ""
     if shifted_rows:
@@ -992,6 +1000,15 @@ def _delta_display(item: Dict[str, Any]) -> str:
 def _confidence_factor_display(item: Dict[str, Any]) -> str:
     factors = item.get("confidence_factors") or []
     return ", ".join(str(factor.get("code", "")) for factor in factors if factor.get("code"))
+
+
+def _report_limit(result: Dict[str, Any], default: int) -> int:
+    budgets = result.get("resource_budgets") or {}
+    limit = budgets.get("max_report_rows", default)
+    try:
+        return max(0, min(default, int(limit)))
+    except Exception:
+        return default
 
 
 def _md(value: Any) -> str:

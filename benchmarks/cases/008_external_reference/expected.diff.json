@@ -1,5 +1,18 @@
 {
   "schema_version": "0.1",
+  "resource_budgets": {
+    "max_file_size_bytes": 104857600,
+    "max_uncompressed_bytes": 786432000,
+    "max_zip_expansion_ratio": 100,
+    "max_zip_members": 25000,
+    "max_parsed_cells": 500000,
+    "max_formulas": 100000,
+    "max_formula_length": 8192,
+    "max_graph_nodes": 750000,
+    "max_graph_edges": 1000000,
+    "max_virtual_membership_edges": 250000,
+    "max_report_rows": 500
+  },
   "baseline": {
     "filename": "baseline.xlsx",
     "sha256": "ad3b774057bc5ff429f8e0f9b7ff43d5262c0647902a3bd49b7a7597e65e658a",
@@ -10,7 +23,9 @@
     "full_calc_on_load": false,
     "created_at": "2026-01-01T00:00:00",
     "modified_at": "2026-01-01T00:00:00",
-    "app_version": null
+    "app_version": null,
+    "parsed_cell_count": 4,
+    "formula_count": 1
   },
   "candidate": {
     "filename": "candidate.xlsx",
@@ -22,7 +37,9 @@
     "full_calc_on_load": false,
     "created_at": "2026-01-01T00:00:00",
     "modified_at": "2026-01-01T00:00:00",
-    "app_version": null
+    "app_version": null,
+    "parsed_cell_count": 4,
+    "formula_count": 1
   },
   "summary": {
     "direct_change_count": 1,
@@ -421,6 +438,91 @@
       }
     },
     "edges": [],
+    "compacted_nodes": {
+      "Summary!B2": {
+        "id": "Summary!B2",
+        "ref": "Summary!B2",
+        "node_type": "cell",
+        "label": "2027E External input",
+        "semantic_id": "cell::summary::intersection::external_input::2027e",
+        "semantic_identity": {
+          "semantic_id": "cell::summary::intersection::external_input::2027e",
+          "kind": "row_column_intersection",
+          "row_headers": [
+            "External input"
+          ],
+          "column_headers": [
+            "2027E"
+          ],
+          "labels": [
+            "External input",
+            "2027E"
+          ],
+          "source_refs": [
+            "Summary!A2",
+            "Summary!B1"
+          ],
+          "confidence": 0.9
+        },
+        "semantic_role": "output",
+        "sheet_name": "Summary",
+        "old_value": null,
+        "new_value": {
+          "raw": 12,
+          "typed_value": 12,
+          "display_value": "12",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": {
+          "raw": "='[budget_new.xlsx]Inputs'!A1",
+          "normalized": "'[budget_new.xlsx]Inputs'!A1",
+          "formula_type": "normal",
+          "tokens": [
+            {
+              "type": "external_reference",
+              "text": "'[budget_new.xlsx]Inputs'!A1"
+            }
+          ],
+          "precedents": [
+            {
+              "raw": "'[budget_new.xlsx]Inputs'!A1",
+              "ref": "A1",
+              "sheet_name": "[budget_new.xlsx]Inputs",
+              "kind": "external_reference",
+              "target": "[budget_new.xlsx]Inputs!A1",
+              "confidence": 0.4
+            }
+          ],
+          "has_volatile_function": false,
+          "has_dynamic_reference": false,
+          "has_external_reference": true,
+          "parse_status": "partial",
+          "parse_warnings": [
+            "Reference points at unknown sheet [budget_new.xlsx]Inputs."
+          ]
+        },
+        "changes": [
+          "chg_0001"
+        ],
+        "materiality_score": 0,
+        "confidence": 0.6
+      }
+    },
+    "compacted_edges": [],
+    "compacted_paths": [
+      {
+        "output_ref": "Summary!B2",
+        "path_id": "path_001_001",
+        "nodes": [
+          "Summary!B2"
+        ],
+        "raw_node_count": 1,
+        "collapsed_node_count": 0
+      }
+    ],
+    "compaction_groups": [],
     "range_membership_summary": [],
     "collapsed_node_count": 0,
     "omitted_node_count": 4

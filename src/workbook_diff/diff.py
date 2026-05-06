@@ -14,6 +14,7 @@ from .formulas import (
     normalize_formula,
     parse_formula_references,
 )
+from .security import check_deadline, enforce_budget, make_deadline, public_resource_budgets, resolve_resource_budgets
 from .snapshot import parse_workbook
 from .utils import display_scalar, is_number, safe_float, split_cell_id
 
@@ -56,20 +57,31 @@ def diff_workbooks(
 ) -> Dict[str, Any]:
     config = config or {}
     options = options or {}
-    baseline = parse_workbook(baseline_path, config=config, strict=bool(options.get("strict")))
-    candidate = parse_workbook(candidate_path, config=config, strict=bool(options.get("strict")))
+    budgets = resolve_resource_budgets(config, options)
+    deadline = make_deadline(budgets)
+    baseline = parse_workbook(baseline_path, config=config, strict=bool(options.get("strict")), options=options, deadline=deadline)
+    check_deadline(deadline, "parsing candidate workbook")
+    candidate = parse_workbook(candidate_path, config=config, strict=bool(options.get("strict")), options=options, deadline=deadline)
     if not options.get("include_hidden_sheets", True):
         baseline = _without_hidden_sheets(baseline)
         candidate = _without_hidden_sheets(candidate)
-    return diff_snapshots(baseline, candidate, config=config, options=options)
+    return diff_snapshots(baseline, candidate, config=config, options=options, deadline=deadline)
 
 
-def diff_snapshots(baseline: Any, candidate: Any, config: Optional[Dict[str, Any]] = None, options: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+def diff_snapshots(
+    baseline: Any,
+    candidate: Any,
+    config: Optional[Dict[str, Any]] = None,
+    options: Optional[Dict[str, Any]] = None,
+    deadline: Optional[float] = None,
+) -> Dict[str, Any]:
     config = config or {}
     options = options or {}
+    budgets = resolve_resource_budgets(config, options)
     max_expand = int(_config_value(config, "graph.max_range_expand_cells", options.get("max_range_expand_cells", 1000)))
-    baseline_graph_raw = build_dependency_graph(baseline, max_range_expand_cells=max_expand)
-    candidate_graph = build_dependency_graph(candidate, max_range_expand_cells=max_expand)
+    baseline_graph_raw = build_dependency_graph(baseline, max_range_expand_cells=max_expand, budgets=budgets, deadline=deadline)
+    candidate_graph = build_dependency_graph(candidate, max_range_expand_cells=max_expand, budgets=budgets, deadline=deadline)
+    check_deadline(deadline, "building structural alignment")
     alignment = build_structural_alignment(baseline, candidate)
     baseline_graph = remap_graph_refs(baseline_graph_raw, alignment["old_to_new"], edge_id_prefix="baseline_")
 
@@ -100,9 +112,10 @@ def diff_snapshots(baseline: Any, candidate: Any, config: Optional[Dict[str, Any
             root_refs.add(root_ref)
             root_change_ids_by_ref[root_ref].append(change["id"])
     changed_cell_refs = {ref for ref in root_refs if _is_cell_ref(ref)}
-    add_virtual_range_membership_edges(baseline_graph, changed_cell_refs)
-    add_virtual_range_membership_edges(candidate_graph, changed_cell_refs)
+    add_virtual_range_membership_edges(baseline_graph, changed_cell_refs, budgets=budgets)
+    add_virtual_range_membership_edges(candidate_graph, changed_cell_refs, budgets=budgets)
 
+    check_deadline(deadline, "tracing reachable nodes")
     old_reachable = downstream_nodes(root_refs, baseline_graph)
     new_reachable = downstream_nodes(root_refs, candidate_graph)
     all_reachable = old_reachable | new_reachable
@@ -150,6 +163,7 @@ def diff_snapshots(baseline: Any, candidate: Any, config: Optional[Dict[str, Any
 
     return {
         "schema_version": "0.1",
+        "resource_budgets": public_resource_budgets(budgets),
         "baseline": baseline.file,
         "candidate": candidate.file,
         "summary": summary,
@@ -179,7 +193,13 @@ def diff_snapshots(baseline: Any, candidate: Any, config: Optional[Dict[str, Any
     }
 
 
-def build_dependency_graph(snapshot: Any, max_range_expand_cells: int = 1000) -> Dict[str, Any]:
+def build_dependency_graph(
+    snapshot: Any,
+    max_range_expand_cells: int = 1000,
+    budgets: Optional[Dict[str, Any]] = None,
+    deadline: Optional[float] = None,
+) -> Dict[str, Any]:
+    budgets = budgets or {}
     nodes: Dict[str, Dict[str, Any]] = {}
     edges: List[Dict[str, Any]] = []
     edge_seen: Set[Tuple[str, str, str, str]] = set()
@@ -187,11 +207,14 @@ def build_dependency_graph(snapshot: Any, max_range_expand_cells: int = 1000) ->
 
     for ref, cell in snapshot.cells.items():
         nodes[ref] = _dependency_node(ref, cell)
+    _enforce_graph_budgets(nodes, edges, budgets, "initial graph nodes")
 
     edge_counter = _add_defined_name_graph_nodes(snapshot, nodes, edges, edge_seen, edge_counter, max_range_expand_cells)
     edge_counter = _add_table_graph_nodes(snapshot, nodes, edges, edge_seen, edge_counter, max_range_expand_cells)
+    _enforce_graph_budgets(nodes, edges, budgets, "defined names and tables")
 
     for formula_ref, cell in snapshot.cells.items():
+        check_deadline(deadline, f"building graph dependencies for {formula_ref}")
         if cell.kind != "formula" or not cell.formula:
             continue
         for precedent in cell.formula.precedents:
@@ -227,6 +250,7 @@ def build_dependency_graph(snapshot: Any, max_range_expand_cells: int = 1000) ->
                     precedent.get("confidence", 1.0),
                     formula_ref=formula_ref,
                 )
+            _enforce_graph_budgets(nodes, edges, budgets, formula_ref)
 
     return {
         "nodes": nodes,
@@ -234,6 +258,11 @@ def build_dependency_graph(snapshot: Any, max_range_expand_cells: int = 1000) ->
         "adjacency": _adjacency(edges),
         "reverse_adjacency": _reverse_adjacency(edges),
     }
+
+
+def _enforce_graph_budgets(nodes: Dict[str, Dict[str, Any]], edges: Sequence[Dict[str, Any]], budgets: Dict[str, Any], subject: str) -> None:
+    enforce_budget("max_graph_nodes", len(nodes), budgets, f"Dependency graph nodes after {subject}")
+    enforce_budget("max_graph_edges", len(edges), budgets, f"Dependency graph edges after {subject}")
 
 
 def _add_defined_name_graph_nodes(
@@ -369,13 +398,15 @@ def _add_dependency_edge(
     return edge_counter + 1
 
 
-def add_virtual_range_membership_edges(graph: Dict[str, Any], changed_cell_refs: Iterable[str]) -> None:
+def add_virtual_range_membership_edges(graph: Dict[str, Any], changed_cell_refs: Iterable[str], budgets: Optional[Dict[str, Any]] = None) -> None:
+    budgets = budgets or {}
     range_index = _range_node_index(graph)
     if not range_index:
         return
     edges = graph["edges"]
     edge_seen = {(edge["from"], edge["to"], edge.get("edge_type", ""), edge.get("evidence", "")) for edge in edges}
     edge_counter = len(edges) + 1
+    virtual_edge_count = 0
     membership_counts: Dict[str, int] = defaultdict(int)
     for cell_ref in sorted(changed_cell_refs, key=_ref_sort_key):
         if cell_ref not in graph["nodes"]:
@@ -392,6 +423,8 @@ def add_virtual_range_membership_edges(graph: Dict[str, Any], changed_cell_refs:
             if key in edge_seen:
                 continue
             edge_seen.add(key)
+            virtual_edge_count += 1
+            enforce_budget("max_virtual_membership_edges", virtual_edge_count, budgets, "Virtual range membership edges")
             edges.append(
                 {
                     "id": f"vrange_{edge_counter:06d}",
@@ -404,6 +437,7 @@ def add_virtual_range_membership_edges(graph: Dict[str, Any], changed_cell_refs:
                 }
             )
             edge_counter += 1
+            _enforce_graph_budgets(graph["nodes"], edges, budgets, "virtual range membership")
     graph["range_membership_summary"] = [
         {"range_ref": range_ref, "changed_cell_count": count}
         for range_ref, count in sorted(membership_counts.items(), key=lambda item: _ref_sort_key(item[0]))
@@ -932,15 +966,137 @@ def build_change_impact_dag(
         node["changes"] = [change["id"] for change in changes if node_id in _change_graph_root_refs(change) or change["object_ref"] == node_id]
         nodes[node_id] = node
     edges = [graph_edges_by_id[edge_id] for edge_id in sorted(included_edges) if edge_id in graph_edges_by_id]
+    compaction = _compact_impact_paths(impacted_outputs[:40], nodes)
     return {
         "roots": [root for root in roots if root in nodes],
         "outputs": [output for output in outputs if output in nodes],
         "nodes": nodes,
         "edges": edges,
+        "compacted_nodes": compaction["nodes"],
+        "compacted_edges": compaction["edges"],
+        "compacted_paths": compaction["paths"],
+        "compaction_groups": compaction["groups"],
         "range_membership_summary": candidate_graph.get("range_membership_summary") or baseline_graph.get("range_membership_summary") or [],
-        "collapsed_node_count": 0,
+        "collapsed_node_count": compaction["collapsed_node_count"],
         "omitted_node_count": max(0, len(candidate_graph["nodes"]) - len(nodes)),
     }
+
+
+def _compact_impact_paths(impacted_outputs: Sequence[Dict[str, Any]], nodes: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
+    group_by_members: Dict[Tuple[str, ...], str] = {}
+    groups: Dict[str, Dict[str, Any]] = {}
+    compact_nodes: Dict[str, Dict[str, Any]] = {}
+    compact_edges_seen: Set[Tuple[str, str]] = set()
+    compact_edges: List[Dict[str, Any]] = []
+    compact_paths: List[Dict[str, Any]] = []
+
+    def add_node(node_id: str) -> None:
+        if node_id in compact_nodes:
+            return
+        if node_id in groups:
+            compact_nodes[node_id] = groups[node_id]
+        else:
+            compact_nodes[node_id] = nodes.get(node_id, _placeholder_node_dict(node_id))
+
+    def flush_buffer(buffer: List[str], compacted: List[str]) -> None:
+        if not buffer:
+            return
+        if len(buffer) == 1:
+            compacted.append(buffer[0])
+            return
+        key = tuple(buffer)
+        group_id = group_by_members.get(key)
+        if group_id is None:
+            group_id = f"collapsed:{len(group_by_members) + 1:03d}"
+            group_by_members[key] = group_id
+            groups[group_id] = _compaction_group(group_id, buffer, nodes)
+        compacted.append(group_id)
+
+    for output in impacted_outputs:
+        for path in output.get("representative_paths", []):
+            raw_nodes = list(path.get("nodes", []))
+            if not raw_nodes:
+                continue
+            compacted: List[str] = []
+            buffer: List[str] = []
+            for index, node_id in enumerate(raw_nodes):
+                terminal = index == 0 or index == len(raw_nodes) - 1
+                if not terminal and _node_is_compactable(node_id, nodes.get(node_id, {})):
+                    buffer.append(node_id)
+                    continue
+                flush_buffer(buffer, compacted)
+                buffer = []
+                compacted.append(node_id)
+            flush_buffer(buffer, compacted)
+            compacted = _dedupe_consecutive(compacted)
+            for node_id in compacted:
+                add_node(node_id)
+            for left, right in zip(compacted, compacted[1:]):
+                if left == right or (left, right) in compact_edges_seen:
+                    continue
+                compact_edges_seen.add((left, right))
+                compact_edges.append({"from": left, "to": right, "edge_type": "compacted_dependency"})
+            compact_paths.append(
+                {
+                    "output_ref": output.get("ref"),
+                    "path_id": path.get("id"),
+                    "nodes": compacted,
+                    "raw_node_count": len(raw_nodes),
+                    "collapsed_node_count": max(0, len(raw_nodes) - len(compacted)),
+                }
+            )
+
+    collapsed_count = sum(len(group.get("member_nodes", [])) for group in groups.values())
+    return {
+        "nodes": compact_nodes,
+        "edges": compact_edges,
+        "paths": compact_paths,
+        "groups": list(groups.values()),
+        "collapsed_node_count": collapsed_count,
+    }
+
+
+def _node_is_compactable(node_id: str, node: Dict[str, Any]) -> bool:
+    node_type = node.get("node_type")
+    if node_type in {"defined_name", "table", "range", "external_reference", "table_column"}:
+        return False
+    if node.get("semantic_role") in {"assumption", "raw_data", "output"}:
+        return False
+    return "!" in node_id
+
+
+def _compaction_group(group_id: str, member_nodes: Sequence[str], nodes: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
+    member_list = list(member_nodes)
+    range_ref = _bounding_range(member_list)
+    first_node = nodes.get(member_list[0], {}) if member_list else {}
+    sheet = split_cell_id(member_list[0])[0] if member_list else ""
+    has_formula = any((nodes.get(node_id, {}).get("new_formula") or nodes.get(node_id, {}).get("old_formula")) for node_id in member_list)
+    group_type = "formula_block" if has_formula else "intermediate_chain"
+    label_prefix = "Formula block" if has_formula else "Intermediate chain"
+    return {
+        "id": group_id,
+        "ref": range_ref,
+        "node_type": "collapsed_block",
+        "group_type": group_type,
+        "label": f"{label_prefix}: {range_ref}",
+        "semantic_role": first_node.get("semantic_role", "intermediate_calculation"),
+        "sheet_name": sheet or first_node.get("sheet_name"),
+        "member_count": len(member_list),
+        "member_nodes": member_list,
+        "range_ref": range_ref,
+        "changes": [],
+        "materiality_score": max((nodes.get(node_id, {}).get("materiality_score", 0) for node_id in member_list), default=0),
+        "confidence": min((nodes.get(node_id, {}).get("confidence", 1.0) for node_id in member_list), default=1.0),
+    }
+
+
+def _dedupe_consecutive(items: Sequence[str]) -> List[str]:
+    result: List[str] = []
+    for item in items:
+        if result and result[-1] == item:
+            continue
+        result.append(item)
+    return result
 
 
 def build_summary(

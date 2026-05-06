@@ -1,5 +1,18 @@
 {
   "schema_version": "0.1",
+  "resource_budgets": {
+    "max_file_size_bytes": 104857600,
+    "max_uncompressed_bytes": 786432000,
+    "max_zip_expansion_ratio": 100,
+    "max_zip_members": 25000,
+    "max_parsed_cells": 500000,
+    "max_formulas": 100000,
+    "max_formula_length": 8192,
+    "max_graph_nodes": 750000,
+    "max_graph_edges": 1000000,
+    "max_virtual_membership_edges": 250000,
+    "max_report_rows": 500
+  },
   "baseline": {
     "filename": "baseline.xlsx",
     "sha256": "69c493c3ab3578399765fce88ef8f3140bdc071bdbc51c9056dd37f292ddb448",
@@ -10,7 +23,9 @@
     "full_calc_on_load": false,
     "created_at": "2026-01-01T00:00:00",
     "modified_at": "2026-01-01T00:00:00",
-    "app_version": null
+    "app_version": null,
+    "parsed_cell_count": 8,
+    "formula_count": 1
   },
   "candidate": {
     "filename": "candidate.xlsx",
@@ -22,7 +37,9 @@
     "full_calc_on_load": false,
     "created_at": "2026-01-01T00:00:00",
     "modified_at": "2026-01-01T00:00:00",
-    "app_version": null
+    "app_version": null,
+    "parsed_cell_count": 8,
+    "formula_count": 0
   },
   "summary": {
     "direct_change_count": 1,
@@ -406,6 +423,64 @@
       }
     },
     "edges": [],
+    "compacted_nodes": {
+      "Summary!B4": {
+        "id": "Summary!B4",
+        "ref": "Summary!B4",
+        "node_type": "cell",
+        "label": "2027E Total Revenue",
+        "semantic_id": "cell::summary::intersection::total_revenue::2027e",
+        "semantic_identity": {
+          "semantic_id": "cell::summary::intersection::total_revenue::2027e",
+          "kind": "row_column_intersection",
+          "row_headers": [
+            "Total Revenue"
+          ],
+          "column_headers": [
+            "2027E"
+          ],
+          "labels": [
+            "Total Revenue",
+            "2027E"
+          ],
+          "source_refs": [
+            "Summary!A4",
+            "Summary!B1"
+          ],
+          "confidence": 0.9
+        },
+        "semantic_role": "output",
+        "sheet_name": "Summary",
+        "old_value": null,
+        "new_value": {
+          "raw": 325,
+          "typed_value": 325,
+          "display_value": "325",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": null,
+        "changes": [
+          "chg_0001"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      }
+    },
+    "compacted_edges": [],
+    "compacted_paths": [
+      {
+        "output_ref": "Summary!B4",
+        "path_id": "path_001_001",
+        "nodes": [
+          "Summary!B4"
+        ],
+        "raw_node_count": 1,
+        "collapsed_node_count": 0
+      }
+    ],
+    "compaction_groups": [],
     "range_membership_summary": [],
     "collapsed_node_count": 0,
     "omitted_node_count": 7

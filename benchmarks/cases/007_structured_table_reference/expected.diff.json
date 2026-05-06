@@ -1,5 +1,18 @@
 {
   "schema_version": "0.1",
+  "resource_budgets": {
+    "max_file_size_bytes": 104857600,
+    "max_uncompressed_bytes": 786432000,
+    "max_zip_expansion_ratio": 100,
+    "max_zip_members": 25000,
+    "max_parsed_cells": 500000,
+    "max_formulas": 100000,
+    "max_formula_length": 8192,
+    "max_graph_nodes": 750000,
+    "max_graph_edges": 1000000,
+    "max_virtual_membership_edges": 250000,
+    "max_report_rows": 500
+  },
   "baseline": {
     "filename": "baseline.xlsx",
     "sha256": "e8c426613fe4fe938e961de78a310cff03a5b317163596eb315006b71561c78b",
@@ -10,7 +23,9 @@
     "full_calc_on_load": false,
     "created_at": "2026-01-01T00:00:00",
     "modified_at": "2026-01-01T00:00:00",
-    "app_version": null
+    "app_version": null,
+    "parsed_cell_count": 8,
+    "formula_count": 1
   },
   "candidate": {
     "filename": "candidate.xlsx",
@@ -22,7 +37,9 @@
     "full_calc_on_load": false,
     "created_at": "2026-01-01T00:00:00",
     "modified_at": "2026-01-01T00:00:00",
-    "app_version": null
+    "app_version": null,
+    "parsed_cell_count": 8,
+    "formula_count": 1
   },
   "summary": {
     "direct_change_count": 1,
@@ -429,6 +446,49 @@
       "Summary!B2"
     ],
     "nodes": {
+      "Bookings!B2": {
+        "id": "Bookings!B2",
+        "ref": "Bookings!B2",
+        "node_type": "cell",
+        "label": "Amount Acme",
+        "semantic_id": "cell::bookings::intersection::acme::amount",
+        "semantic_identity": {
+          "semantic_id": "cell::bookings::intersection::acme::amount",
+          "kind": "row_column_intersection",
+          "row_headers": [
+            "Acme"
+          ],
+          "column_headers": [
+            "Amount"
+          ],
+          "labels": [
+            "Acme",
+            "Amount"
+          ],
+          "source_refs": [
+            "Bookings!A2",
+            "Bookings!B1"
+          ],
+          "confidence": 0.9
+        },
+        "semantic_role": "raw_data",
+        "sheet_name": "Bookings",
+        "old_value": null,
+        "new_value": {
+          "raw": 125,
+          "typed_value": 125,
+          "display_value": "125",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": null,
+        "changes": [
+          "chg_0001"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      },
       "Summary!B2": {
         "id": "Summary!B2",
         "ref": "Summary!B2",
@@ -500,7 +560,20 @@
         ],
         "materiality_score": 0,
         "confidence": 1.0
-      },
+      }
+    },
+    "edges": [
+      {
+        "id": "e000008",
+        "from": "Bookings!B2",
+        "to": "Summary!B2",
+        "edge_type": "table_reference",
+        "formula_ref": "Summary!B2",
+        "evidence": "BookingsTable[Amount]",
+        "confidence": 0.8
+      }
+    ],
+    "compacted_nodes": {
       "Bookings!B2": {
         "id": "Bookings!B2",
         "ref": "Bookings!B2",
@@ -543,19 +616,100 @@
         ],
         "materiality_score": 0,
         "confidence": 1.0
+      },
+      "Summary!B2": {
+        "id": "Summary!B2",
+        "ref": "Summary!B2",
+        "node_type": "cell",
+        "label": "2027E Booked ARR",
+        "semantic_id": "cell::summary::intersection::booked_arr::2027e",
+        "semantic_identity": {
+          "semantic_id": "cell::summary::intersection::booked_arr::2027e",
+          "kind": "row_column_intersection",
+          "row_headers": [
+            "Booked ARR"
+          ],
+          "column_headers": [
+            "2027E"
+          ],
+          "labels": [
+            "Booked ARR",
+            "2027E"
+          ],
+          "source_refs": [
+            "Summary!A2",
+            "Summary!B1"
+          ],
+          "confidence": 0.9
+        },
+        "semantic_role": "output",
+        "sheet_name": "Summary",
+        "old_value": null,
+        "new_value": {
+          "raw": 125,
+          "typed_value": 125,
+          "display_value": "125",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": {
+          "raw": "=SUM(BookingsTable[Amount])",
+          "normalized": "SUM(BOOKINGSTABLE[AMOUNT])",
+          "formula_type": "normal",
+          "tokens": [
+            {
+              "type": "table_reference",
+              "text": "BookingsTable[Amount]"
+            },
+            {
+              "type": "function",
+              "text": "SUM"
+            }
+          ],
+          "precedents": [
+            {
+              "raw": "BookingsTable[Amount]",
+              "ref": "BookingsTable[Amount]",
+              "sheet_name": "Bookings",
+              "kind": "table_reference",
+              "target": "Bookings!A1:B2",
+              "confidence": 0.8
+            }
+          ],
+          "has_volatile_function": false,
+          "has_dynamic_reference": false,
+          "has_external_reference": false,
+          "parse_status": "ok",
+          "parse_warnings": []
+        },
+        "changes": [
+          "chg_0002"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
       }
     },
-    "edges": [
+    "compacted_edges": [
       {
-        "id": "e000008",
         "from": "Bookings!B2",
         "to": "Summary!B2",
-        "edge_type": "table_reference",
-        "formula_ref": "Summary!B2",
-        "evidence": "BookingsTable[Amount]",
-        "confidence": 0.8
+        "edge_type": "compacted_dependency"
       }
     ],
+    "compacted_paths": [
+      {
+        "output_ref": "Summary!B2",
+        "path_id": "path_001_001",
+        "nodes": [
+          "Bookings!B2",
+          "Summary!B2"
+        ],
+        "raw_node_count": 2,
+        "collapsed_node_count": 0
+      }
+    ],
+    "compaction_groups": [],
     "range_membership_summary": [],
     "collapsed_node_count": 0,
     "omitted_node_count": 7

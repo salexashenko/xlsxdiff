@@ -1,5 +1,18 @@
 {
   "schema_version": "0.1",
+  "resource_budgets": {
+    "max_file_size_bytes": 104857600,
+    "max_uncompressed_bytes": 786432000,
+    "max_zip_expansion_ratio": 100,
+    "max_zip_members": 25000,
+    "max_parsed_cells": 500000,
+    "max_formulas": 100000,
+    "max_formula_length": 8192,
+    "max_graph_nodes": 750000,
+    "max_graph_edges": 1000000,
+    "max_virtual_membership_edges": 250000,
+    "max_report_rows": 500
+  },
   "baseline": {
     "filename": "baseline.xlsx",
     "sha256": "4369606158c4978a8fa82abbe7a51d1086f7b29a7272254c213bf8bc5fe9b861",
@@ -10,7 +23,9 @@
     "full_calc_on_load": false,
     "created_at": "2026-01-01T00:00:00",
     "modified_at": "2026-01-01T00:00:00",
-    "app_version": null
+    "app_version": null,
+    "parsed_cell_count": 6,
+    "formula_count": 1
   },
   "candidate": {
     "filename": "candidate.xlsx",
@@ -22,7 +37,9 @@
     "full_calc_on_load": false,
     "created_at": "2026-01-01T00:00:00",
     "modified_at": "2026-01-01T00:00:00",
-    "app_version": null
+    "app_version": null,
+    "parsed_cell_count": 6,
+    "formula_count": 1
   },
   "summary": {
     "direct_change_count": 1,
@@ -414,6 +431,16 @@
       "Summary!B2"
     ],
     "nodes": {
+      "RawData!A1:Z10000": {
+        "id": "RawData!A1:Z10000",
+        "ref": "RawData!A1:Z10000",
+        "node_type": "range",
+        "label": "RawData!A1:Z10000",
+        "semantic_role": "unknown",
+        "changes": [],
+        "materiality_score": 0,
+        "confidence": 1.0
+      },
       "Summary!B2": {
         "id": "Summary!B2",
         "ref": "Summary!B2",
@@ -519,16 +546,6 @@
         ],
         "materiality_score": 0,
         "confidence": 1.0
-      },
-      "RawData!A1:Z10000": {
-        "id": "RawData!A1:Z10000",
-        "ref": "RawData!A1:Z10000",
-        "node_type": "range",
-        "label": "RawData!A1:Z10000",
-        "semantic_role": "unknown",
-        "changes": [],
-        "materiality_score": 0,
-        "confidence": 1.0
       }
     },
     "edges": [
@@ -551,6 +568,150 @@
         "confidence": 0.9
       }
     ],
+    "compacted_nodes": {
+      "RawData!C582": {
+        "id": "RawData!C582",
+        "ref": "RawData!C582",
+        "node_type": "cell",
+        "label": "RawData",
+        "semantic_id": null,
+        "semantic_identity": {
+          "semantic_id": null,
+          "kind": "address_only",
+          "row_headers": [],
+          "column_headers": [],
+          "labels": [],
+          "source_refs": [],
+          "confidence": 0.0
+        },
+        "semantic_role": "raw_data",
+        "sheet_name": "RawData",
+        "old_value": null,
+        "new_value": {
+          "raw": 15,
+          "typed_value": 15,
+          "display_value": "15",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": null,
+        "changes": [
+          "chg_0001"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      },
+      "RawData!A1:Z10000": {
+        "id": "RawData!A1:Z10000",
+        "ref": "RawData!A1:Z10000",
+        "node_type": "range",
+        "label": "RawData!A1:Z10000",
+        "semantic_role": "unknown",
+        "changes": [],
+        "materiality_score": 0,
+        "confidence": 1.0
+      },
+      "Summary!B2": {
+        "id": "Summary!B2",
+        "ref": "Summary!B2",
+        "node_type": "cell",
+        "label": "Value Total raw amount",
+        "semantic_id": "cell::summary::intersection::total_raw_amount::value",
+        "semantic_identity": {
+          "semantic_id": "cell::summary::intersection::total_raw_amount::value",
+          "kind": "row_column_intersection",
+          "row_headers": [
+            "Total raw amount"
+          ],
+          "column_headers": [
+            "Value"
+          ],
+          "labels": [
+            "Total raw amount",
+            "Value"
+          ],
+          "source_refs": [
+            "Summary!A2",
+            "Summary!B1"
+          ],
+          "confidence": 0.9
+        },
+        "semantic_role": "output",
+        "sheet_name": "Summary",
+        "old_value": null,
+        "new_value": {
+          "raw": 15,
+          "typed_value": 15,
+          "display_value": "15",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": {
+          "raw": "=SUM(RawData!A1:Z10000)",
+          "normalized": "SUM(RAWDATA!A1:Z10000)",
+          "formula_type": "normal",
+          "tokens": [
+            {
+              "type": "reference",
+              "text": "RawData!A1:Z10000",
+              "target": "RawData!A1:Z10000"
+            },
+            {
+              "type": "function",
+              "text": "SUM"
+            }
+          ],
+          "precedents": [
+            {
+              "raw": "RawData!A1:Z10000",
+              "ref": "A1:Z10000",
+              "sheet_name": "RawData",
+              "kind": "range",
+              "target": "RawData!A1:Z10000",
+              "confidence": 1.0
+            }
+          ],
+          "has_volatile_function": false,
+          "has_dynamic_reference": false,
+          "has_external_reference": false,
+          "parse_status": "ok",
+          "parse_warnings": []
+        },
+        "changes": [
+          "chg_0002"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      }
+    },
+    "compacted_edges": [
+      {
+        "from": "RawData!C582",
+        "to": "RawData!A1:Z10000",
+        "edge_type": "compacted_dependency"
+      },
+      {
+        "from": "RawData!A1:Z10000",
+        "to": "Summary!B2",
+        "edge_type": "compacted_dependency"
+      }
+    ],
+    "compacted_paths": [
+      {
+        "output_ref": "Summary!B2",
+        "path_id": "path_001_001",
+        "nodes": [
+          "RawData!C582",
+          "RawData!A1:Z10000",
+          "Summary!B2"
+        ],
+        "raw_node_count": 3,
+        "collapsed_node_count": 0
+      }
+    ],
+    "compaction_groups": [],
     "range_membership_summary": [
       {
         "range_ref": "RawData!A1:Z10000",

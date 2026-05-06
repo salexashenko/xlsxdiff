@@ -1,5 +1,18 @@
 {
   "schema_version": "0.1",
+  "resource_budgets": {
+    "max_file_size_bytes": 104857600,
+    "max_uncompressed_bytes": 786432000,
+    "max_zip_expansion_ratio": 100,
+    "max_zip_members": 25000,
+    "max_parsed_cells": 500000,
+    "max_formulas": 100000,
+    "max_formula_length": 8192,
+    "max_graph_nodes": 750000,
+    "max_graph_edges": 1000000,
+    "max_virtual_membership_edges": 250000,
+    "max_report_rows": 500
+  },
   "baseline": {
     "filename": "baseline.xlsx",
     "sha256": "a8c4f8b4f2e0e93e0f732aacd24f8a5b442621db22ecd1736c93e46d6bfce861",
@@ -10,7 +23,9 @@
     "full_calc_on_load": false,
     "created_at": "2026-01-01T00:00:00",
     "modified_at": "2026-01-01T00:00:00",
-    "app_version": null
+    "app_version": null,
+    "parsed_cell_count": 8,
+    "formula_count": 1
   },
   "candidate": {
     "filename": "candidate.xlsx",
@@ -22,7 +37,9 @@
     "full_calc_on_load": false,
     "created_at": "2026-01-01T00:00:00",
     "modified_at": "2026-01-01T00:00:00",
-    "app_version": null
+    "app_version": null,
+    "parsed_cell_count": 8,
+    "formula_count": 1
   },
   "summary": {
     "direct_change_count": 4,
@@ -760,6 +777,18 @@
         "materiality_score": 0,
         "confidence": 1.0
       },
+      "name:GROWTH_2027": {
+        "id": "name:GROWTH_2027",
+        "ref": "Growth_2027",
+        "node_type": "defined_name",
+        "label": "Growth_2027",
+        "semantic_role": "unknown",
+        "changes": [
+          "chg_0001"
+        ],
+        "materiality_score": 0,
+        "confidence": 0.85
+      },
       "Assumptions!D13": {
         "id": "Assumptions!D13",
         "ref": "Assumptions!D13",
@@ -836,18 +865,6 @@
         ],
         "materiality_score": 0,
         "confidence": 1.0
-      },
-      "name:GROWTH_2027": {
-        "id": "name:GROWTH_2027",
-        "ref": "Growth_2027",
-        "node_type": "defined_name",
-        "label": "Growth_2027",
-        "semantic_role": "unknown",
-        "changes": [
-          "chg_0001"
-        ],
-        "materiality_score": 0,
-        "confidence": 0.85
       }
     },
     "edges": [
@@ -870,6 +887,161 @@
         "confidence": 0.9
       }
     ],
+    "compacted_nodes": {
+      "name:GROWTH_2027": {
+        "id": "name:GROWTH_2027",
+        "ref": "Growth_2027",
+        "node_type": "defined_name",
+        "label": "Growth_2027",
+        "semantic_role": "unknown",
+        "changes": [
+          "chg_0001"
+        ],
+        "materiality_score": 0,
+        "confidence": 0.85
+      },
+      "Assumptions!D14": {
+        "id": "Assumptions!D14",
+        "ref": "Assumptions!D14",
+        "node_type": "cell",
+        "label": "Growth_2027",
+        "semantic_id": "cell::assumptions::defined_name::growth_2027",
+        "semantic_identity": {
+          "semantic_id": "cell::assumptions::defined_name::growth_2027",
+          "kind": "defined_name",
+          "row_headers": [],
+          "column_headers": [],
+          "labels": [
+            "Growth_2027"
+          ],
+          "source_refs": [
+            "Assumptions!D14"
+          ],
+          "confidence": 0.98
+        },
+        "semantic_role": "assumption",
+        "sheet_name": "Assumptions",
+        "old_value": null,
+        "new_value": {
+          "raw": 0.2,
+          "typed_value": 0.2,
+          "display_value": "0.2",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": null,
+        "changes": [
+          "chg_0002",
+          "chg_0005"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      },
+      "Summary!B2": {
+        "id": "Summary!B2",
+        "ref": "Summary!B2",
+        "node_type": "cell",
+        "label": "2027E Revenue",
+        "semantic_id": "cell::summary::intersection::revenue::2027e",
+        "semantic_identity": {
+          "semantic_id": "cell::summary::intersection::revenue::2027e",
+          "kind": "row_column_intersection",
+          "row_headers": [
+            "Revenue"
+          ],
+          "column_headers": [
+            "2027E"
+          ],
+          "labels": [
+            "Revenue",
+            "2027E"
+          ],
+          "source_refs": [
+            "Summary!A2",
+            "Summary!B1"
+          ],
+          "confidence": 0.9
+        },
+        "semantic_role": "output",
+        "sheet_name": "Summary",
+        "old_value": null,
+        "new_value": {
+          "raw": 120,
+          "typed_value": 120,
+          "display_value": "120",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": {
+          "raw": "=100*(1+Growth_2027)",
+          "normalized": "100*(1+GROWTH_2027)",
+          "formula_type": "normal",
+          "tokens": [
+            {
+              "type": "defined_name",
+              "text": "Growth_2027",
+              "target": "Assumptions!D14"
+            },
+            {
+              "type": "number",
+              "text": "1"
+            },
+            {
+              "type": "number",
+              "text": "100"
+            }
+          ],
+          "precedents": [
+            {
+              "raw": "Growth_2027",
+              "ref": "Growth_2027",
+              "sheet_name": "Summary",
+              "kind": "defined_name_reference",
+              "target": "Assumptions!D14",
+              "confidence": 0.9
+            }
+          ],
+          "has_volatile_function": false,
+          "has_dynamic_reference": false,
+          "has_external_reference": false,
+          "parse_status": "ok",
+          "parse_warnings": []
+        },
+        "changes": [
+          "chg_0003"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      }
+    },
+    "compacted_edges": [
+      {
+        "from": "name:GROWTH_2027",
+        "to": "Assumptions!D14",
+        "edge_type": "compacted_dependency"
+      },
+      {
+        "from": "Assumptions!D14",
+        "to": "Summary!B2",
+        "edge_type": "compacted_dependency"
+      }
+    ],
+    "compacted_paths": [
+      {
+        "output_ref": "Summary!B2",
+        "path_id": "path_001_001",
+        "nodes": [
+          "name:GROWTH_2027",
+          "Assumptions!D14",
+          "Summary!B2"
+        ],
+        "raw_node_count": 3,
+        "collapsed_node_count": 0
+      }
+    ],
+    "compaction_groups": [],
     "range_membership_summary": [],
     "collapsed_node_count": 0,
     "omitted_node_count": 5

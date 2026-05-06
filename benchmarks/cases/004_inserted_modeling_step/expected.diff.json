@@ -1,5 +1,18 @@
 {
   "schema_version": "0.1",
+  "resource_budgets": {
+    "max_file_size_bytes": 104857600,
+    "max_uncompressed_bytes": 786432000,
+    "max_zip_expansion_ratio": 100,
+    "max_zip_members": 25000,
+    "max_parsed_cells": 500000,
+    "max_formulas": 100000,
+    "max_formula_length": 8192,
+    "max_graph_nodes": 750000,
+    "max_graph_edges": 1000000,
+    "max_virtual_membership_edges": 250000,
+    "max_report_rows": 500
+  },
   "baseline": {
     "filename": "baseline.xlsx",
     "sha256": "b1fc2fdacbe1f721bf757cd8e8cb44a3b0f62bd549a95a27884401b39638bcd7",
@@ -10,7 +23,9 @@
     "full_calc_on_load": false,
     "created_at": "2026-01-01T00:00:00",
     "modified_at": "2026-01-01T00:00:00",
-    "app_version": null
+    "app_version": null,
+    "parsed_cell_count": 12,
+    "formula_count": 4
   },
   "candidate": {
     "filename": "candidate.xlsx",
@@ -22,7 +37,9 @@
     "full_calc_on_load": false,
     "created_at": "2026-01-01T00:00:00",
     "modified_at": "2026-01-01T00:00:00",
-    "app_version": null
+    "app_version": null,
+    "parsed_cell_count": 15,
+    "formula_count": 4
   },
   "summary": {
     "direct_change_count": 5,
@@ -1095,6 +1112,174 @@
       "Summary!B5"
     ],
     "nodes": {
+      "Summary!B5": {
+        "id": "Summary!B5",
+        "ref": "Summary!B5",
+        "node_type": "cell",
+        "label": "2026E EBITDA",
+        "semantic_id": "cell::summary::intersection::ebitda::2026e",
+        "semantic_identity": {
+          "semantic_id": "cell::summary::intersection::ebitda::2026e",
+          "kind": "row_column_intersection",
+          "row_headers": [
+            "EBITDA"
+          ],
+          "column_headers": [
+            "2026E"
+          ],
+          "labels": [
+            "EBITDA",
+            "2026E"
+          ],
+          "source_refs": [
+            "Summary!A5",
+            "Summary!B1"
+          ],
+          "confidence": 0.9
+        },
+        "semantic_role": "output",
+        "sheet_name": "Summary",
+        "old_value": null,
+        "new_value": {
+          "raw": 30,
+          "typed_value": 30,
+          "display_value": "30",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": {
+          "raw": "=B4-B3",
+          "normalized": "B4-B3",
+          "formula_type": "normal",
+          "tokens": [
+            {
+              "type": "reference",
+              "text": "B4",
+              "target": "Summary!B4"
+            },
+            {
+              "type": "reference",
+              "text": "B3",
+              "target": "Summary!B3"
+            }
+          ],
+          "precedents": [
+            {
+              "raw": "B4",
+              "ref": "B4",
+              "sheet_name": "Summary",
+              "kind": "cell",
+              "target": "Summary!B4",
+              "confidence": 1.0
+            },
+            {
+              "raw": "B3",
+              "ref": "B3",
+              "sheet_name": "Summary",
+              "kind": "cell",
+              "target": "Summary!B3",
+              "confidence": 1.0
+            }
+          ],
+          "has_volatile_function": false,
+          "has_dynamic_reference": false,
+          "has_external_reference": false,
+          "parse_status": "ok",
+          "parse_warnings": []
+        },
+        "changes": [
+          "chg_0001"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      },
+      "Summary!C3": {
+        "id": "Summary!C3",
+        "ref": "Summary!C3",
+        "node_type": "cell",
+        "label": "2027E GPU Expense",
+        "semantic_id": "cell::summary::intersection::gpu_expense::2027e",
+        "semantic_identity": {
+          "semantic_id": "cell::summary::intersection::gpu_expense::2027e",
+          "kind": "row_column_intersection",
+          "row_headers": [
+            "GPU Expense"
+          ],
+          "column_headers": [
+            "2027E"
+          ],
+          "labels": [
+            "GPU Expense",
+            "2027E"
+          ],
+          "source_refs": [
+            "Summary!A3",
+            "Summary!C1"
+          ],
+          "confidence": 0.9
+        },
+        "semantic_role": "unknown",
+        "sheet_name": "Summary",
+        "old_value": null,
+        "new_value": {
+          "raw": 15,
+          "typed_value": 15,
+          "display_value": "15",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": null,
+        "changes": [
+          "chg_0005"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      },
+      "Summary!B3": {
+        "id": "Summary!B3",
+        "ref": "Summary!B3",
+        "node_type": "cell",
+        "label": "2026E GPU Expense",
+        "semantic_id": "cell::summary::intersection::gpu_expense::2026e",
+        "semantic_identity": {
+          "semantic_id": "cell::summary::intersection::gpu_expense::2026e",
+          "kind": "row_column_intersection",
+          "row_headers": [
+            "GPU Expense"
+          ],
+          "column_headers": [
+            "2026E"
+          ],
+          "labels": [
+            "GPU Expense",
+            "2026E"
+          ],
+          "source_refs": [
+            "Summary!A3",
+            "Summary!B1"
+          ],
+          "confidence": 0.9
+        },
+        "semantic_role": "unknown",
+        "sheet_name": "Summary",
+        "old_value": null,
+        "new_value": {
+          "raw": 10,
+          "typed_value": 10,
+          "display_value": "10",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": null,
+        "changes": [
+          "chg_0004"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      },
       "Summary!C5": {
         "id": "Summary!C5",
         "ref": "Summary!C5",
@@ -1173,6 +1358,235 @@
         },
         "changes": [
           "chg_0002"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      },
+      "Summary!A3": {
+        "id": "Summary!A3",
+        "ref": "Summary!A3",
+        "node_type": "cell",
+        "label": "Revenue",
+        "semantic_id": "cell::summary::row_header::gpu_expense",
+        "semantic_identity": {
+          "semantic_id": "cell::summary::row_header::gpu_expense",
+          "kind": "row_header",
+          "row_headers": [
+            "GPU Expense"
+          ],
+          "column_headers": [],
+          "labels": [
+            "GPU Expense"
+          ],
+          "source_refs": [
+            "Summary!A3"
+          ],
+          "confidence": 0.78
+        },
+        "semantic_role": "unknown",
+        "sheet_name": "Summary",
+        "old_value": null,
+        "new_value": {
+          "raw": "GPU Expense",
+          "typed_value": "GPU Expense",
+          "display_value": "GPU Expense",
+          "value_type": "string",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": null,
+        "changes": [
+          "chg_0003"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      }
+    },
+    "edges": [
+      {
+        "id": "e000004",
+        "from": "Summary!B3",
+        "to": "Summary!B5",
+        "edge_type": "cell_reference",
+        "formula_ref": "Summary!B5",
+        "evidence": "B3",
+        "confidence": 1.0
+      },
+      {
+        "id": "e000006",
+        "from": "Summary!C3",
+        "to": "Summary!C5",
+        "edge_type": "cell_reference",
+        "formula_ref": "Summary!C5",
+        "evidence": "C3",
+        "confidence": 1.0
+      }
+    ],
+    "compacted_nodes": {
+      "Summary!C3": {
+        "id": "Summary!C3",
+        "ref": "Summary!C3",
+        "node_type": "cell",
+        "label": "2027E GPU Expense",
+        "semantic_id": "cell::summary::intersection::gpu_expense::2027e",
+        "semantic_identity": {
+          "semantic_id": "cell::summary::intersection::gpu_expense::2027e",
+          "kind": "row_column_intersection",
+          "row_headers": [
+            "GPU Expense"
+          ],
+          "column_headers": [
+            "2027E"
+          ],
+          "labels": [
+            "GPU Expense",
+            "2027E"
+          ],
+          "source_refs": [
+            "Summary!A3",
+            "Summary!C1"
+          ],
+          "confidence": 0.9
+        },
+        "semantic_role": "unknown",
+        "sheet_name": "Summary",
+        "old_value": null,
+        "new_value": {
+          "raw": 15,
+          "typed_value": 15,
+          "display_value": "15",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": null,
+        "changes": [
+          "chg_0005"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      },
+      "Summary!C5": {
+        "id": "Summary!C5",
+        "ref": "Summary!C5",
+        "node_type": "cell",
+        "label": "2027E EBITDA",
+        "semantic_id": "cell::summary::intersection::ebitda::2027e",
+        "semantic_identity": {
+          "semantic_id": "cell::summary::intersection::ebitda::2027e",
+          "kind": "row_column_intersection",
+          "row_headers": [
+            "EBITDA"
+          ],
+          "column_headers": [
+            "2027E"
+          ],
+          "labels": [
+            "EBITDA",
+            "2027E"
+          ],
+          "source_refs": [
+            "Summary!A5",
+            "Summary!C1"
+          ],
+          "confidence": 0.9
+        },
+        "semantic_role": "output",
+        "sheet_name": "Summary",
+        "old_value": null,
+        "new_value": {
+          "raw": 33,
+          "typed_value": 33,
+          "display_value": "33",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": {
+          "raw": "=C4-C3",
+          "normalized": "C4-C3",
+          "formula_type": "normal",
+          "tokens": [
+            {
+              "type": "reference",
+              "text": "C4",
+              "target": "Summary!C4"
+            },
+            {
+              "type": "reference",
+              "text": "C3",
+              "target": "Summary!C3"
+            }
+          ],
+          "precedents": [
+            {
+              "raw": "C4",
+              "ref": "C4",
+              "sheet_name": "Summary",
+              "kind": "cell",
+              "target": "Summary!C4",
+              "confidence": 1.0
+            },
+            {
+              "raw": "C3",
+              "ref": "C3",
+              "sheet_name": "Summary",
+              "kind": "cell",
+              "target": "Summary!C3",
+              "confidence": 1.0
+            }
+          ],
+          "has_volatile_function": false,
+          "has_dynamic_reference": false,
+          "has_external_reference": false,
+          "parse_status": "ok",
+          "parse_warnings": []
+        },
+        "changes": [
+          "chg_0002"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      },
+      "Summary!B3": {
+        "id": "Summary!B3",
+        "ref": "Summary!B3",
+        "node_type": "cell",
+        "label": "2026E GPU Expense",
+        "semantic_id": "cell::summary::intersection::gpu_expense::2026e",
+        "semantic_identity": {
+          "semantic_id": "cell::summary::intersection::gpu_expense::2026e",
+          "kind": "row_column_intersection",
+          "row_headers": [
+            "GPU Expense"
+          ],
+          "column_headers": [
+            "2026E"
+          ],
+          "labels": [
+            "GPU Expense",
+            "2026E"
+          ],
+          "source_refs": [
+            "Summary!A3",
+            "Summary!B1"
+          ],
+          "confidence": 0.9
+        },
+        "semantic_role": "unknown",
+        "sheet_name": "Summary",
+        "old_value": null,
+        "new_value": {
+          "raw": 10,
+          "typed_value": 10,
+          "display_value": "10",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": null,
+        "changes": [
+          "chg_0004"
         ],
         "materiality_score": 0,
         "confidence": 1.0
@@ -1258,153 +1672,61 @@
         ],
         "materiality_score": 0,
         "confidence": 1.0
-      },
-      "Summary!B3": {
-        "id": "Summary!B3",
-        "ref": "Summary!B3",
-        "node_type": "cell",
-        "label": "2026E GPU Expense",
-        "semantic_id": "cell::summary::intersection::gpu_expense::2026e",
-        "semantic_identity": {
-          "semantic_id": "cell::summary::intersection::gpu_expense::2026e",
-          "kind": "row_column_intersection",
-          "row_headers": [
-            "GPU Expense"
-          ],
-          "column_headers": [
-            "2026E"
-          ],
-          "labels": [
-            "GPU Expense",
-            "2026E"
-          ],
-          "source_refs": [
-            "Summary!A3",
-            "Summary!B1"
-          ],
-          "confidence": 0.9
-        },
-        "semantic_role": "unknown",
-        "sheet_name": "Summary",
-        "old_value": null,
-        "new_value": {
-          "raw": 10,
-          "typed_value": 10,
-          "display_value": "10",
-          "value_type": "number",
-          "number_format": "General"
-        },
-        "old_formula": null,
-        "new_formula": null,
-        "changes": [
-          "chg_0004"
-        ],
-        "materiality_score": 0,
-        "confidence": 1.0
-      },
-      "Summary!A3": {
-        "id": "Summary!A3",
-        "ref": "Summary!A3",
-        "node_type": "cell",
-        "label": "Revenue",
-        "semantic_id": "cell::summary::row_header::gpu_expense",
-        "semantic_identity": {
-          "semantic_id": "cell::summary::row_header::gpu_expense",
-          "kind": "row_header",
-          "row_headers": [
-            "GPU Expense"
-          ],
-          "column_headers": [],
-          "labels": [
-            "GPU Expense"
-          ],
-          "source_refs": [
-            "Summary!A3"
-          ],
-          "confidence": 0.78
-        },
-        "semantic_role": "unknown",
-        "sheet_name": "Summary",
-        "old_value": null,
-        "new_value": {
-          "raw": "GPU Expense",
-          "typed_value": "GPU Expense",
-          "display_value": "GPU Expense",
-          "value_type": "string",
-          "number_format": "General"
-        },
-        "old_formula": null,
-        "new_formula": null,
-        "changes": [
-          "chg_0003"
-        ],
-        "materiality_score": 0,
-        "confidence": 1.0
-      },
-      "Summary!C3": {
-        "id": "Summary!C3",
-        "ref": "Summary!C3",
-        "node_type": "cell",
-        "label": "2027E GPU Expense",
-        "semantic_id": "cell::summary::intersection::gpu_expense::2027e",
-        "semantic_identity": {
-          "semantic_id": "cell::summary::intersection::gpu_expense::2027e",
-          "kind": "row_column_intersection",
-          "row_headers": [
-            "GPU Expense"
-          ],
-          "column_headers": [
-            "2027E"
-          ],
-          "labels": [
-            "GPU Expense",
-            "2027E"
-          ],
-          "source_refs": [
-            "Summary!A3",
-            "Summary!C1"
-          ],
-          "confidence": 0.9
-        },
-        "semantic_role": "unknown",
-        "sheet_name": "Summary",
-        "old_value": null,
-        "new_value": {
-          "raw": 15,
-          "typed_value": 15,
-          "display_value": "15",
-          "value_type": "number",
-          "number_format": "General"
-        },
-        "old_formula": null,
-        "new_formula": null,
-        "changes": [
-          "chg_0005"
-        ],
-        "materiality_score": 0,
-        "confidence": 1.0
       }
     },
-    "edges": [
+    "compacted_edges": [
       {
-        "id": "e000004",
-        "from": "Summary!B3",
-        "to": "Summary!B5",
-        "edge_type": "cell_reference",
-        "formula_ref": "Summary!B5",
-        "evidence": "B3",
-        "confidence": 1.0
-      },
-      {
-        "id": "e000006",
         "from": "Summary!C3",
         "to": "Summary!C5",
-        "edge_type": "cell_reference",
-        "formula_ref": "Summary!C5",
-        "evidence": "C3",
-        "confidence": 1.0
+        "edge_type": "compacted_dependency"
+      },
+      {
+        "from": "Summary!B3",
+        "to": "Summary!B5",
+        "edge_type": "compacted_dependency"
       }
     ],
+    "compacted_paths": [
+      {
+        "output_ref": "Summary!C5",
+        "path_id": "path_001_001",
+        "nodes": [
+          "Summary!C3",
+          "Summary!C5"
+        ],
+        "raw_node_count": 2,
+        "collapsed_node_count": 0
+      },
+      {
+        "output_ref": "Summary!C5",
+        "path_id": "path_002_001",
+        "nodes": [
+          "Summary!C5"
+        ],
+        "raw_node_count": 1,
+        "collapsed_node_count": 0
+      },
+      {
+        "output_ref": "Summary!B5",
+        "path_id": "path_001_002",
+        "nodes": [
+          "Summary!B3",
+          "Summary!B5"
+        ],
+        "raw_node_count": 2,
+        "collapsed_node_count": 0
+      },
+      {
+        "output_ref": "Summary!B5",
+        "path_id": "path_002_002",
+        "nodes": [
+          "Summary!B5"
+        ],
+        "raw_node_count": 1,
+        "collapsed_node_count": 0
+      }
+    ],
+    "compaction_groups": [],
     "range_membership_summary": [],
     "collapsed_node_count": 0,
     "omitted_node_count": 10

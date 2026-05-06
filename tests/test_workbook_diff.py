@@ -13,6 +13,7 @@ from openpyxl.workbook.defined_name import DefinedName
 
 from workbook_diff.diff import diff_workbooks
 from workbook_diff.reporting import write_artifacts
+from workbook_diff.security import ResourceBudgetExceeded
 
 
 NS_MAIN = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
@@ -305,6 +306,50 @@ def test_formula_change_with_unchanged_cache_downgrades_value_confidence(tmp_pat
     assert output["value_delta_confidence"] == "moderate"
     assert any(factor["code"] == "formula_changed_cache_unchanged" for factor in output["confidence_factors"])
     assert "formula changed while the cached value stayed at 2000" in result["llm_summary"]["one_sentence_summary"]
+
+
+def test_resource_budget_caps_parsed_cells(tmp_path: Path) -> None:
+    baseline = tmp_path / "budget_cells_old.xlsx"
+    candidate = tmp_path / "budget_cells_new.xlsx"
+    _make_row_column_header_workbook(baseline, arr_2027=49)
+    _make_row_column_header_workbook(candidate, arr_2027=55)
+
+    with pytest.raises(ResourceBudgetExceeded, match="max_parsed_cells"):
+        diff_workbooks(baseline, candidate, options={"max_parsed_cells": 1})
+
+
+def test_resource_budget_caps_formula_length(tmp_path: Path) -> None:
+    baseline = tmp_path / "budget_formula_old.xlsx"
+    candidate = tmp_path / "budget_formula_new.xlsx"
+    _make_formula_change_workbook(baseline, formula="=Revenue!F22*2", cached=2000)
+    _make_formula_change_workbook(candidate, formula="=Revenue!F22*3", cached=3000)
+
+    with pytest.raises(ResourceBudgetExceeded, match="max_formula_length"):
+        diff_workbooks(baseline, candidate, options={"max_formula_length": 5})
+
+
+def test_resource_budget_caps_graph_edges(tmp_path: Path) -> None:
+    baseline = tmp_path / "budget_graph_old.xlsx"
+    candidate = tmp_path / "budget_graph_new.xlsx"
+    _make_assumption_workbook(baseline, growth=0.18, revenue=1180, summary=1180)
+    _make_assumption_workbook(candidate, growth=0.22, revenue=1220, summary=1220)
+
+    with pytest.raises(ResourceBudgetExceeded, match="max_graph_edges"):
+        diff_workbooks(baseline, candidate, options={"max_graph_edges": 1})
+
+
+def test_change_dag_includes_compacted_blocks(tmp_path: Path) -> None:
+    baseline = tmp_path / "chain_old.xlsx"
+    candidate = tmp_path / "chain_new.xlsx"
+    _make_chain_workbook(baseline, driver=10, mid1=20, mid2=25, output=30)
+    _make_chain_workbook(candidate, driver=15, mid1=30, mid2=35, output=40)
+
+    result = diff_workbooks(baseline, candidate, config={"outputs": [{"ref": "Summary!B2", "name": "Final KPI"}]})
+
+    dag = result["change_impact_dag"]
+    assert dag["collapsed_node_count"] >= 1
+    assert any(group["node_type"] == "collapsed_block" for group in dag["compaction_groups"])
+    assert dag["compacted_edges"]
 
 
 def test_cli_artifacts_are_written(tmp_path: Path) -> None:
@@ -620,6 +665,31 @@ def _make_manual_calc_assumption_workbook(path: Path, growth: float, revenue: in
     summary_ws["G31"] = "=Revenue!G22/Customers!G22"
     wb.save(path)
     _patch_cached_values(path, {"Revenue": {"G22": revenue}, "Summary": {"G31": summary}})
+
+
+def _make_chain_workbook(path: Path, driver: int, mid1: int, mid2: int, output: int) -> None:
+    wb = Workbook()
+    wb.calculation.fullCalcOnLoad = False
+    assumptions = wb.active
+    assumptions.title = "Assumptions"
+    assumptions["A1"] = "Metric"
+    assumptions["B1"] = "Value"
+    assumptions["A2"] = "Driver"
+    assumptions["B2"] = driver
+    calc = wb.create_sheet("Calc")
+    calc["A1"] = "Step"
+    calc["B1"] = "Value"
+    calc["A2"] = "Intermediate 1"
+    calc["B2"] = "=Assumptions!B2*2"
+    calc["A3"] = "Intermediate 2"
+    calc["B3"] = "=Calc!B2+5"
+    summary = wb.create_sheet("Summary")
+    summary["A1"] = "Metric"
+    summary["B1"] = "Value"
+    summary["A2"] = "Final KPI"
+    summary["B2"] = "=Calc!B3+5"
+    wb.save(path)
+    _patch_cached_values(path, {"Calc": {"B2": mid1, "B3": mid2}, "Summary": {"B2": output}})
 
 
 def _find_change(result: dict, ref: str) -> dict:

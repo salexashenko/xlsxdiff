@@ -3,7 +3,7 @@
 Compared:
 - Baseline: `baseline.xlsx` `f07303f6bf46`
 - Candidate: `candidate.xlsx` `3acc57af00ea`
-- Generated: 2026-05-06T01:49:04.304169+00:00
+- Generated: 2026-05-06T02:24:59.417378+00:00
 - Overall confidence: **high**
 
 ## Executive summary

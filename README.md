@@ -129,6 +129,8 @@ Generated example reports are ignored by Git.
 
 Formula values are compared from cached workbook values. The engine does not currently recalculate Excel formulas itself, so stale cached values can produce stale value diffs. Formula dependency parsing covers common Excel references and ranges, but dynamic references such as `INDIRECT`, complex structured references, and some newer Excel functions are reported with diagnostics rather than fully expanded.
 
+The parser enforces configurable resource budgets for file size, uncompressed ZIP size, ZIP members, parsed cells, formulas, formula length, graph nodes, graph edges, virtual range-membership edges, report rows, and optional total diff time. Pass limits through `options` or under `security:` / `limits:` in config, for example `{"max_parsed_cells": 100000, "max_diff_seconds": 30}`.
+
 ## Development
 
 ```bash

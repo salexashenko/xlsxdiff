@@ -1,5 +1,18 @@
 {
   "schema_version": "0.1",
+  "resource_budgets": {
+    "max_file_size_bytes": 104857600,
+    "max_uncompressed_bytes": 786432000,
+    "max_zip_expansion_ratio": 100,
+    "max_zip_members": 25000,
+    "max_parsed_cells": 500000,
+    "max_formulas": 100000,
+    "max_formula_length": 8192,
+    "max_graph_nodes": 750000,
+    "max_graph_edges": 1000000,
+    "max_virtual_membership_edges": 250000,
+    "max_report_rows": 500
+  },
   "baseline": {
     "filename": "baseline.xlsx",
     "sha256": "553391c8a5fc0103522105eb2665effc8a3264f1c009e1da1b6bb57c75817729",
@@ -10,7 +23,9 @@
     "full_calc_on_load": false,
     "created_at": "2026-01-01T00:00:00",
     "modified_at": "2026-01-01T00:00:00",
-    "app_version": null
+    "app_version": null,
+    "parsed_cell_count": 9,
+    "formula_count": 2
   },
   "candidate": {
     "filename": "candidate.xlsx",
@@ -22,7 +37,9 @@
     "full_calc_on_load": false,
     "created_at": "2026-01-01T00:00:00",
     "modified_at": "2026-01-01T00:00:00",
-    "app_version": null
+    "app_version": null,
+    "parsed_cell_count": 9,
+    "formula_count": 2
   },
   "summary": {
     "direct_change_count": 1,
@@ -649,6 +666,225 @@
       "Summary!G31"
     ],
     "nodes": {
+      "Summary!G31": {
+        "id": "Summary!G31",
+        "ref": "Summary!G31",
+        "node_type": "cell",
+        "label": "Summary",
+        "semantic_id": null,
+        "semantic_identity": {
+          "semantic_id": null,
+          "kind": "address_only",
+          "row_headers": [],
+          "column_headers": [],
+          "labels": [],
+          "source_refs": [],
+          "confidence": 0.0
+        },
+        "semantic_role": "output",
+        "sheet_name": "Summary",
+        "old_value": null,
+        "new_value": {
+          "raw": 1220,
+          "typed_value": 1220,
+          "display_value": "1220",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": {
+          "raw": "=Revenue!G22/Customers!G22",
+          "normalized": "REVENUE!G22/CUSTOMERS!G22",
+          "formula_type": "normal",
+          "tokens": [
+            {
+              "type": "reference",
+              "text": "Revenue!G22",
+              "target": "Revenue!G22"
+            },
+            {
+              "type": "reference",
+              "text": "Customers!G22",
+              "target": "Customers!G22"
+            }
+          ],
+          "precedents": [
+            {
+              "raw": "Revenue!G22",
+              "ref": "G22",
+              "sheet_name": "Revenue",
+              "kind": "cell",
+              "target": "Revenue!G22",
+              "confidence": 1.0
+            },
+            {
+              "raw": "Customers!G22",
+              "ref": "G22",
+              "sheet_name": "Customers",
+              "kind": "cell",
+              "target": "Customers!G22",
+              "confidence": 1.0
+            }
+          ],
+          "has_volatile_function": false,
+          "has_dynamic_reference": false,
+          "has_external_reference": false,
+          "parse_status": "ok",
+          "parse_warnings": []
+        },
+        "changes": [
+          "chg_0003"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      },
+      "Revenue!G22": {
+        "id": "Revenue!G22",
+        "ref": "Revenue!G22",
+        "node_type": "cell",
+        "label": "2027 Revenue",
+        "semantic_id": "cell::revenue::column_value::2027_revenue",
+        "semantic_identity": {
+          "semantic_id": "cell::revenue::column_value::2027_revenue",
+          "kind": "column_labeled_cell",
+          "row_headers": [],
+          "column_headers": [
+            "2027 Revenue"
+          ],
+          "labels": [
+            "2027 Revenue"
+          ],
+          "source_refs": [
+            "Revenue!G21"
+          ],
+          "confidence": 0.62
+        },
+        "semantic_role": "output",
+        "sheet_name": "Revenue",
+        "old_value": null,
+        "new_value": {
+          "raw": 1220,
+          "typed_value": 1220,
+          "display_value": "1220",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": {
+          "raw": "=Revenue!F22*(1+Assumptions!D14)",
+          "normalized": "REVENUE!F22*(1+ASSUMPTIONS!D14)",
+          "formula_type": "normal",
+          "tokens": [
+            {
+              "type": "reference",
+              "text": "Revenue!F22",
+              "target": "Revenue!F22"
+            },
+            {
+              "type": "reference",
+              "text": "Assumptions!D14",
+              "target": "Assumptions!D14"
+            },
+            {
+              "type": "number",
+              "text": "1"
+            }
+          ],
+          "precedents": [
+            {
+              "raw": "Revenue!F22",
+              "ref": "F22",
+              "sheet_name": "Revenue",
+              "kind": "cell",
+              "target": "Revenue!F22",
+              "confidence": 1.0
+            },
+            {
+              "raw": "Assumptions!D14",
+              "ref": "D14",
+              "sheet_name": "Assumptions",
+              "kind": "cell",
+              "target": "Assumptions!D14",
+              "confidence": 1.0
+            }
+          ],
+          "has_volatile_function": false,
+          "has_dynamic_reference": false,
+          "has_external_reference": false,
+          "parse_status": "ok",
+          "parse_warnings": []
+        },
+        "changes": [
+          "chg_0002"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      },
+      "Assumptions!D14": {
+        "id": "Assumptions!D14",
+        "ref": "Assumptions!D14",
+        "node_type": "cell",
+        "label": "2026 Growth Rate",
+        "semantic_id": "cell::assumptions::intersection::growth_rate::2026",
+        "semantic_identity": {
+          "semantic_id": "cell::assumptions::intersection::growth_rate::2026",
+          "kind": "row_column_intersection",
+          "row_headers": [
+            "Growth Rate"
+          ],
+          "column_headers": [
+            "2026"
+          ],
+          "labels": [
+            "Growth Rate",
+            "2026"
+          ],
+          "source_refs": [
+            "Assumptions!A14",
+            "Assumptions!D13"
+          ],
+          "confidence": 0.9
+        },
+        "semantic_role": "assumption",
+        "sheet_name": "Assumptions",
+        "old_value": null,
+        "new_value": {
+          "raw": 0.22,
+          "typed_value": 0.22,
+          "display_value": "0.22",
+          "value_type": "number",
+          "number_format": "0.0%"
+        },
+        "old_formula": null,
+        "new_formula": null,
+        "changes": [
+          "chg_0001"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      }
+    },
+    "edges": [
+      {
+        "id": "e000002",
+        "from": "Assumptions!D14",
+        "to": "Revenue!G22",
+        "edge_type": "cell_reference",
+        "formula_ref": "Revenue!G22",
+        "evidence": "Assumptions!D14",
+        "confidence": 1.0
+      },
+      {
+        "id": "e000003",
+        "from": "Revenue!G22",
+        "to": "Summary!G31",
+        "edge_type": "cell_reference",
+        "formula_ref": "Summary!G31",
+        "evidence": "Revenue!G22",
+        "confidence": 1.0
+      }
+    ],
+    "compacted_nodes": {
       "Assumptions!D14": {
         "id": "Assumptions!D14",
         "ref": "Assumptions!D14",
@@ -847,26 +1083,42 @@
         "confidence": 1.0
       }
     },
-    "edges": [
+    "compacted_edges": [
       {
-        "id": "e000002",
         "from": "Assumptions!D14",
         "to": "Revenue!G22",
-        "edge_type": "cell_reference",
-        "formula_ref": "Revenue!G22",
-        "evidence": "Assumptions!D14",
-        "confidence": 1.0
+        "edge_type": "compacted_dependency"
       },
       {
-        "id": "e000003",
         "from": "Revenue!G22",
         "to": "Summary!G31",
-        "edge_type": "cell_reference",
-        "formula_ref": "Summary!G31",
-        "evidence": "Revenue!G22",
-        "confidence": 1.0
+        "edge_type": "compacted_dependency"
       }
     ],
+    "compacted_paths": [
+      {
+        "output_ref": "Revenue!G22",
+        "path_id": "path_001_001",
+        "nodes": [
+          "Assumptions!D14",
+          "Revenue!G22"
+        ],
+        "raw_node_count": 2,
+        "collapsed_node_count": 0
+      },
+      {
+        "output_ref": "Summary!G31",
+        "path_id": "path_001_002",
+        "nodes": [
+          "Assumptions!D14",
+          "Revenue!G22",
+          "Summary!G31"
+        ],
+        "raw_node_count": 3,
+        "collapsed_node_count": 0
+      }
+    ],
+    "compaction_groups": [],
     "range_membership_summary": [],
     "collapsed_node_count": 0,
     "omitted_node_count": 6

@@ -201,6 +201,15 @@ def _cases() -> List[BenchmarkCase]:
             config={"outputs": [{"ref": "Summary!B4", "name": "Total Revenue"}]},
             options={},
         ),
+        BenchmarkCase(
+            slug="012_compacted_formula_chain",
+            title="Compacted Formula Chain",
+            purpose="A changed assumption flows through multiple intermediate formula cells before reaching a final KPI.",
+            expected="The raw path should remain available, while the public change-impact DAG includes a compressed intermediate formula block.",
+            builder=_build_compacted_formula_chain,
+            config={"outputs": [{"ref": "Summary!B2", "name": "Final KPI"}]},
+            options={},
+        ),
     ]
 
 
@@ -257,6 +266,11 @@ def _build_multiple_upstream_roots(baseline: Path, candidate: Path) -> None:
 def _build_formula_to_hardcode_override(baseline: Path, candidate: Path) -> None:
     _make_hardcode_override_baseline(baseline)
     _make_hardcode_override_candidate(candidate)
+
+
+def _build_compacted_formula_chain(baseline: Path, candidate: Path) -> None:
+    _make_chain_workbook(baseline, driver=10, mid1=20, mid2=25, output=30)
+    _make_chain_workbook(candidate, driver=15, mid1=30, mid2=35, output=40)
 
 
 def _make_assumption_workbook(path: Path, growth: float, revenue: int, summary: int, manual_calc: bool) -> None:
@@ -476,6 +490,31 @@ def _make_hardcode_override_candidate(path: Path) -> None:
     ws["A4"] = "Total Revenue"
     ws["B4"] = 325
     _save_workbook(wb, path)
+
+
+def _make_chain_workbook(path: Path, driver: int, mid1: int, mid2: int, output: int) -> None:
+    wb = Workbook()
+    wb.calculation.fullCalcOnLoad = False
+    assumptions = wb.active
+    assumptions.title = "Assumptions"
+    assumptions["A1"] = "Metric"
+    assumptions["B1"] = "Value"
+    assumptions["A2"] = "Driver"
+    assumptions["B2"] = driver
+    calc = wb.create_sheet("Calc")
+    calc["A1"] = "Step"
+    calc["B1"] = "Value"
+    calc["A2"] = "Intermediate 1"
+    calc["B2"] = "=Assumptions!B2*2"
+    calc["A3"] = "Intermediate 2"
+    calc["B3"] = "=Calc!B2+5"
+    summary = wb.create_sheet("Summary")
+    summary["A1"] = "Metric"
+    summary["B1"] = "Value"
+    summary["A2"] = "Final KPI"
+    summary["B2"] = "=Calc!B3+5"
+    _save_workbook(wb, path)
+    _patch_cached_values(path, {"Calc": {"B2": mid1, "B3": mid2}, "Summary": {"B2": output}})
 
 
 def _save_workbook(wb: Workbook, path: Path) -> None:

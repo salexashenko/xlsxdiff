@@ -10,7 +10,7 @@ from openpyxl.utils import get_column_letter
 
 from .formulas import VOLATILE_FUNCTIONS, formula_functions, normalize_formula, parse_formula_references
 from .models import CellSnapshot, CellValue, FormulaSnapshot, WorkbookSnapshot
-from .security import inspect_workbook_package
+from .security import check_deadline, enforce_budget, inspect_workbook_package, resolve_resource_budgets
 from .utils import cell_id, display_scalar, sha256_file
 
 
@@ -44,9 +44,17 @@ OUTPUT_LABEL_TERMS = {
 }
 
 
-def parse_workbook(path: Path, config: Optional[Dict[str, Any]] = None, strict: bool = False) -> WorkbookSnapshot:
+def parse_workbook(
+    path: Path,
+    config: Optional[Dict[str, Any]] = None,
+    strict: bool = False,
+    options: Optional[Dict[str, Any]] = None,
+    deadline: Optional[float] = None,
+) -> WorkbookSnapshot:
     config = config or {}
-    package_info, diagnostics = inspect_workbook_package(path, strict=strict)
+    budgets = resolve_resource_budgets(config, options)
+    package_info, diagnostics = inspect_workbook_package(path, strict=strict, budgets=budgets)
+    check_deadline(deadline, f"loading {path.name}")
     formula_wb = load_workbook(path, data_only=False, keep_vba=path.suffix.lower() == ".xlsm", rich_text=False)
     value_wb = load_workbook(path, data_only=True, keep_vba=path.suffix.lower() == ".xlsm", rich_text=False)
     sheet_names = list(formula_wb.sheetnames)
@@ -59,7 +67,10 @@ def parse_workbook(path: Path, config: Optional[Dict[str, Any]] = None, strict: 
     sheets = _extract_sheets(formula_wb)
 
     cells: Dict[str, CellSnapshot] = {}
+    parsed_cell_count = 0
+    formula_count = 0
     for sheet_name in sheet_names:
+        check_deadline(deadline, f"parsing sheet {sheet_name}")
         formula_ws = formula_wb[sheet_name]
         value_ws = value_wb[sheet_name]
         sheet_visible = formula_ws.sheet_state == "visible"
@@ -72,6 +83,8 @@ def parse_workbook(path: Path, config: Optional[Dict[str, Any]] = None, strict: 
             kind = _cell_kind(raw_formula_value)
             if kind == "blank" and cached_value is None and not formula_cell.comment and not formula_cell.hyperlink:
                 continue
+            parsed_cell_count += 1
+            enforce_budget("max_parsed_cells", parsed_cell_count, budgets, f"Workbook {path.name} parsed cells")
 
             address = f"{get_column_letter(col)}{row}"
             ref = cell_id(sheet_name, address)
@@ -79,6 +92,11 @@ def parse_workbook(path: Path, config: Optional[Dict[str, Any]] = None, strict: 
             formula_snapshot = None
             value_source = cached_value if kind == "formula" else raw_formula_value
             if kind == "formula":
+                formula_count += 1
+                enforce_budget("max_formulas", formula_count, budgets, f"Workbook {path.name} formulas")
+                formula_text = str(raw_formula_value)
+                enforce_budget("max_formula_length", len(formula_text), budgets, f"Formula {ref}")
+                check_deadline(deadline, f"parsing formula {ref}")
                 precedents, tokens, warnings, parse_status = parse_formula_references(
                     raw_formula_value,
                     sheet_name,
@@ -155,6 +173,8 @@ def parse_workbook(path: Path, config: Optional[Dict[str, Any]] = None, strict: 
         "created_at": _iso_or_none(getattr(formula_wb.properties, "created", None)),
         "modified_at": _iso_or_none(getattr(formula_wb.properties, "modified", None)),
         "app_version": getattr(formula_wb.properties, "version", None),
+        "parsed_cell_count": parsed_cell_count,
+        "formula_count": formula_count,
     }
     if file_info["calc_mode"] == "manual":
         diagnostics.append(

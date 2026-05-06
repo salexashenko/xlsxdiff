@@ -17,4 +17,4 @@ python benchmarks/generate_benchmarks.py
 
 The fixtures are intentionally committed. They are not generated example output; they are the public regression set for the library.
 
-Current coverage includes simple assumption impacts, named-range rebinding, large-range membership, inserted modeling steps, manual calculation mode, unchanged formula caches, structured table references, external references, hidden-sheet drivers, multiple upstream roots, and formula-to-hardcode overrides.
+Current coverage includes simple assumption impacts, named-range rebinding, large-range membership, inserted modeling steps, manual calculation mode, unchanged formula caches, structured table references, external references, hidden-sheet drivers, multiple upstream roots, formula-to-hardcode overrides, and compacted intermediate formula chains.

@@ -1,5 +1,18 @@
 {
   "schema_version": "0.1",
+  "resource_budgets": {
+    "max_file_size_bytes": 104857600,
+    "max_uncompressed_bytes": 786432000,
+    "max_zip_expansion_ratio": 100,
+    "max_zip_members": 25000,
+    "max_parsed_cells": 500000,
+    "max_formulas": 100000,
+    "max_formula_length": 8192,
+    "max_graph_nodes": 750000,
+    "max_graph_edges": 1000000,
+    "max_virtual_membership_edges": 250000,
+    "max_report_rows": 500
+  },
   "baseline": {
     "filename": "baseline.xlsx",
     "sha256": "82ad8dba5ab2229461d31753a9b1ca4a2096fdf8a00539517145d287c4a00574",
@@ -10,7 +23,9 @@
     "full_calc_on_load": false,
     "created_at": "2026-01-01T00:00:00",
     "modified_at": "2026-01-01T00:00:00",
-    "app_version": null
+    "app_version": null,
+    "parsed_cell_count": 8,
+    "formula_count": 1
   },
   "candidate": {
     "filename": "candidate.xlsx",
@@ -22,7 +37,9 @@
     "full_calc_on_load": false,
     "created_at": "2026-01-01T00:00:00",
     "modified_at": "2026-01-01T00:00:00",
-    "app_version": null
+    "app_version": null,
+    "parsed_cell_count": 8,
+    "formula_count": 1
   },
   "summary": {
     "direct_change_count": 2,
@@ -573,6 +590,45 @@
       "Summary!B2"
     ],
     "nodes": {
+      "Assumptions!B2": {
+        "id": "Assumptions!B2",
+        "ref": "Assumptions!B2",
+        "node_type": "cell",
+        "label": "Price",
+        "semantic_id": "cell::assumptions::row_value::price",
+        "semantic_identity": {
+          "semantic_id": "cell::assumptions::row_value::price",
+          "kind": "row_labeled_cell",
+          "row_headers": [
+            "Price"
+          ],
+          "column_headers": [],
+          "labels": [
+            "Price"
+          ],
+          "source_refs": [
+            "Assumptions!A2"
+          ],
+          "confidence": 0.7
+        },
+        "semantic_role": "assumption",
+        "sheet_name": "Assumptions",
+        "old_value": null,
+        "new_value": {
+          "raw": 12,
+          "typed_value": 12,
+          "display_value": "12",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": null,
+        "changes": [
+          "chg_0001"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      },
       "Summary!B2": {
         "id": "Summary!B2",
         "ref": "Summary!B2",
@@ -693,7 +749,29 @@
         ],
         "materiality_score": 0,
         "confidence": 1.0
+      }
+    },
+    "edges": [
+      {
+        "id": "e000001",
+        "from": "Assumptions!B2",
+        "to": "Summary!B2",
+        "edge_type": "cell_reference",
+        "formula_ref": "Summary!B2",
+        "evidence": "Assumptions!B2",
+        "confidence": 1.0
       },
+      {
+        "id": "e000002",
+        "from": "Assumptions!B3",
+        "to": "Summary!B2",
+        "edge_type": "cell_reference",
+        "formula_ref": "Summary!B2",
+        "evidence": "Assumptions!B3",
+        "confidence": 1.0
+      }
+    ],
+    "compacted_nodes": {
       "Assumptions!B2": {
         "id": "Assumptions!B2",
         "ref": "Assumptions!B2",
@@ -732,28 +810,164 @@
         ],
         "materiality_score": 0,
         "confidence": 1.0
-      }
-    },
-    "edges": [
-      {
-        "id": "e000001",
-        "from": "Assumptions!B2",
-        "to": "Summary!B2",
-        "edge_type": "cell_reference",
-        "formula_ref": "Summary!B2",
-        "evidence": "Assumptions!B2",
+      },
+      "Summary!B2": {
+        "id": "Summary!B2",
+        "ref": "Summary!B2",
+        "node_type": "cell",
+        "label": "2027E Revenue",
+        "semantic_id": "cell::summary::intersection::revenue::2027e",
+        "semantic_identity": {
+          "semantic_id": "cell::summary::intersection::revenue::2027e",
+          "kind": "row_column_intersection",
+          "row_headers": [
+            "Revenue"
+          ],
+          "column_headers": [
+            "2027E"
+          ],
+          "labels": [
+            "Revenue",
+            "2027E"
+          ],
+          "source_refs": [
+            "Summary!A2",
+            "Summary!B1"
+          ],
+          "confidence": 0.9
+        },
+        "semantic_role": "output",
+        "sheet_name": "Summary",
+        "old_value": null,
+        "new_value": {
+          "raw": 150,
+          "typed_value": 150,
+          "display_value": "150",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": {
+          "raw": "=Assumptions!B2*Assumptions!B3",
+          "normalized": "ASSUMPTIONS!B2*ASSUMPTIONS!B3",
+          "formula_type": "normal",
+          "tokens": [
+            {
+              "type": "reference",
+              "text": "Assumptions!B2",
+              "target": "Assumptions!B2"
+            },
+            {
+              "type": "reference",
+              "text": "Assumptions!B3",
+              "target": "Assumptions!B3"
+            }
+          ],
+          "precedents": [
+            {
+              "raw": "Assumptions!B2",
+              "ref": "B2",
+              "sheet_name": "Assumptions",
+              "kind": "cell",
+              "target": "Assumptions!B2",
+              "confidence": 1.0
+            },
+            {
+              "raw": "Assumptions!B3",
+              "ref": "B3",
+              "sheet_name": "Assumptions",
+              "kind": "cell",
+              "target": "Assumptions!B3",
+              "confidence": 1.0
+            }
+          ],
+          "has_volatile_function": false,
+          "has_dynamic_reference": false,
+          "has_external_reference": false,
+          "parse_status": "ok",
+          "parse_warnings": []
+        },
+        "changes": [
+          "chg_0003"
+        ],
+        "materiality_score": 0,
         "confidence": 1.0
       },
-      {
-        "id": "e000002",
-        "from": "Assumptions!B3",
-        "to": "Summary!B2",
-        "edge_type": "cell_reference",
-        "formula_ref": "Summary!B2",
-        "evidence": "Assumptions!B3",
+      "Assumptions!B3": {
+        "id": "Assumptions!B3",
+        "ref": "Assumptions!B3",
+        "node_type": "cell",
+        "label": "Units",
+        "semantic_id": "cell::assumptions::row_value::units",
+        "semantic_identity": {
+          "semantic_id": "cell::assumptions::row_value::units",
+          "kind": "row_labeled_cell",
+          "row_headers": [
+            "Units"
+          ],
+          "column_headers": [],
+          "labels": [
+            "Units"
+          ],
+          "source_refs": [
+            "Assumptions!A3"
+          ],
+          "confidence": 0.7
+        },
+        "semantic_role": "assumption",
+        "sheet_name": "Assumptions",
+        "old_value": null,
+        "new_value": {
+          "raw": 12.5,
+          "typed_value": 12.5,
+          "display_value": "12.5",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": null,
+        "changes": [
+          "chg_0002"
+        ],
+        "materiality_score": 0,
         "confidence": 1.0
       }
+    },
+    "compacted_edges": [
+      {
+        "from": "Assumptions!B2",
+        "to": "Summary!B2",
+        "edge_type": "compacted_dependency"
+      },
+      {
+        "from": "Assumptions!B3",
+        "to": "Summary!B2",
+        "edge_type": "compacted_dependency"
+      }
     ],
+    "compacted_paths": [
+      {
+        "output_ref": "Summary!B2",
+        "path_id": "path_001_001",
+        "nodes": [
+          "Assumptions!B2",
+          "Summary!B2"
+        ],
+        "raw_node_count": 2,
+        "collapsed_node_count": 0
+      },
+      {
+        "output_ref": "Summary!B2",
+        "path_id": "path_002_001",
+        "nodes": [
+          "Assumptions!B3",
+          "Summary!B2"
+        ],
+        "raw_node_count": 2,
+        "collapsed_node_count": 0
+      }
+    ],
+    "compaction_groups": [],
     "range_membership_summary": [],
     "collapsed_node_count": 0,
     "omitted_node_count": 5

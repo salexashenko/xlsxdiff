@@ -86,10 +86,15 @@ def diff_snapshots(baseline: Any, candidate: Any, config: Optional[Dict[str, Any
     change_counter = _diff_workbook_file_info(baseline, candidate, changes, change_counter)
     change_counter = _diff_cells(baseline, candidate, alignment, changes, change_counter, options)
 
+    preliminary_groups: List[Dict[str, Any]] = []
+    _add_named_range_rebound_groups(changes, preliminary_groups, 1, baseline, candidate)
+    suppressed_root_change_ids = _suppressed_change_ids_from_groups(preliminary_groups)
     root_refs: Set[str] = set()
     root_change_ids_by_ref = defaultdict(list)
     for change in changes:
         if change["directness"] != "direct":
+            continue
+        if change.get("id") in suppressed_root_change_ids:
             continue
         for root_ref in _change_graph_root_refs(change):
             root_refs.add(root_ref)
@@ -124,7 +129,7 @@ def diff_snapshots(baseline: Any, candidate: Any, config: Optional[Dict[str, Any
         change["materiality_score"] = materiality_score(change, candidate_graph, config)
 
     changes.sort(key=lambda item: (-item["materiality_score"], item["id"]))
-    grouped_changes = group_changes(changes)
+    grouped_changes = group_changes(changes, baseline, candidate)
     impacted_outputs = build_impacted_outputs(changes, baseline, candidate, baseline_graph, candidate_graph, root_change_ids_by_ref, config)
     impact_dag = build_change_impact_dag(changes, impacted_outputs, candidate_graph, baseline_graph)
 
@@ -140,7 +145,7 @@ def diff_snapshots(baseline: Any, candidate: Any, config: Optional[Dict[str, Any
     summary = build_summary(changes, impacted_outputs, baseline, candidate, diagnostics, alignment)
     llm_summary = build_llm_summary(changes, impacted_outputs, grouped_changes, summary, diagnostics, config)
     summary["one_sentence_summary"] = llm_summary["one_sentence_summary"]
-    direct_changes = [change for change in changes if change["directness"] == "direct"]
+    direct_changes = _top_direct_changes(changes, grouped_changes)
     unexplained_changes = [change for change in changes if change["directness"] == "unexplained"]
 
     return {
@@ -365,22 +370,24 @@ def _add_dependency_edge(
 
 
 def add_virtual_range_membership_edges(graph: Dict[str, Any], changed_cell_refs: Iterable[str]) -> None:
-    range_nodes = [
-        node_id
-        for node_id, node in graph.get("nodes", {}).items()
-        if node.get("node_type") == "range" and _is_range_ref(node_id)
-    ]
-    if not range_nodes:
+    range_index = _range_node_index(graph)
+    if not range_index:
         return
     edges = graph["edges"]
     edge_seen = {(edge["from"], edge["to"], edge.get("edge_type", ""), edge.get("evidence", "")) for edge in edges}
     edge_counter = len(edges) + 1
+    membership_counts: Dict[str, int] = defaultdict(int)
     for cell_ref in sorted(changed_cell_refs, key=_ref_sort_key):
         if cell_ref not in graph["nodes"]:
             graph["nodes"][cell_ref] = _placeholder_node(cell_ref)
-        for range_ref in range_nodes:
-            if not _range_contains_cell(range_ref, cell_ref):
+        parsed_cell = _parse_cell_ref(cell_ref)
+        if parsed_cell is None:
+            continue
+        cell_sheet, row, col = parsed_cell
+        for min_row, max_row, min_col, max_col, range_ref in range_index.get(cell_sheet, []):
+            if not (min_row <= row <= max_row and min_col <= col <= max_col):
                 continue
+            membership_counts[range_ref] += 1
             key = (cell_ref, range_ref, "range_membership", "changed cell inside referenced range")
             if key in edge_seen:
                 continue
@@ -397,8 +404,27 @@ def add_virtual_range_membership_edges(graph: Dict[str, Any], changed_cell_refs:
                 }
             )
             edge_counter += 1
+    graph["range_membership_summary"] = [
+        {"range_ref": range_ref, "changed_cell_count": count}
+        for range_ref, count in sorted(membership_counts.items(), key=lambda item: _ref_sort_key(item[0]))
+    ]
     graph["adjacency"] = _adjacency(edges)
     graph["reverse_adjacency"] = _reverse_adjacency(edges)
+
+
+def _range_node_index(graph: Dict[str, Any]) -> Dict[str, List[Tuple[int, int, int, int, str]]]:
+    index: Dict[str, List[Tuple[int, int, int, int, str]]] = defaultdict(list)
+    for node_id, node in graph.get("nodes", {}).items():
+        if node.get("node_type") != "range" or not _is_range_ref(node_id):
+            continue
+        bounds = _parse_range_ref(node_id)
+        if bounds is None:
+            continue
+        sheet, min_row, max_row, min_col, max_col = bounds
+        index[sheet].append((min_row, max_row, min_col, max_col, node_id))
+    for ranges in index.values():
+        ranges.sort(key=lambda item: (item[0], item[1], item[2], item[3], item[4]))
+    return index
 
 
 def downstream_nodes(root_refs: Iterable[str], graph: Dict[str, Any]) -> Set[str]:
@@ -440,6 +466,22 @@ def representative_path(root: str, target: str, graph: Dict[str, Any], max_depth
     return None
 
 
+def _path_display_nodes(node_ids: Sequence[str], candidate_graph: Dict[str, Any], baseline_graph: Dict[str, Any]) -> List[Dict[str, Any]]:
+    display_nodes: List[Dict[str, Any]] = []
+    for node_id in node_ids:
+        node = candidate_graph["nodes"].get(node_id) or baseline_graph["nodes"].get(node_id) or _placeholder_node_dict(node_id)
+        display_nodes.append(
+            {
+                "id": node_id,
+                "ref": node.get("ref") or node_id,
+                "label": node.get("label") or node.get("ref") or node_id,
+                "node_type": node.get("node_type", "unknown"),
+                "semantic_role": node.get("semantic_role", "unknown"),
+            }
+        )
+    return display_nodes
+
+
 def materiality_score(change: Dict[str, Any], graph: Dict[str, Any], config: Dict[str, Any]) -> float:
     score = 0.0
     role = change.get("semantic_role")
@@ -475,11 +517,15 @@ def materiality_score(change: Dict[str, Any], graph: Dict[str, Any], config: Dic
     return round(score, 3)
 
 
-def group_changes(changes: Sequence[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def group_changes(changes: Sequence[Dict[str, Any]], baseline: Any = None, candidate: Any = None) -> List[Dict[str, Any]]:
     groups: List[Dict[str, Any]] = []
-    counter = _add_modeling_step_groups(changes, groups, 1)
+    counter = _add_named_range_rebound_groups(changes, groups, 1, baseline, candidate)
+    counter = _add_modeling_step_groups(changes, groups, counter)
+    suppressed_ids = _suppressed_change_ids_from_groups(groups)
     buckets: Dict[Tuple[str, str, str], List[Dict[str, Any]]] = defaultdict(list)
     for change in changes:
+        if change.get("id") in suppressed_ids:
+            continue
         if change["scope"] != "cell":
             continue
         sheet = change.get("sheet_name") or split_cell_id(change["object_ref"])[0]
@@ -514,6 +560,92 @@ def group_changes(changes: Sequence[Dict[str, Any]]) -> List[Dict[str, Any]]:
         counter += 1
     groups.sort(key=lambda item: (-item["materiality_score"], item["id"]))
     return groups
+
+
+def _top_direct_changes(changes: Sequence[Dict[str, Any]], grouped_changes: Sequence[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    suppressed_ids = _suppressed_change_ids_from_groups(grouped_changes)
+    return [change for change in changes if change.get("directness") == "direct" and change.get("id") not in suppressed_ids][:25]
+
+
+def _suppressed_change_ids_from_groups(groups: Sequence[Dict[str, Any]]) -> Set[str]:
+    suppressed: Set[str] = set()
+    for group in groups:
+        suppressed.update(str(change_id) for change_id in group.get("suppressed_change_ids", []) if change_id)
+    return suppressed
+
+
+def _add_named_range_rebound_groups(
+    changes: Sequence[Dict[str, Any]],
+    groups: List[Dict[str, Any]],
+    counter: int,
+    baseline: Any,
+    candidate: Any,
+) -> int:
+    for name_change in changes:
+        if name_change.get("kind") != "defined_name_changed":
+            continue
+        old_target = name_change.get("old")
+        new_target = name_change.get("new")
+        if not isinstance(old_target, str) or not isinstance(new_target, str):
+            continue
+        related = [name_change]
+        suppressed: List[str] = []
+        targets = {old_target, new_target}
+        for change in changes:
+            if change.get("id") == name_change.get("id") or change.get("scope") != "cell":
+                continue
+            refs = {ref for ref in [change.get("object_ref"), change.get("old_ref"), change.get("new_ref")] if ref}
+            if refs & targets:
+                related.append(change)
+                suppressed.append(change["id"])
+
+        old_value = _cell_value_dict(baseline, old_target)
+        new_value = _cell_value_dict(candidate, new_target)
+        delta = numeric_delta(old_value, new_value)
+        old_display = (old_value or {}).get("display_value", "")
+        new_display = (new_value or {}).get("display_value", "")
+        groups.append(
+            {
+                "id": f"grp_{counter:03d}",
+                "group_type": "named_range_rebound",
+                "range_ref": f"{old_target},{new_target}",
+                "label": f"Named range rebound: {name_change['object_ref']}",
+                "change_count": len(related),
+                "representative_changes": [change["id"] for change in related[:8]],
+                "primary_change_id": name_change["id"],
+                "suppressed_change_ids": sorted(set(suppressed)),
+                "name": name_change["object_ref"],
+                "old_target": old_target,
+                "new_target": new_target,
+                "effective_old": old_display,
+                "effective_new": new_display,
+                "delta": delta,
+                "summary": _named_range_rebound_summary(name_change["object_ref"], old_target, new_target, old_display, new_display, delta),
+                "materiality_score": max(90.0, max((change.get("materiality_score", 0) for change in related), default=0)),
+            }
+        )
+        counter += 1
+    return counter
+
+
+def _cell_value_dict(snapshot: Any, ref: str) -> Optional[Dict[str, Any]]:
+    if snapshot is None or not ref:
+        return None
+    cell = getattr(snapshot, "cells", {}).get(ref)
+    if not cell:
+        return None
+    return cell.value.to_dict()
+
+
+def _named_range_rebound_summary(name: str, old_target: str, new_target: str, old_display: str, new_display: str, delta: Optional[Dict[str, Any]]) -> str:
+    value_phrase = ""
+    if old_display or new_display:
+        value_phrase = f" Effective value changed from {old_display or 'blank'} to {new_display or 'blank'}"
+        delta_text = _delta_text({"delta": delta}) if delta else ""
+        if delta_text:
+            value_phrase += f" ({delta_text})"
+        value_phrase += "."
+    return f"Named range '{name}' was rebound from {old_target} to {new_target}.{value_phrase}"
 
 
 def _add_modeling_step_groups(changes: Sequence[Dict[str, Any]], groups: List[Dict[str, Any]], counter: int) -> int:
@@ -569,7 +701,7 @@ def build_impacted_outputs(
             continue
         if change.get("semantic_role") != "output" and change.get("directness") not in {"propagated", "unexplained"}:
             continue
-        if change["kind"] not in {"cached_value_changed", "formula_changed", "formula_reference_changed", "formula_function_changed", "formula_operator_changed", "formula_constant_changed", "formula_named_range_changed", "formula_text_changed", "constant_to_formula", "formula_to_constant"}:
+        if change["kind"] not in {"cached_value_changed", "formula_changed", "formula_reference_changed", "formula_function_changed", "formula_operator_changed", "formula_constant_changed", "formula_named_range_changed", "formula_external_reference_changed", "formula_text_changed", "constant_to_formula", "formula_to_constant"}:
             continue
         ref = change["object_ref"]
         upstream_ids: List[str] = []
@@ -587,6 +719,7 @@ def build_impacted_outputs(
                     "from": root,
                     "to": ref,
                     "nodes": path["nodes"],
+                    "display_nodes": _path_display_nodes(path["nodes"], candidate_graph, baseline_graph),
                     "edges": path["edge_ids"],
                     "collapsed": False,
                     "confidence": path["confidence"],
@@ -602,7 +735,7 @@ def build_impacted_outputs(
             strength = "moderate"
         else:
             strength = "weak"
-        strength, confidence_factors = degrade_explanation_strength(
+        strength, confidence_factors, dependency_confidence, value_delta_confidence = degrade_explanation_strength(
             strength,
             paths,
             upstream_ids,
@@ -624,6 +757,8 @@ def build_impacted_outputs(
                 "old_ref": old_ref,
                 "new_ref": new_ref,
                 "address_changed": bool(change.get("address_changed")),
+                "change_id": change.get("id"),
+                "change_kind": change.get("kind"),
                 "semantic_id": change.get("semantic_id"),
                 "label": configured_output_names.get(ref) or _best_label_from_change(change),
                 "old_value": old_cell.value.to_dict() if old_cell else None,
@@ -632,6 +767,8 @@ def build_impacted_outputs(
                 "upstream_change_ids": upstream_ids,
                 "representative_paths": paths[:5],
                 "explanation_strength": strength,
+                "dependency_confidence": dependency_confidence,
+                "value_delta_confidence": value_delta_confidence,
                 "confidence_factors": confidence_factors,
                 "explanation": _output_explanation(ref, change, upstream_ids, strength),
                 "materiality_score": change.get("materiality_score", 0),
@@ -652,25 +789,35 @@ def degrade_explanation_strength(
     candidate: Any,
     baseline_graph: Dict[str, Any],
     candidate_graph: Dict[str, Any],
-) -> Tuple[str, List[Dict[str, Any]]]:
+) -> Tuple[str, List[Dict[str, Any]], str, str]:
     factors: List[Dict[str, Any]] = []
 
-    def add_factor(code: str, message: str, cap: str) -> None:
-        factors.append({"code": code, "message": message, "strength_cap": cap})
+    def add_factor(code: str, message: str, cap: str, area: str = "explanation") -> None:
+        factors.append({"code": code, "message": message, "strength_cap": cap, "confidence_area": area})
 
     for workbook_name, snapshot in [("baseline", baseline), ("candidate", candidate)]:
         if snapshot.file.get("calc_mode") == "manual":
-            add_factor("manual_calculation_mode", f"{workbook_name} workbook uses manual calculation mode.", "moderate")
+            add_factor("manual_calculation_mode", f"{workbook_name} workbook uses manual calculation mode.", "moderate", "value_delta")
         if snapshot.file.get("full_calc_on_load"):
-            add_factor("full_calc_on_load", f"{workbook_name} workbook requests full recalculation on load.", "moderate")
+            add_factor("full_calc_on_load", f"{workbook_name} workbook requests full recalculation on load.", "moderate", "value_delta")
 
     upstream_changes = [changes_by_id[item] for item in upstream_ids if item in changes_by_id]
     if len(upstream_changes) > 1:
         add_factor("multiple_upstream_roots", "Multiple upstream direct changes converge on this output.", "moderate")
     if any(change.get("scope") != "cell" for change in upstream_changes):
         add_factor("non_cell_root", "At least one upstream root is a named range, table, or workbook object.", "moderate")
-    if output_change.get("kind", "").startswith("formula_") and output_change.get("delta"):
-        add_factor("formula_and_value_changed", "The output formula and cached value both changed.", "moderate")
+    if output_change.get("kind", "").startswith("formula_") and _delta_is_nonzero(output_change.get("delta")):
+        add_factor("formula_and_value_changed", "The output formula and cached value both changed.", "moderate", "value_delta")
+    if output_change.get("kind", "").startswith("formula_") and not _delta_is_nonzero(output_change.get("delta")):
+        add_factor("formula_changed_cache_unchanged", "The output formula changed but its cached value did not change.", "moderate", "value_delta")
+
+    output_ref = output_change.get("object_ref")
+    old_ref = output_change.get("old_ref") or output_ref
+    new_ref = output_change.get("new_ref") or output_ref
+    for workbook_name, graph, node_id in [("baseline", baseline_graph, old_ref), ("candidate", candidate_graph, new_ref)]:
+        node = graph.get("nodes", {}).get(node_id)
+        if _node_has_missing_formula_cache(node):
+            add_factor("output_formula_cache_missing", f"{workbook_name} output formula cache is missing at {node_id}.", "weak", "value_delta")
 
     for node_id in _path_node_ids(paths):
         node = candidate_graph["nodes"].get(node_id) or baseline_graph["nodes"].get(node_id)
@@ -680,18 +827,29 @@ def degrade_explanation_strength(
         if not formula:
             continue
         if formula.get("parse_status") and formula.get("parse_status") != "ok":
-            add_factor("partial_formula_parse", f"Formula dependency extraction was partial at {node_id}.", "weak")
+            add_factor("partial_formula_parse", f"Formula dependency extraction was partial at {node_id}.", "weak", "dependency")
         if formula.get("has_dynamic_reference"):
-            add_factor("dynamic_reference", f"Formula path includes dynamic reference logic at {node_id}.", "weak")
+            add_factor("dynamic_reference", f"Formula path includes dynamic reference logic at {node_id}.", "weak", "dependency")
         if formula.get("has_external_reference"):
-            add_factor("external_reference", f"Formula path includes an external workbook reference at {node_id}.", "moderate")
+            add_factor("external_reference", f"Formula path includes an external workbook reference at {node_id}.", "moderate", "dependency")
         if formula.get("has_volatile_function"):
-            add_factor("volatile_function", f"Formula path includes a volatile function at {node_id}.", "moderate")
+            add_factor("volatile_function", f"Formula path includes a volatile function at {node_id}.", "moderate", "dependency")
+        if _node_has_missing_formula_cache(node):
+            add_factor("path_formula_cache_missing", f"Formula cache is missing on the path at {node_id}.", "weak", "value_delta")
 
     capped = strength
     for factor in factors:
         capped = _cap_strength(capped, factor["strength_cap"])
-    return capped, _dedupe_confidence_factors(factors)
+    factors = _dedupe_confidence_factors(factors)
+    dependency_confidence = _path_dependency_confidence(paths)
+    value_delta_confidence = "high" if _delta_is_nonzero(output_change.get("delta")) else "moderate"
+    for factor in factors:
+        area = factor.get("confidence_area")
+        if area in {"dependency", "explanation"}:
+            dependency_confidence = _cap_confidence(dependency_confidence, factor["strength_cap"])
+        if area in {"value_delta", "explanation"}:
+            value_delta_confidence = _cap_confidence(value_delta_confidence, factor["strength_cap"])
+    return capped, factors, dependency_confidence, value_delta_confidence
 
 
 def _path_node_ids(paths: Sequence[Dict[str, Any]]) -> Set[str]:
@@ -718,6 +876,34 @@ def _dedupe_confidence_factors(factors: Sequence[Dict[str, Any]]) -> List[Dict[s
         seen.add(key)
         result.append(factor)
     return result
+
+
+def _path_dependency_confidence(paths: Sequence[Dict[str, Any]]) -> str:
+    if not paths:
+        return "weak"
+    confidence = min(float(path.get("confidence", 0)) for path in paths)
+    if confidence >= 0.85:
+        return "high"
+    if confidence >= 0.65:
+        return "moderate"
+    return "weak"
+
+
+def _cap_confidence(confidence: str, cap: str) -> str:
+    order = {"weak": 1, "moderate": 2, "high": 3, "strong": 3, "unexplained": 0}
+    normalized_cap = "high" if cap == "strong" else cap
+    if order.get(confidence, 0) <= order.get(normalized_cap, 0):
+        return confidence
+    return normalized_cap
+
+
+def _node_has_missing_formula_cache(node: Optional[Dict[str, Any]]) -> bool:
+    if not node:
+        return False
+    if not (node.get("new_formula") or node.get("old_formula")):
+        return False
+    value = node.get("new_value") or node.get("old_value") or {}
+    return value.get("value_type") == "blank" or (value.get("typed_value") is None and not value.get("display_value"))
 
 
 def build_change_impact_dag(
@@ -751,6 +937,7 @@ def build_change_impact_dag(
         "outputs": [output for output in outputs if output in nodes],
         "nodes": nodes,
         "edges": edges,
+        "range_membership_summary": candidate_graph.get("range_membership_summary") or baseline_graph.get("range_membership_summary") or [],
         "collapsed_node_count": 0,
         "omitted_node_count": max(0, len(candidate_graph["nodes"]) - len(nodes)),
     }
@@ -809,8 +996,10 @@ def build_llm_summary(
     diagnostics: Sequence[Dict[str, Any]],
     config: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
-    direct_changes = [change for change in changes if change.get("directness") == "direct"]
+    suppressed_ids = _suppressed_change_ids_from_groups(grouped_changes)
+    direct_changes = [change for change in changes if change.get("directness") == "direct" and change.get("id") not in suppressed_ids]
     top_direct = direct_changes[:8]
+    top_groups = list(grouped_changes[:8])
     configured_output_refs = _configured_output_refs(config or {})
     llm_ranked_outputs = sorted(
         impacted_outputs,
@@ -832,15 +1021,26 @@ def build_llm_summary(
         caveats.append(f"{summary['unexplained_change_count']} changed value(s) had no detected upstream explanation.")
     if warning_codes:
         caveats.append("Warnings present: " + ", ".join(warning_codes) + ".")
+    output_factor_codes = sorted(
+        {
+            factor.get("code", "")
+            for output in top_outputs
+            for factor in output.get("confidence_factors", [])
+            if factor.get("code")
+        }
+    )
+    if output_factor_codes:
+        caveats.append("Output confidence factors: " + ", ".join(output_factor_codes) + ".")
 
-    one_sentence = _llm_one_sentence(summary, top_direct, top_outputs)
+    one_sentence = _llm_one_sentence(summary, top_direct, top_outputs, top_groups)
     return {
         "schema_version": "0.1",
         "intended_use": "A compact, deterministic context object for LLMs to answer a user with one sentence plus optional evidence.",
         "one_sentence_summary": one_sentence,
         "confidence": summary.get("confidence", "unknown"),
         "counts": {
-            "direct_changes": summary.get("direct_change_count", 0),
+            "direct_changes": len(direct_changes),
+            "raw_direct_changes": summary.get("direct_change_count", 0),
             "propagated_changes": summary.get("propagated_change_count", 0),
             "unexplained_changes": summary.get("unexplained_change_count", 0),
             "formula_changes": summary.get("formulas_changed", 0),
@@ -848,8 +1048,9 @@ def build_llm_summary(
             "shifted_semantic_matches": summary.get("shifted_semantic_matches", 0),
         },
         "top_direct_changes": [_llm_change_fact(change) for change in top_direct],
-        "top_change_groups": [_llm_group_fact(group) for group in grouped_changes[:8]],
+        "top_change_groups": [_llm_group_fact(group) for group in top_groups],
         "top_impacted_outputs": [_llm_output_fact(output) for output in top_outputs],
+        "claims": _llm_claims(top_direct, top_groups, top_outputs),
         "caveats": caveats,
         "safe_response_rules": [
             "Use the one_sentence_summary verbatim or paraphrase it without adding unsupported causality.",
@@ -860,7 +1061,12 @@ def build_llm_summary(
     }
 
 
-def _llm_one_sentence(summary: Dict[str, Any], top_direct: Sequence[Dict[str, Any]], top_outputs: Sequence[Dict[str, Any]]) -> str:
+def _llm_one_sentence(
+    summary: Dict[str, Any],
+    top_direct: Sequence[Dict[str, Any]],
+    top_outputs: Sequence[Dict[str, Any]],
+    top_groups: Sequence[Dict[str, Any]] = (),
+) -> str:
     if summary.get("direct_change_count", 0) == 0 and summary.get("propagated_change_count", 0) == 0 and summary.get("unexplained_change_count", 0) == 0:
         return "No workbook changes were detected."
     if top_outputs:
@@ -871,18 +1077,25 @@ def _llm_one_sentence(summary: Dict[str, Any], top_direct: Sequence[Dict[str, An
         new_display = (output.get("new_value") or {}).get("display_value", "")
         delta = _delta_text(output)
         strength = output.get("explanation_strength", "unknown")
-        direct_phrase = _direct_change_phrase(top_direct)
+        named_rebound = next((group for group in top_groups if group.get("group_type") == "named_range_rebound"), None)
+        direct_phrase = _named_range_rebound_phrase(named_rebound) if named_rebound else _direct_change_phrase(top_direct)
         explanation = "likely explained by" if strength == "strong" else "associated with"
         if strength == "unexplained":
             explanation = "without a detected upstream explanation despite"
+        if not delta and old_display == new_display and output.get("change_kind", "").startswith("formula"):
+            return (
+                f"{output_ref} {output_label} formula changed while the cached value stayed at {old_display or 'blank'}, "
+                f"{explanation} {direct_phrase}; {summary.get('unexplained_change_count', 0)} unexplained value changes were detected."
+            )
         return (
             f"{output_ref} {output_label} changed from {old_display or 'blank'} to {new_display or 'blank'}"
             f"{f' ({delta})' if delta else ''}, {explanation} {direct_phrase}; "
             f"{summary.get('unexplained_change_count', 0)} unexplained value changes were detected."
         )
     if top_direct:
+        noun = "change" if summary.get("direct_change_count", 0) == 1 else "changes"
         return (
-            f"Detected {summary.get('direct_change_count', 0)} direct changes, led by {_change_short(top_direct[0])}, "
+            f"Detected {summary.get('direct_change_count', 0)} direct {noun}, led by {_change_short(top_direct[0])}, "
             f"with {summary.get('propagated_change_count', 0)} propagated value changes and "
             f"{summary.get('unexplained_change_count', 0)} unexplained value changes."
         )
@@ -953,7 +1166,7 @@ def _llm_change_fact(change: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def _llm_group_fact(group: Dict[str, Any]) -> Dict[str, Any]:
-    return {
+    fact = {
         "id": group.get("id"),
         "group_type": group.get("group_type"),
         "label": group.get("label"),
@@ -962,6 +1175,10 @@ def _llm_group_fact(group: Dict[str, Any]) -> Dict[str, Any]:
         "summary": group.get("summary"),
         "materiality_score": group.get("materiality_score"),
     }
+    for key in ["primary_change_id", "name", "old_target", "new_target", "effective_old", "effective_new", "delta"]:
+        if key in group:
+            fact[key] = group.get(key)
+    return fact
 
 
 def _llm_output_fact(output: Dict[str, Any]) -> Dict[str, Any]:
@@ -970,12 +1187,16 @@ def _llm_output_fact(output: Dict[str, Any]) -> Dict[str, Any]:
         "old_ref": output.get("old_ref"),
         "new_ref": output.get("new_ref"),
         "address_changed": output.get("address_changed"),
+        "change_id": output.get("change_id"),
+        "change_kind": output.get("change_kind"),
         "semantic_id": output.get("semantic_id"),
         "label": output.get("label"),
         "old": (output.get("old_value") or {}).get("display_value"),
         "new": (output.get("new_value") or {}).get("display_value"),
         "delta": _delta_text(output),
         "explanation_strength": output.get("explanation_strength"),
+        "dependency_confidence": output.get("dependency_confidence"),
+        "value_delta_confidence": output.get("value_delta_confidence"),
         "confidence_factors": output.get("confidence_factors", []),
         "upstream_change_ids": output.get("upstream_change_ids", []),
         "representative_paths": output.get("representative_paths", [])[:3],
@@ -993,6 +1214,8 @@ def _direct_change_phrase(top_direct: Sequence[Dict[str, Any]]) -> str:
 
 def _change_short(change: Dict[str, Any]) -> str:
     ref = change.get("object_ref", "a changed cell")
+    if change.get("kind") == "defined_name_changed":
+        return f"named range {ref} rebinding from {change.get('old_display') or 'blank'} to {change.get('new_display') or 'blank'}"
     label = _best_label_from_change(change)
     old_display = change.get("old_display", "")
     new_display = change.get("new_display", "")
@@ -1001,12 +1224,91 @@ def _change_short(change: Dict[str, Any]) -> str:
     return f"{ref} changing from {old_display or 'blank'} to {new_display or 'blank'}"
 
 
+def _named_range_rebound_phrase(group: Optional[Dict[str, Any]]) -> str:
+    if not group:
+        return ""
+    phrase = f"named range {group.get('name')} rebinding from {group.get('old_target')} to {group.get('new_target')}"
+    old_display = group.get("effective_old")
+    new_display = group.get("effective_new")
+    if old_display or new_display:
+        phrase += f", moving the effective value from {old_display or 'blank'} to {new_display or 'blank'}"
+    return phrase
+
+
+def _llm_claims(
+    top_direct: Sequence[Dict[str, Any]],
+    top_groups: Sequence[Dict[str, Any]],
+    top_outputs: Sequence[Dict[str, Any]],
+) -> List[Dict[str, Any]]:
+    claims: List[Dict[str, Any]] = []
+    for group in top_groups:
+        if group.get("group_type") != "named_range_rebound":
+            continue
+        claims.append(
+            {
+                "claim": _named_range_rebound_summary(
+                    str(group.get("name", "")),
+                    str(group.get("old_target", "")),
+                    str(group.get("new_target", "")),
+                    str(group.get("effective_old") or ""),
+                    str(group.get("effective_new") or ""),
+                    group.get("delta"),
+                ),
+                "refs": [ref for ref in [group.get("name"), group.get("old_target"), group.get("new_target")] if ref],
+                "change_ids": [group.get("primary_change_id")] if group.get("primary_change_id") else [],
+                "evidence_type": "named_range_rebinding",
+                "confidence": "moderate",
+                "caveats": ["non_cell_root"],
+            }
+        )
+    for output in top_outputs:
+        refs = [output.get("ref")] if output.get("ref") else []
+        old_value = output.get("old_value") or {}
+        new_value = output.get("new_value") or {}
+        claims.append(
+            {
+                "claim": f"{output.get('label') or output.get('ref')} changed from {old_value.get('display_value') or 'blank'} to {new_value.get('display_value') or 'blank'}",
+                "refs": refs,
+                "old_value": old_value.get("typed_value"),
+                "new_value": new_value.get("typed_value"),
+                "delta": output.get("delta"),
+                "evidence_type": "cached_value_diff",
+                "confidence": output.get("value_delta_confidence") or output.get("explanation_strength"),
+                "caveats": ["cached_value_mode"] + [factor.get("code") for factor in output.get("confidence_factors", []) if factor.get("code")],
+            }
+        )
+        if output.get("upstream_change_ids") and output.get("explanation_strength") != "unexplained":
+            claims.append(
+                {
+                    "claim": f"Detected upstream changes are associated with {output.get('label') or output.get('ref')}",
+                    "refs": refs,
+                    "root_change_ids": output.get("upstream_change_ids", []),
+                    "representative_paths": output.get("representative_paths", [])[:3],
+                    "evidence_type": "dependency_path",
+                    "confidence": output.get("explanation_strength"),
+                    "dependency_confidence": output.get("dependency_confidence"),
+                    "value_delta_confidence": output.get("value_delta_confidence"),
+                    "caveats": [factor.get("code") for factor in output.get("confidence_factors", []) if factor.get("code")],
+                }
+            )
+    return claims[:12]
+
+
 def _delta_text(item: Dict[str, Any]) -> str:
     delta = item.get("delta")
     if not delta:
         return ""
+    if not _delta_is_nonzero(delta):
+        return ""
     parts = [delta.get("display_point_delta") or delta.get("display_delta"), delta.get("display_relative_delta")]
     return " / ".join(part for part in parts if part)
+
+
+def _delta_is_nonzero(delta: Optional[Dict[str, Any]]) -> bool:
+    if not delta:
+        return False
+    absolute_delta = delta.get("absolute_delta")
+    return isinstance(absolute_delta, (int, float)) and abs(float(absolute_delta)) > 1e-12
 
 
 def _diff_sheets(baseline: Any, candidate: Any, changes: List[Dict[str, Any]], counter: int) -> int:
@@ -1540,21 +1842,42 @@ def _is_range_ref(ref: str) -> bool:
     return "!" in ref and ":" in ref and not ref.startswith("[")
 
 
-def _range_contains_cell(range_ref: str, cell_ref: str) -> bool:
-    if not _is_range_ref(range_ref) or not _is_cell_ref(cell_ref):
-        return False
+def _parse_cell_ref(ref: str) -> Optional[Tuple[str, int, int]]:
+    if not _is_cell_ref(ref):
+        return None
     try:
-        from openpyxl.utils.cell import coordinate_to_tuple, range_boundaries
+        from openpyxl.utils.cell import coordinate_to_tuple
 
-        range_sheet, cells = split_cell_id(range_ref)
-        cell_sheet, address = split_cell_id(cell_ref)
-        if range_sheet != cell_sheet:
-            return False
+        sheet, address = split_cell_id(ref)
         row, col = coordinate_to_tuple(address)
-        min_col, min_row, max_col, max_row = range_boundaries(cells.replace("$", ""))
-        return min_row <= row <= max_row and min_col <= col <= max_col
+        return sheet, row, col
     except Exception:
+        return None
+
+
+def _parse_range_ref(ref: str) -> Optional[Tuple[str, int, int, int, int]]:
+    if not _is_range_ref(ref):
+        return None
+    try:
+        from openpyxl.utils.cell import range_boundaries
+
+        sheet, cells = split_cell_id(ref)
+        min_col, min_row, max_col, max_row = range_boundaries(cells.replace("$", ""))
+        return sheet, min_row, max_row, min_col, max_col
+    except Exception:
+        return None
+
+
+def _range_contains_cell(range_ref: str, cell_ref: str) -> bool:
+    parsed_range = _parse_range_ref(range_ref)
+    parsed_cell = _parse_cell_ref(cell_ref)
+    if parsed_range is None or parsed_cell is None:
         return False
+    range_sheet, min_row, max_row, min_col, max_col = parsed_range
+    cell_sheet, row, col = parsed_cell
+    if range_sheet != cell_sheet:
+        return False
+    return min_row <= row <= max_row and min_col <= col <= max_col
 
 
 def _alignment_diagnostics(alignment: Dict[str, Any]) -> List[Dict[str, Any]]:

@@ -1,0 +1,640 @@
+{
+  "schema_version": "0.1",
+  "baseline": {
+    "filename": "baseline.xlsx",
+    "sha256": "ad3b774057bc5ff429f8e0f9b7ff43d5262c0647902a3bd49b7a7597e65e658a",
+    "file_size_bytes": 4941,
+    "workbook_type": "xlsx",
+    "has_macros": false,
+    "calc_mode": "unknown",
+    "full_calc_on_load": false,
+    "created_at": "2026-01-01T00:00:00",
+    "modified_at": "2026-01-01T00:00:00",
+    "app_version": null
+  },
+  "candidate": {
+    "filename": "candidate.xlsx",
+    "sha256": "95435b1cca3af8a52cccc4d031114ed15ef0b456a01f3594d8464a706b95d045",
+    "file_size_bytes": 4941,
+    "workbook_type": "xlsx",
+    "has_macros": false,
+    "calc_mode": "unknown",
+    "full_calc_on_load": false,
+    "created_at": "2026-01-01T00:00:00",
+    "modified_at": "2026-01-01T00:00:00",
+    "app_version": null
+  },
+  "summary": {
+    "direct_change_count": 1,
+    "propagated_change_count": 0,
+    "unexplained_change_count": 0,
+    "structural_matches": 4,
+    "semantic_matches": 4,
+    "shifted_semantic_matches": 0,
+    "unmatched_old_cells": 0,
+    "unmatched_new_cells": 0,
+    "sheets_added": 0,
+    "sheets_deleted": 0,
+    "formulas_changed": 1,
+    "constants_changed": 0,
+    "cached_values_changed": 0,
+    "outputs_changed": 1,
+    "has_macros": false,
+    "has_external_links": false,
+    "has_opaque_formulas": false,
+    "confidence": "medium",
+    "one_sentence_summary": "Summary!B2 External Input changed from 10 to 12 (+2.00 / +20.0%), associated with Summary!B2 2027E External input changing from ='[budget_old.xlsx]Inputs'!A1 to ='[budget_new.xlsx]Inputs'!A1; 0 unexplained value changes were detected."
+  },
+  "llm_summary": {
+    "schema_version": "0.1",
+    "intended_use": "A compact, deterministic context object for LLMs to answer a user with one sentence plus optional evidence.",
+    "one_sentence_summary": "Summary!B2 External Input changed from 10 to 12 (+2.00 / +20.0%), associated with Summary!B2 2027E External input changing from ='[budget_old.xlsx]Inputs'!A1 to ='[budget_new.xlsx]Inputs'!A1; 0 unexplained value changes were detected.",
+    "confidence": "medium",
+    "counts": {
+      "direct_changes": 1,
+      "raw_direct_changes": 1,
+      "propagated_changes": 0,
+      "unexplained_changes": 0,
+      "formula_changes": 1,
+      "outputs_changed": 1,
+      "shifted_semantic_matches": 0
+    },
+    "top_direct_changes": [
+      {
+        "id": "chg_0001",
+        "kind": "formula_external_reference_changed",
+        "ref": "Summary!B2",
+        "old_ref": "Summary!B2",
+        "new_ref": "Summary!B2",
+        "address_changed": false,
+        "semantic_id": "cell::summary::intersection::external_input::2027e",
+        "label": "2027E External input",
+        "old": "='[budget_old.xlsx]Inputs'!A1",
+        "new": "='[budget_new.xlsx]Inputs'!A1",
+        "delta": "+2.00 / +20.0%",
+        "semantic_role": "output",
+        "materiality_score": 115.002,
+        "confidence": 0.95
+      }
+    ],
+    "top_change_groups": [],
+    "top_impacted_outputs": [
+      {
+        "ref": "Summary!B2",
+        "old_ref": "Summary!B2",
+        "new_ref": "Summary!B2",
+        "address_changed": false,
+        "change_id": "chg_0001",
+        "change_kind": "formula_external_reference_changed",
+        "semantic_id": "cell::summary::intersection::external_input::2027e",
+        "label": "External Input",
+        "old": "10",
+        "new": "12",
+        "delta": "+2.00 / +20.0%",
+        "explanation_strength": "weak",
+        "dependency_confidence": "weak",
+        "value_delta_confidence": "moderate",
+        "confidence_factors": [
+          {
+            "code": "formula_and_value_changed",
+            "message": "The output formula and cached value both changed.",
+            "strength_cap": "moderate",
+            "confidence_area": "value_delta"
+          },
+          {
+            "code": "partial_formula_parse",
+            "message": "Formula dependency extraction was partial at Summary!B2.",
+            "strength_cap": "weak",
+            "confidence_area": "dependency"
+          },
+          {
+            "code": "external_reference",
+            "message": "Formula path includes an external workbook reference at Summary!B2.",
+            "strength_cap": "moderate",
+            "confidence_area": "dependency"
+          }
+        ],
+        "upstream_change_ids": [
+          "chg_0001"
+        ],
+        "representative_paths": [
+          {
+            "id": "path_001_001",
+            "from": "Summary!B2",
+            "to": "Summary!B2",
+            "nodes": [
+              "Summary!B2"
+            ],
+            "display_nodes": [
+              {
+                "id": "Summary!B2",
+                "ref": "Summary!B2",
+                "label": "2027E External input",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
+            "edges": [],
+            "collapsed": false,
+            "confidence": 1.0
+          }
+        ],
+        "explanation": "Summary!B2 changed and may be related to 1 upstream direct change(s), but dependency evidence is partial."
+      }
+    ],
+    "claims": [
+      {
+        "claim": "External Input changed from 10 to 12",
+        "refs": [
+          "Summary!B2"
+        ],
+        "old_value": 10,
+        "new_value": 12,
+        "delta": {
+          "old_number": 10.0,
+          "new_number": 12.0,
+          "absolute_delta": 2.0,
+          "display_delta": "+2.00",
+          "relative_delta": 0.19999999999999996,
+          "display_relative_delta": "+20.0%"
+        },
+        "evidence_type": "cached_value_diff",
+        "confidence": "moderate",
+        "caveats": [
+          "cached_value_mode",
+          "formula_and_value_changed",
+          "partial_formula_parse",
+          "external_reference"
+        ]
+      },
+      {
+        "claim": "Detected upstream changes are associated with External Input",
+        "refs": [
+          "Summary!B2"
+        ],
+        "root_change_ids": [
+          "chg_0001"
+        ],
+        "representative_paths": [
+          {
+            "id": "path_001_001",
+            "from": "Summary!B2",
+            "to": "Summary!B2",
+            "nodes": [
+              "Summary!B2"
+            ],
+            "display_nodes": [
+              {
+                "id": "Summary!B2",
+                "ref": "Summary!B2",
+                "label": "2027E External input",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
+            "edges": [],
+            "collapsed": false,
+            "confidence": 1.0
+          }
+        ],
+        "evidence_type": "dependency_path",
+        "confidence": "weak",
+        "dependency_confidence": "weak",
+        "value_delta_confidence": "moderate",
+        "caveats": [
+          "formula_and_value_changed",
+          "partial_formula_parse",
+          "external_reference"
+        ]
+      }
+    ],
+    "caveats": [
+      "Uses cached workbook formula values; numeric deltas assume both workbooks were saved after recalculation.",
+      "Warnings present: FORMULA_PARSE_PARTIAL.",
+      "Output confidence factors: external_reference, formula_and_value_changed, partial_formula_parse."
+    ],
+    "safe_response_rules": [
+      "Use the one_sentence_summary verbatim or paraphrase it without adding unsupported causality.",
+      "Say 'likely explains' only when explanation_strength is strong.",
+      "Say 'associated with' for moderate or weak paths.",
+      "Always include cell references for material claims."
+    ]
+  },
+  "changes": [
+    {
+      "id": "chg_0001",
+      "kind": "formula_external_reference_changed",
+      "scope": "cell",
+      "object_ref": "Summary!B2",
+      "old_ref": "Summary!B2",
+      "new_ref": "Summary!B2",
+      "address_changed": false,
+      "semantic_id": "cell::summary::intersection::external_input::2027e",
+      "semantic_identity": {
+        "semantic_id": "cell::summary::intersection::external_input::2027e",
+        "kind": "row_column_intersection",
+        "row_headers": [
+          "External input"
+        ],
+        "column_headers": [
+          "2027E"
+        ],
+        "labels": [
+          "External input",
+          "2027E"
+        ],
+        "source_refs": [
+          "Summary!A2",
+          "Summary!B1"
+        ],
+        "confidence": 0.9
+      },
+      "sheet_name": "Summary",
+      "range_ref": "Summary!B2",
+      "old": "='[budget_old.xlsx]Inputs'!A1",
+      "new": "='[budget_new.xlsx]Inputs'!A1",
+      "old_display": "='[budget_old.xlsx]Inputs'!A1",
+      "new_display": "='[budget_new.xlsx]Inputs'!A1",
+      "delta": {
+        "old_number": 10.0,
+        "new_number": 12.0,
+        "absolute_delta": 2.0,
+        "display_delta": "+2.00",
+        "relative_delta": 0.19999999999999996,
+        "display_relative_delta": "+20.0%"
+      },
+      "labels": [
+        {
+          "text": "2027E External input",
+          "source": "left_neighbor+above_neighbor",
+          "confidence": 0.86,
+          "source_ref": "Summary!B1,Summary!A2"
+        },
+        {
+          "text": "External input",
+          "source": "left_neighbor",
+          "confidence": 0.75,
+          "source_ref": "Summary!A2"
+        },
+        {
+          "text": "2027E",
+          "source": "above_neighbor",
+          "confidence": 0.65,
+          "source_ref": "Summary!B1"
+        },
+        {
+          "text": "Summary",
+          "source": "sheet_name",
+          "confidence": 0.2
+        }
+      ],
+      "semantic_role": "output",
+      "directness": "direct",
+      "materiality_score": 115.002,
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "type": "formula_diff",
+          "kind": "formula_external_reference_changed",
+          "old_formula": "='[budget_old.xlsx]Inputs'!A1",
+          "new_formula": "='[budget_new.xlsx]Inputs'!A1",
+          "old_normalized": "'[budget_old.xlsx]Inputs'!A1",
+          "new_normalized": "'[budget_new.xlsx]Inputs'!A1",
+          "token_diff": [
+            {
+              "type": "reference",
+              "old": [
+                "[budget_old.xlsx]Inputs!A1"
+              ],
+              "new": [
+                "[budget_new.xlsx]Inputs!A1"
+              ]
+            }
+          ]
+        }
+      ],
+      "warnings": [],
+      "visibility_context": {
+        "sheet_visible": true,
+        "row_hidden": false,
+        "col_hidden": false
+      }
+    }
+  ],
+  "grouped_changes": [],
+  "dependency_graph_stats": {
+    "baseline_node_count": 5,
+    "baseline_edge_count": 1,
+    "aligned_baseline_node_count": 5,
+    "aligned_baseline_edge_count": 1,
+    "candidate_node_count": 5,
+    "candidate_edge_count": 1
+  },
+  "structural_alignment": {
+    "summary": {
+      "matched_cells": 4,
+      "semantic_matches": 4,
+      "shifted_semantic_matches": 0,
+      "unmatched_old_cells": 0,
+      "unmatched_new_cells": 0
+    },
+    "shifted_matches": [],
+    "shifted_matches_omitted": 0
+  },
+  "change_impact_dag": {
+    "roots": [
+      "Summary!B2"
+    ],
+    "outputs": [
+      "Summary!B2"
+    ],
+    "nodes": {
+      "Summary!B2": {
+        "id": "Summary!B2",
+        "ref": "Summary!B2",
+        "node_type": "cell",
+        "label": "2027E External input",
+        "semantic_id": "cell::summary::intersection::external_input::2027e",
+        "semantic_identity": {
+          "semantic_id": "cell::summary::intersection::external_input::2027e",
+          "kind": "row_column_intersection",
+          "row_headers": [
+            "External input"
+          ],
+          "column_headers": [
+            "2027E"
+          ],
+          "labels": [
+            "External input",
+            "2027E"
+          ],
+          "source_refs": [
+            "Summary!A2",
+            "Summary!B1"
+          ],
+          "confidence": 0.9
+        },
+        "semantic_role": "output",
+        "sheet_name": "Summary",
+        "old_value": null,
+        "new_value": {
+          "raw": 12,
+          "typed_value": 12,
+          "display_value": "12",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": {
+          "raw": "='[budget_new.xlsx]Inputs'!A1",
+          "normalized": "'[budget_new.xlsx]Inputs'!A1",
+          "formula_type": "normal",
+          "tokens": [
+            {
+              "type": "external_reference",
+              "text": "'[budget_new.xlsx]Inputs'!A1"
+            }
+          ],
+          "precedents": [
+            {
+              "raw": "'[budget_new.xlsx]Inputs'!A1",
+              "ref": "A1",
+              "sheet_name": "[budget_new.xlsx]Inputs",
+              "kind": "external_reference",
+              "target": "[budget_new.xlsx]Inputs!A1",
+              "confidence": 0.4
+            }
+          ],
+          "has_volatile_function": false,
+          "has_dynamic_reference": false,
+          "has_external_reference": true,
+          "parse_status": "partial",
+          "parse_warnings": [
+            "Reference points at unknown sheet [budget_new.xlsx]Inputs."
+          ]
+        },
+        "changes": [
+          "chg_0001"
+        ],
+        "materiality_score": 0,
+        "confidence": 0.6
+      }
+    },
+    "edges": [],
+    "range_membership_summary": [],
+    "collapsed_node_count": 0,
+    "omitted_node_count": 4
+  },
+  "top_direct_changes": [
+    {
+      "id": "chg_0001",
+      "kind": "formula_external_reference_changed",
+      "scope": "cell",
+      "object_ref": "Summary!B2",
+      "old_ref": "Summary!B2",
+      "new_ref": "Summary!B2",
+      "address_changed": false,
+      "semantic_id": "cell::summary::intersection::external_input::2027e",
+      "semantic_identity": {
+        "semantic_id": "cell::summary::intersection::external_input::2027e",
+        "kind": "row_column_intersection",
+        "row_headers": [
+          "External input"
+        ],
+        "column_headers": [
+          "2027E"
+        ],
+        "labels": [
+          "External input",
+          "2027E"
+        ],
+        "source_refs": [
+          "Summary!A2",
+          "Summary!B1"
+        ],
+        "confidence": 0.9
+      },
+      "sheet_name": "Summary",
+      "range_ref": "Summary!B2",
+      "old": "='[budget_old.xlsx]Inputs'!A1",
+      "new": "='[budget_new.xlsx]Inputs'!A1",
+      "old_display": "='[budget_old.xlsx]Inputs'!A1",
+      "new_display": "='[budget_new.xlsx]Inputs'!A1",
+      "delta": {
+        "old_number": 10.0,
+        "new_number": 12.0,
+        "absolute_delta": 2.0,
+        "display_delta": "+2.00",
+        "relative_delta": 0.19999999999999996,
+        "display_relative_delta": "+20.0%"
+      },
+      "labels": [
+        {
+          "text": "2027E External input",
+          "source": "left_neighbor+above_neighbor",
+          "confidence": 0.86,
+          "source_ref": "Summary!B1,Summary!A2"
+        },
+        {
+          "text": "External input",
+          "source": "left_neighbor",
+          "confidence": 0.75,
+          "source_ref": "Summary!A2"
+        },
+        {
+          "text": "2027E",
+          "source": "above_neighbor",
+          "confidence": 0.65,
+          "source_ref": "Summary!B1"
+        },
+        {
+          "text": "Summary",
+          "source": "sheet_name",
+          "confidence": 0.2
+        }
+      ],
+      "semantic_role": "output",
+      "directness": "direct",
+      "materiality_score": 115.002,
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "type": "formula_diff",
+          "kind": "formula_external_reference_changed",
+          "old_formula": "='[budget_old.xlsx]Inputs'!A1",
+          "new_formula": "='[budget_new.xlsx]Inputs'!A1",
+          "old_normalized": "'[budget_old.xlsx]Inputs'!A1",
+          "new_normalized": "'[budget_new.xlsx]Inputs'!A1",
+          "token_diff": [
+            {
+              "type": "reference",
+              "old": [
+                "[budget_old.xlsx]Inputs!A1"
+              ],
+              "new": [
+                "[budget_new.xlsx]Inputs!A1"
+              ]
+            }
+          ]
+        }
+      ],
+      "warnings": [],
+      "visibility_context": {
+        "sheet_visible": true,
+        "row_hidden": false,
+        "col_hidden": false
+      }
+    }
+  ],
+  "top_impacted_outputs": [
+    {
+      "ref": "Summary!B2",
+      "old_ref": "Summary!B2",
+      "new_ref": "Summary!B2",
+      "address_changed": false,
+      "change_id": "chg_0001",
+      "change_kind": "formula_external_reference_changed",
+      "semantic_id": "cell::summary::intersection::external_input::2027e",
+      "label": "External Input",
+      "old_value": {
+        "raw": 10,
+        "typed_value": 10,
+        "display_value": "10",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "new_value": {
+        "raw": 12,
+        "typed_value": 12,
+        "display_value": "12",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "delta": {
+        "old_number": 10.0,
+        "new_number": 12.0,
+        "absolute_delta": 2.0,
+        "display_delta": "+2.00",
+        "relative_delta": 0.19999999999999996,
+        "display_relative_delta": "+20.0%"
+      },
+      "upstream_change_ids": [
+        "chg_0001"
+      ],
+      "representative_paths": [
+        {
+          "id": "path_001_001",
+          "from": "Summary!B2",
+          "to": "Summary!B2",
+          "nodes": [
+            "Summary!B2"
+          ],
+          "display_nodes": [
+            {
+              "id": "Summary!B2",
+              "ref": "Summary!B2",
+              "label": "2027E External input",
+              "node_type": "cell",
+              "semantic_role": "output"
+            }
+          ],
+          "edges": [],
+          "collapsed": false,
+          "confidence": 1.0
+        }
+      ],
+      "explanation_strength": "weak",
+      "dependency_confidence": "weak",
+      "value_delta_confidence": "moderate",
+      "confidence_factors": [
+        {
+          "code": "formula_and_value_changed",
+          "message": "The output formula and cached value both changed.",
+          "strength_cap": "moderate",
+          "confidence_area": "value_delta"
+        },
+        {
+          "code": "partial_formula_parse",
+          "message": "Formula dependency extraction was partial at Summary!B2.",
+          "strength_cap": "weak",
+          "confidence_area": "dependency"
+        },
+        {
+          "code": "external_reference",
+          "message": "Formula path includes an external workbook reference at Summary!B2.",
+          "strength_cap": "moderate",
+          "confidence_area": "dependency"
+        }
+      ],
+      "explanation": "Summary!B2 changed and may be related to 1 upstream direct change(s), but dependency evidence is partial.",
+      "materiality_score": 115.002,
+      "semantic_role": "output"
+    }
+  ],
+  "unexplained_changes": [],
+  "diagnostics": [
+    {
+      "severity": "warning",
+      "code": "FORMULA_PARSE_PARTIAL",
+      "message": "Reference points at unknown sheet [budget_old.xlsx]Inputs.",
+      "object_ref": "Summary!B2",
+      "details": {
+        "workbook": "baseline"
+      }
+    },
+    {
+      "severity": "warning",
+      "code": "FORMULA_PARSE_PARTIAL",
+      "message": "Reference points at unknown sheet [budget_new.xlsx]Inputs.",
+      "object_ref": "Summary!B2",
+      "details": {
+        "workbook": "candidate"
+      }
+    },
+    {
+      "severity": "info",
+      "code": "CACHED_VALUE_MODE",
+      "message": "This report uses cached formula results. Numeric output deltas assume both workbooks were saved after recalculation."
+    }
+  ]
+}

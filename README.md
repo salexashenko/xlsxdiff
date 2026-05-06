@@ -4,6 +4,12 @@
 
 The project is designed for spreadsheet review workflows where a plain cell-by-cell diff is too noisy: financial models, planning workbooks, operating dashboards, and generated Excel artifacts.
 
+Typical output is meant to be directly usable in review:
+
+```text
+Summary!G31 Total LTV changed from 1180 to 1220 (+40.0 / +3.4%), likely explained by Assumptions!D14 Growth Rate changing from 0.18 to 0.22; 0 unexplained value changes were detected.
+```
+
 ## What It Does
 
 - Detects changed constants, formulas, workbook metadata, defined names, tables, comments, hyperlinks, and optional style changes.
@@ -84,6 +90,7 @@ For agent workflows, read `llm_summary.json` or `result["llm_summary"]` instead 
 - `top_direct_changes`: important changed assumptions, formulas, inputs, or metadata.
 - `top_change_groups`: grouped edits such as inserted/deleted modeling steps.
 - `top_impacted_outputs`: ranked final variables with old value, new value, delta, and upstream change IDs.
+- `claims`: structured evidence-backed claims that support the one-sentence summary.
 - `caveats`: diagnostics that should temper the answer.
 
 A useful agent response pattern is to use `one_sentence_summary` for the answer, mention one or two `top_direct_changes` or `top_change_groups` only when the user asks for detail, and surface `caveats` when the diff includes unexplained output changes or unsupported formula constructs.

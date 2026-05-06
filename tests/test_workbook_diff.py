@@ -250,9 +250,14 @@ def test_named_range_change_propagates_as_non_cell_root(tmp_path: Path) -> None:
     assert output_change["directness"] == "propagated"
     output = next(item for item in result["top_impacted_outputs"] if item["ref"] == "Summary!B2")
     assert output["explanation_strength"] == "moderate"
-    assert name_change["id"] in output["upstream_change_ids"]
+    assert output["upstream_change_ids"] == [name_change["id"]]
     assert any(path["nodes"][0] == "name:GROWTH_2027" for path in output["representative_paths"])
+    assert output["representative_paths"][0]["display_nodes"][0]["ref"] == "Growth_2027"
     assert any(factor["code"] == "non_cell_root" for factor in output["confidence_factors"])
+    assert any(group["group_type"] == "named_range_rebound" for group in result["grouped_changes"])
+    assert [change["id"] for change in result["llm_summary"]["top_direct_changes"]] == [name_change["id"]]
+    assert "named range Growth_2027 rebinding" in result["llm_summary"]["one_sentence_summary"]
+    assert not any(change["ref"] == "Assumptions!D14" for change in result["llm_summary"]["top_direct_changes"])
 
 
 def test_changed_cell_inside_large_range_reaches_output(tmp_path: Path) -> None:
@@ -268,6 +273,8 @@ def test_changed_cell_inside_large_range_reaches_output(tmp_path: Path) -> None:
     output = next(item for item in result["top_impacted_outputs"] if item["ref"] == "Summary!B2")
     assert output["explanation_strength"] == "strong"
     assert output["representative_paths"][0]["nodes"] == ["RawData!C582", "RawData!A1:Z10000", "Summary!B2"]
+    assert result["change_impact_dag"]["range_membership_summary"][0]["range_ref"] == "RawData!A1:Z10000"
+    assert result["change_impact_dag"]["range_membership_summary"][0]["changed_cell_count"] == 1
 
 
 def test_manual_calculation_downgrades_output_confidence(tmp_path: Path) -> None:
@@ -280,7 +287,24 @@ def test_manual_calculation_downgrades_output_confidence(tmp_path: Path) -> None
 
     output = next(item for item in result["top_impacted_outputs"] if item["ref"] == "Summary!G31")
     assert output["explanation_strength"] == "moderate"
+    assert output["dependency_confidence"] == "high"
+    assert output["value_delta_confidence"] == "moderate"
     assert any(factor["code"] == "manual_calculation_mode" for factor in output["confidence_factors"])
+
+
+def test_formula_change_with_unchanged_cache_downgrades_value_confidence(tmp_path: Path) -> None:
+    baseline = tmp_path / "formula_cache_old.xlsx"
+    candidate = tmp_path / "formula_cache_new.xlsx"
+    _make_formula_change_workbook(baseline, formula="=Revenue!F22*2", cached=2000)
+    _make_formula_change_workbook(candidate, formula="=Revenue!F22*3", cached=2000)
+
+    result = diff_workbooks(baseline, candidate, config={"outputs": [{"ref": "Revenue!G22", "name": "Revenue"}]})
+
+    output = next(item for item in result["top_impacted_outputs"] if item["ref"] == "Revenue!G22")
+    assert output["dependency_confidence"] == "high"
+    assert output["value_delta_confidence"] == "moderate"
+    assert any(factor["code"] == "formula_changed_cache_unchanged" for factor in output["confidence_factors"])
+    assert "formula changed while the cached value stayed at 2000" in result["llm_summary"]["one_sentence_summary"]
 
 
 def test_cli_artifacts_are_written(tmp_path: Path) -> None:

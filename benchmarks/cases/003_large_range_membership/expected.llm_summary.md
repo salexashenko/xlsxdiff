@@ -7,6 +7,7 @@ Summary!B2 Total raw amount changed from 10 to 15 (+5.00 / +50.0%), likely expla
 ## Counts
 
 - direct_changes: 1
+- raw_direct_changes: 1
 - propagated_changes: 1
 - unexplained_changes: 0
 - formula_changes: 0
@@ -19,7 +20,7 @@ Summary!B2 Total raw amount changed from 10 to 15 (+5.00 / +50.0%), likely expla
 
 ## Top Impacted Outputs
 
-- `Summary!B2` Total raw amount: 10 -> 15 +5.00 / +50.0%; strength=strong
+- `Summary!B2` Total raw amount: 10 -> 15 +5.00 / +50.0%; strength=strong; dependency=high; value_delta=high
 
 ## Caveats
 

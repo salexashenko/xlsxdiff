@@ -10,6 +10,7 @@
     "top_direct_changes",
     "top_change_groups",
     "top_impacted_outputs",
+    "claims",
     "caveats"
   ],
   "properties": {
@@ -44,6 +45,13 @@
         "$ref": "#/$defs/summaryOutput"
       }
     },
+    "claims": {
+      "type": "array",
+      "description": "Structured claims that back the natural-language summary.",
+      "items": {
+        "$ref": "#/$defs/claim"
+      }
+    },
     "caveats": {
       "type": "array",
       "items": {
@@ -65,6 +73,12 @@
         },
         "ref": {
           "type": "string"
+        },
+        "change_id": {
+          "type": ["string", "null"]
+        },
+        "change_kind": {
+          "type": ["string", "null"]
         },
         "label": {
           "type": ["string", "null"]
@@ -128,6 +142,12 @@
         "explanation_strength": {
           "enum": ["strong", "moderate", "weak", "unexplained"]
         },
+        "dependency_confidence": {
+          "enum": ["high", "moderate", "weak", null]
+        },
+        "value_delta_confidence": {
+          "enum": ["high", "moderate", "weak", null]
+        },
         "upstream_change_ids": {
           "type": "array",
           "items": {
@@ -155,6 +175,64 @@
         },
         "strength_cap": {
           "enum": ["strong", "moderate", "weak", "unexplained"]
+        },
+        "confidence_area": {
+          "enum": ["dependency", "value_delta", "explanation"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "claim": {
+      "type": "object",
+      "required": ["claim", "refs", "evidence_type", "confidence"],
+      "properties": {
+        "claim": {
+          "type": "string"
+        },
+        "refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "change_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "root_change_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "old_value": {
+          "type": ["number", "string", "boolean", "null"]
+        },
+        "new_value": {
+          "type": ["number", "string", "boolean", "null"]
+        },
+        "delta": {
+          "type": ["object", "null"]
+        },
+        "evidence_type": {
+          "enum": ["cached_value_diff", "dependency_path", "named_range_rebinding"]
+        },
+        "confidence": {
+          "type": ["string", "null"]
+        },
+        "dependency_confidence": {
+          "type": ["string", "null"]
+        },
+        "value_delta_confidence": {
+          "type": ["string", "null"]
+        },
+        "caveats": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "additionalProperties": true

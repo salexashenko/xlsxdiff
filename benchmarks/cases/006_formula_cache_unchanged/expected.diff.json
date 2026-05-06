@@ -1,0 +1,590 @@
+{
+  "schema_version": "0.1",
+  "baseline": {
+    "filename": "baseline.xlsx",
+    "sha256": "9a21c80f87730513283458e030c43bf2471299e761a98bf433a2b148d4f58994",
+    "file_size_bytes": 4923,
+    "workbook_type": "xlsx",
+    "has_macros": false,
+    "calc_mode": "unknown",
+    "full_calc_on_load": false,
+    "created_at": "2026-01-01T00:00:00",
+    "modified_at": "2026-01-01T00:00:00",
+    "app_version": null
+  },
+  "candidate": {
+    "filename": "candidate.xlsx",
+    "sha256": "04eb3dae92a1825348fd7f3adf80ff951a945fa62f7b80f82979c40072a0b719",
+    "file_size_bytes": 4924,
+    "workbook_type": "xlsx",
+    "has_macros": false,
+    "calc_mode": "unknown",
+    "full_calc_on_load": false,
+    "created_at": "2026-01-01T00:00:00",
+    "modified_at": "2026-01-01T00:00:00",
+    "app_version": null
+  },
+  "summary": {
+    "direct_change_count": 1,
+    "propagated_change_count": 0,
+    "unexplained_change_count": 0,
+    "structural_matches": 4,
+    "semantic_matches": 4,
+    "shifted_semantic_matches": 0,
+    "unmatched_old_cells": 0,
+    "unmatched_new_cells": 0,
+    "sheets_added": 0,
+    "sheets_deleted": 0,
+    "formulas_changed": 1,
+    "constants_changed": 0,
+    "cached_values_changed": 0,
+    "outputs_changed": 1,
+    "has_macros": false,
+    "has_external_links": false,
+    "has_opaque_formulas": false,
+    "confidence": "high",
+    "one_sentence_summary": "Summary!B2 Total Revenue formula changed while the cached value stayed at 200, associated with Summary!B2 2027E Total Revenue changing from =100*2 to =100*3; 0 unexplained value changes were detected."
+  },
+  "llm_summary": {
+    "schema_version": "0.1",
+    "intended_use": "A compact, deterministic context object for LLMs to answer a user with one sentence plus optional evidence.",
+    "one_sentence_summary": "Summary!B2 Total Revenue formula changed while the cached value stayed at 200, associated with Summary!B2 2027E Total Revenue changing from =100*2 to =100*3; 0 unexplained value changes were detected.",
+    "confidence": "high",
+    "counts": {
+      "direct_changes": 1,
+      "raw_direct_changes": 1,
+      "propagated_changes": 0,
+      "unexplained_changes": 0,
+      "formula_changes": 1,
+      "outputs_changed": 1,
+      "shifted_semantic_matches": 0
+    },
+    "top_direct_changes": [
+      {
+        "id": "chg_0001",
+        "kind": "formula_constant_changed",
+        "ref": "Summary!B2",
+        "old_ref": "Summary!B2",
+        "new_ref": "Summary!B2",
+        "address_changed": false,
+        "semantic_id": "cell::summary::intersection::total_revenue::2027e",
+        "label": "2027E Total Revenue",
+        "old": "=100*2",
+        "new": "=100*3",
+        "delta": "",
+        "semantic_role": "output",
+        "materiality_score": 95.0,
+        "confidence": 0.95
+      }
+    ],
+    "top_change_groups": [],
+    "top_impacted_outputs": [
+      {
+        "ref": "Summary!B2",
+        "old_ref": "Summary!B2",
+        "new_ref": "Summary!B2",
+        "address_changed": false,
+        "change_id": "chg_0001",
+        "change_kind": "formula_constant_changed",
+        "semantic_id": "cell::summary::intersection::total_revenue::2027e",
+        "label": "Total Revenue",
+        "old": "200",
+        "new": "200",
+        "delta": "",
+        "explanation_strength": "moderate",
+        "dependency_confidence": "high",
+        "value_delta_confidence": "moderate",
+        "confidence_factors": [
+          {
+            "code": "formula_changed_cache_unchanged",
+            "message": "The output formula changed but its cached value did not change.",
+            "strength_cap": "moderate",
+            "confidence_area": "value_delta"
+          }
+        ],
+        "upstream_change_ids": [
+          "chg_0001"
+        ],
+        "representative_paths": [
+          {
+            "id": "path_001_001",
+            "from": "Summary!B2",
+            "to": "Summary!B2",
+            "nodes": [
+              "Summary!B2"
+            ],
+            "display_nodes": [
+              {
+                "id": "Summary!B2",
+                "ref": "Summary!B2",
+                "label": "2027E Total Revenue",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
+            "edges": [],
+            "collapsed": false,
+            "confidence": 1.0
+          }
+        ],
+        "explanation": "Summary!B2 changed and is associated with 1 upstream direct change(s)."
+      }
+    ],
+    "claims": [
+      {
+        "claim": "Total Revenue changed from 200 to 200",
+        "refs": [
+          "Summary!B2"
+        ],
+        "old_value": 200,
+        "new_value": 200,
+        "delta": {
+          "old_number": 200.0,
+          "new_number": 200.0,
+          "absolute_delta": 0.0,
+          "display_delta": "0.00",
+          "relative_delta": 0.0,
+          "display_relative_delta": "0.0%"
+        },
+        "evidence_type": "cached_value_diff",
+        "confidence": "moderate",
+        "caveats": [
+          "cached_value_mode",
+          "formula_changed_cache_unchanged"
+        ]
+      },
+      {
+        "claim": "Detected upstream changes are associated with Total Revenue",
+        "refs": [
+          "Summary!B2"
+        ],
+        "root_change_ids": [
+          "chg_0001"
+        ],
+        "representative_paths": [
+          {
+            "id": "path_001_001",
+            "from": "Summary!B2",
+            "to": "Summary!B2",
+            "nodes": [
+              "Summary!B2"
+            ],
+            "display_nodes": [
+              {
+                "id": "Summary!B2",
+                "ref": "Summary!B2",
+                "label": "2027E Total Revenue",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
+            "edges": [],
+            "collapsed": false,
+            "confidence": 1.0
+          }
+        ],
+        "evidence_type": "dependency_path",
+        "confidence": "moderate",
+        "dependency_confidence": "high",
+        "value_delta_confidence": "moderate",
+        "caveats": [
+          "formula_changed_cache_unchanged"
+        ]
+      }
+    ],
+    "caveats": [
+      "Uses cached workbook formula values; numeric deltas assume both workbooks were saved after recalculation.",
+      "Output confidence factors: formula_changed_cache_unchanged."
+    ],
+    "safe_response_rules": [
+      "Use the one_sentence_summary verbatim or paraphrase it without adding unsupported causality.",
+      "Say 'likely explains' only when explanation_strength is strong.",
+      "Say 'associated with' for moderate or weak paths.",
+      "Always include cell references for material claims."
+    ]
+  },
+  "changes": [
+    {
+      "id": "chg_0001",
+      "kind": "formula_constant_changed",
+      "scope": "cell",
+      "object_ref": "Summary!B2",
+      "old_ref": "Summary!B2",
+      "new_ref": "Summary!B2",
+      "address_changed": false,
+      "semantic_id": "cell::summary::intersection::total_revenue::2027e",
+      "semantic_identity": {
+        "semantic_id": "cell::summary::intersection::total_revenue::2027e",
+        "kind": "row_column_intersection",
+        "row_headers": [
+          "Total Revenue"
+        ],
+        "column_headers": [
+          "2027E"
+        ],
+        "labels": [
+          "Total Revenue",
+          "2027E"
+        ],
+        "source_refs": [
+          "Summary!A2",
+          "Summary!B1"
+        ],
+        "confidence": 0.9
+      },
+      "sheet_name": "Summary",
+      "range_ref": "Summary!B2",
+      "old": "=100*2",
+      "new": "=100*3",
+      "old_display": "=100*2",
+      "new_display": "=100*3",
+      "delta": {
+        "old_number": 200.0,
+        "new_number": 200.0,
+        "absolute_delta": 0.0,
+        "display_delta": "0.00",
+        "relative_delta": 0.0,
+        "display_relative_delta": "0.0%"
+      },
+      "labels": [
+        {
+          "text": "2027E Total Revenue",
+          "source": "left_neighbor+above_neighbor",
+          "confidence": 0.86,
+          "source_ref": "Summary!B1,Summary!A2"
+        },
+        {
+          "text": "Total Revenue",
+          "source": "left_neighbor",
+          "confidence": 0.75,
+          "source_ref": "Summary!A2"
+        },
+        {
+          "text": "2027E",
+          "source": "above_neighbor",
+          "confidence": 0.65,
+          "source_ref": "Summary!B1"
+        },
+        {
+          "text": "Summary",
+          "source": "sheet_name",
+          "confidence": 0.2
+        }
+      ],
+      "semantic_role": "output",
+      "directness": "direct",
+      "materiality_score": 95.0,
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "type": "formula_diff",
+          "kind": "formula_constant_changed",
+          "old_formula": "=100*2",
+          "new_formula": "=100*3",
+          "old_normalized": "100*2",
+          "new_normalized": "100*3",
+          "token_diff": [
+            {
+              "type": "number",
+              "old": [
+                "100",
+                "2"
+              ],
+              "new": [
+                "100",
+                "3"
+              ]
+            }
+          ]
+        }
+      ],
+      "warnings": [],
+      "visibility_context": {
+        "sheet_visible": true,
+        "row_hidden": false,
+        "col_hidden": false
+      }
+    }
+  ],
+  "grouped_changes": [],
+  "dependency_graph_stats": {
+    "baseline_node_count": 4,
+    "baseline_edge_count": 0,
+    "aligned_baseline_node_count": 4,
+    "aligned_baseline_edge_count": 0,
+    "candidate_node_count": 4,
+    "candidate_edge_count": 0
+  },
+  "structural_alignment": {
+    "summary": {
+      "matched_cells": 4,
+      "semantic_matches": 4,
+      "shifted_semantic_matches": 0,
+      "unmatched_old_cells": 0,
+      "unmatched_new_cells": 0
+    },
+    "shifted_matches": [],
+    "shifted_matches_omitted": 0
+  },
+  "change_impact_dag": {
+    "roots": [
+      "Summary!B2"
+    ],
+    "outputs": [
+      "Summary!B2"
+    ],
+    "nodes": {
+      "Summary!B2": {
+        "id": "Summary!B2",
+        "ref": "Summary!B2",
+        "node_type": "cell",
+        "label": "2027E Total Revenue",
+        "semantic_id": "cell::summary::intersection::total_revenue::2027e",
+        "semantic_identity": {
+          "semantic_id": "cell::summary::intersection::total_revenue::2027e",
+          "kind": "row_column_intersection",
+          "row_headers": [
+            "Total Revenue"
+          ],
+          "column_headers": [
+            "2027E"
+          ],
+          "labels": [
+            "Total Revenue",
+            "2027E"
+          ],
+          "source_refs": [
+            "Summary!A2",
+            "Summary!B1"
+          ],
+          "confidence": 0.9
+        },
+        "semantic_role": "output",
+        "sheet_name": "Summary",
+        "old_value": null,
+        "new_value": {
+          "raw": 200,
+          "typed_value": 200,
+          "display_value": "200",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": {
+          "raw": "=100*3",
+          "normalized": "100*3",
+          "formula_type": "normal",
+          "tokens": [
+            {
+              "type": "number",
+              "text": "100"
+            },
+            {
+              "type": "number",
+              "text": "3"
+            }
+          ],
+          "precedents": [],
+          "has_volatile_function": false,
+          "has_dynamic_reference": false,
+          "has_external_reference": false,
+          "parse_status": "ok",
+          "parse_warnings": []
+        },
+        "changes": [
+          "chg_0001"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      }
+    },
+    "edges": [],
+    "range_membership_summary": [],
+    "collapsed_node_count": 0,
+    "omitted_node_count": 3
+  },
+  "top_direct_changes": [
+    {
+      "id": "chg_0001",
+      "kind": "formula_constant_changed",
+      "scope": "cell",
+      "object_ref": "Summary!B2",
+      "old_ref": "Summary!B2",
+      "new_ref": "Summary!B2",
+      "address_changed": false,
+      "semantic_id": "cell::summary::intersection::total_revenue::2027e",
+      "semantic_identity": {
+        "semantic_id": "cell::summary::intersection::total_revenue::2027e",
+        "kind": "row_column_intersection",
+        "row_headers": [
+          "Total Revenue"
+        ],
+        "column_headers": [
+          "2027E"
+        ],
+        "labels": [
+          "Total Revenue",
+          "2027E"
+        ],
+        "source_refs": [
+          "Summary!A2",
+          "Summary!B1"
+        ],
+        "confidence": 0.9
+      },
+      "sheet_name": "Summary",
+      "range_ref": "Summary!B2",
+      "old": "=100*2",
+      "new": "=100*3",
+      "old_display": "=100*2",
+      "new_display": "=100*3",
+      "delta": {
+        "old_number": 200.0,
+        "new_number": 200.0,
+        "absolute_delta": 0.0,
+        "display_delta": "0.00",
+        "relative_delta": 0.0,
+        "display_relative_delta": "0.0%"
+      },
+      "labels": [
+        {
+          "text": "2027E Total Revenue",
+          "source": "left_neighbor+above_neighbor",
+          "confidence": 0.86,
+          "source_ref": "Summary!B1,Summary!A2"
+        },
+        {
+          "text": "Total Revenue",
+          "source": "left_neighbor",
+          "confidence": 0.75,
+          "source_ref": "Summary!A2"
+        },
+        {
+          "text": "2027E",
+          "source": "above_neighbor",
+          "confidence": 0.65,
+          "source_ref": "Summary!B1"
+        },
+        {
+          "text": "Summary",
+          "source": "sheet_name",
+          "confidence": 0.2
+        }
+      ],
+      "semantic_role": "output",
+      "directness": "direct",
+      "materiality_score": 95.0,
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "type": "formula_diff",
+          "kind": "formula_constant_changed",
+          "old_formula": "=100*2",
+          "new_formula": "=100*3",
+          "old_normalized": "100*2",
+          "new_normalized": "100*3",
+          "token_diff": [
+            {
+              "type": "number",
+              "old": [
+                "100",
+                "2"
+              ],
+              "new": [
+                "100",
+                "3"
+              ]
+            }
+          ]
+        }
+      ],
+      "warnings": [],
+      "visibility_context": {
+        "sheet_visible": true,
+        "row_hidden": false,
+        "col_hidden": false
+      }
+    }
+  ],
+  "top_impacted_outputs": [
+    {
+      "ref": "Summary!B2",
+      "old_ref": "Summary!B2",
+      "new_ref": "Summary!B2",
+      "address_changed": false,
+      "change_id": "chg_0001",
+      "change_kind": "formula_constant_changed",
+      "semantic_id": "cell::summary::intersection::total_revenue::2027e",
+      "label": "Total Revenue",
+      "old_value": {
+        "raw": 200,
+        "typed_value": 200,
+        "display_value": "200",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "new_value": {
+        "raw": 200,
+        "typed_value": 200,
+        "display_value": "200",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "delta": {
+        "old_number": 200.0,
+        "new_number": 200.0,
+        "absolute_delta": 0.0,
+        "display_delta": "0.00",
+        "relative_delta": 0.0,
+        "display_relative_delta": "0.0%"
+      },
+      "upstream_change_ids": [
+        "chg_0001"
+      ],
+      "representative_paths": [
+        {
+          "id": "path_001_001",
+          "from": "Summary!B2",
+          "to": "Summary!B2",
+          "nodes": [
+            "Summary!B2"
+          ],
+          "display_nodes": [
+            {
+              "id": "Summary!B2",
+              "ref": "Summary!B2",
+              "label": "2027E Total Revenue",
+              "node_type": "cell",
+              "semantic_role": "output"
+            }
+          ],
+          "edges": [],
+          "collapsed": false,
+          "confidence": 1.0
+        }
+      ],
+      "explanation_strength": "moderate",
+      "dependency_confidence": "high",
+      "value_delta_confidence": "moderate",
+      "confidence_factors": [
+        {
+          "code": "formula_changed_cache_unchanged",
+          "message": "The output formula changed but its cached value did not change.",
+          "strength_cap": "moderate",
+          "confidence_area": "value_delta"
+        }
+      ],
+      "explanation": "Summary!B2 changed and is associated with 1 upstream direct change(s).",
+      "materiality_score": 95.0,
+      "semantic_role": "output"
+    }
+  ],
+  "unexplained_changes": [],
+  "diagnostics": [
+    {
+      "severity": "info",
+      "code": "CACHED_VALUE_MODE",
+      "message": "This report uses cached formula results. Numeric output deltas assume both workbooks were saved after recalculation."
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+# LLM Workbook Diff Summary
+
+## One Sentence
+
+Summary!B2 Visible KPI changed from 20 to 30 (+10.0 / +50.0%), likely explained by HiddenCalc!B2 Internal driver changing from 10 to 15; 0 unexplained value changes were detected.
+
+## Counts
+
+- direct_changes: 1
+- raw_direct_changes: 1
+- propagated_changes: 1
+- unexplained_changes: 0
+- formula_changes: 0
+- outputs_changed: 1
+- shifted_semantic_matches: 0
+
+## Top Direct Changes
+
+- `HiddenCalc!B2` Internal driver: 10 -> 15 +5.00 / +50.0%
+
+## Top Impacted Outputs
+
+- `Summary!B2` Visible KPI: 20 -> 30 +10.0 / +50.0%; strength=strong; dependency=high; value_delta=high
+
+## Caveats
+
+- Uses cached workbook formula values; numeric deltas assume both workbooks were saved after recalculation.

@@ -7,6 +7,7 @@ Summary!G31 Total LTV changed from 1180 to 1220 (+40.0 / +3.4%), likely explaine
 ## Counts
 
 - direct_changes: 1
+- raw_direct_changes: 1
 - propagated_changes: 2
 - unexplained_changes: 0
 - formula_changes: 0
@@ -19,8 +20,8 @@ Summary!G31 Total LTV changed from 1180 to 1220 (+40.0 / +3.4%), likely explaine
 
 ## Top Impacted Outputs
 
-- `Summary!G31` Total LTV: 1180 -> 1220 +40.0 / +3.4%; strength=strong
-- `Revenue!G22` 2027 Revenue: 1180 -> 1220 +40.0 / +3.4%; strength=strong
+- `Summary!G31` Total LTV: 1180 -> 1220 +40.0 / +3.4%; strength=strong; dependency=high; value_delta=high
+- `Revenue!G22` 2027 Revenue: 1180 -> 1220 +40.0 / +3.4%; strength=strong; dependency=high; value_delta=high
 
 ## Caveats
 

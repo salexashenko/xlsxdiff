@@ -1,0 +1,1035 @@
+{
+  "schema_version": "0.1",
+  "baseline": {
+    "filename": "baseline.xlsx",
+    "sha256": "82ad8dba5ab2229461d31753a9b1ca4a2096fdf8a00539517145d287c4a00574",
+    "file_size_bytes": 5432,
+    "workbook_type": "xlsx",
+    "has_macros": false,
+    "calc_mode": "unknown",
+    "full_calc_on_load": false,
+    "created_at": "2026-01-01T00:00:00",
+    "modified_at": "2026-01-01T00:00:00",
+    "app_version": null
+  },
+  "candidate": {
+    "filename": "candidate.xlsx",
+    "sha256": "28d6a40bd7c1ef1d566d9ca99ef6da2fcbd5c957193565efe6b24ec2aefbe91f",
+    "file_size_bytes": 5435,
+    "workbook_type": "xlsx",
+    "has_macros": false,
+    "calc_mode": "unknown",
+    "full_calc_on_load": false,
+    "created_at": "2026-01-01T00:00:00",
+    "modified_at": "2026-01-01T00:00:00",
+    "app_version": null
+  },
+  "summary": {
+    "direct_change_count": 2,
+    "propagated_change_count": 1,
+    "unexplained_change_count": 0,
+    "structural_matches": 8,
+    "semantic_matches": 8,
+    "shifted_semantic_matches": 0,
+    "unmatched_old_cells": 0,
+    "unmatched_new_cells": 0,
+    "sheets_added": 0,
+    "sheets_deleted": 0,
+    "formulas_changed": 0,
+    "constants_changed": 2,
+    "cached_values_changed": 1,
+    "outputs_changed": 1,
+    "has_macros": false,
+    "has_external_links": false,
+    "has_opaque_formulas": false,
+    "confidence": "high",
+    "one_sentence_summary": "Summary!B2 Revenue changed from 100 to 150 (+50.0 / +50.0%), associated with Assumptions!B3 Units changing from 10 to 12.5 and 1 other top direct change(s); 0 unexplained value changes were detected."
+  },
+  "llm_summary": {
+    "schema_version": "0.1",
+    "intended_use": "A compact, deterministic context object for LLMs to answer a user with one sentence plus optional evidence.",
+    "one_sentence_summary": "Summary!B2 Revenue changed from 100 to 150 (+50.0 / +50.0%), associated with Assumptions!B3 Units changing from 10 to 12.5 and 1 other top direct change(s); 0 unexplained value changes were detected.",
+    "confidence": "high",
+    "counts": {
+      "direct_changes": 2,
+      "raw_direct_changes": 2,
+      "propagated_changes": 1,
+      "unexplained_changes": 0,
+      "formula_changes": 0,
+      "outputs_changed": 1,
+      "shifted_semantic_matches": 0
+    },
+    "top_direct_changes": [
+      {
+        "id": "chg_0002",
+        "kind": "constant_changed",
+        "ref": "Assumptions!B3",
+        "old_ref": "Assumptions!B3",
+        "new_ref": "Assumptions!B3",
+        "address_changed": false,
+        "semantic_id": "cell::assumptions::row_value::units",
+        "label": "Units",
+        "old": "10",
+        "new": "12.5",
+        "delta": "+2.50 / +25.0%",
+        "semantic_role": "assumption",
+        "materiality_score": 75.502,
+        "confidence": 0.95
+      },
+      {
+        "id": "chg_0001",
+        "kind": "constant_changed",
+        "ref": "Assumptions!B2",
+        "old_ref": "Assumptions!B2",
+        "new_ref": "Assumptions!B2",
+        "address_changed": false,
+        "semantic_id": "cell::assumptions::row_value::price",
+        "label": "Price",
+        "old": "10",
+        "new": "12",
+        "delta": "+2.00 / +20.0%",
+        "semantic_role": "assumption",
+        "materiality_score": 70.502,
+        "confidence": 0.95
+      }
+    ],
+    "top_change_groups": [],
+    "top_impacted_outputs": [
+      {
+        "ref": "Summary!B2",
+        "old_ref": "Summary!B2",
+        "new_ref": "Summary!B2",
+        "address_changed": false,
+        "change_id": "chg_0003",
+        "change_kind": "cached_value_changed",
+        "semantic_id": "cell::summary::intersection::revenue::2027e",
+        "label": "Revenue",
+        "old": "100",
+        "new": "150",
+        "delta": "+50.0 / +50.0%",
+        "explanation_strength": "moderate",
+        "dependency_confidence": "moderate",
+        "value_delta_confidence": "moderate",
+        "confidence_factors": [
+          {
+            "code": "multiple_upstream_roots",
+            "message": "Multiple upstream direct changes converge on this output.",
+            "strength_cap": "moderate",
+            "confidence_area": "explanation"
+          }
+        ],
+        "upstream_change_ids": [
+          "chg_0001",
+          "chg_0002"
+        ],
+        "representative_paths": [
+          {
+            "id": "path_001_001",
+            "from": "Assumptions!B2",
+            "to": "Summary!B2",
+            "nodes": [
+              "Assumptions!B2",
+              "Summary!B2"
+            ],
+            "display_nodes": [
+              {
+                "id": "Assumptions!B2",
+                "ref": "Assumptions!B2",
+                "label": "Price",
+                "node_type": "cell",
+                "semantic_role": "assumption"
+              },
+              {
+                "id": "Summary!B2",
+                "ref": "Summary!B2",
+                "label": "2027E Revenue",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
+            "edges": [
+              "e000001"
+            ],
+            "collapsed": false,
+            "confidence": 1.0
+          },
+          {
+            "id": "path_002_001",
+            "from": "Assumptions!B3",
+            "to": "Summary!B2",
+            "nodes": [
+              "Assumptions!B3",
+              "Summary!B2"
+            ],
+            "display_nodes": [
+              {
+                "id": "Assumptions!B3",
+                "ref": "Assumptions!B3",
+                "label": "Units",
+                "node_type": "cell",
+                "semantic_role": "assumption"
+              },
+              {
+                "id": "Summary!B2",
+                "ref": "Summary!B2",
+                "label": "2027E Revenue",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
+            "edges": [
+              "e000002"
+            ],
+            "collapsed": false,
+            "confidence": 1.0
+          }
+        ],
+        "explanation": "Summary!B2 changed and is associated with 2 upstream direct change(s)."
+      }
+    ],
+    "claims": [
+      {
+        "claim": "Revenue changed from 100 to 150",
+        "refs": [
+          "Summary!B2"
+        ],
+        "old_value": 100,
+        "new_value": 150,
+        "delta": {
+          "old_number": 100.0,
+          "new_number": 150.0,
+          "absolute_delta": 50.0,
+          "display_delta": "+50.0",
+          "relative_delta": 0.5,
+          "display_relative_delta": "+50.0%"
+        },
+        "evidence_type": "cached_value_diff",
+        "confidence": "moderate",
+        "caveats": [
+          "cached_value_mode",
+          "multiple_upstream_roots"
+        ]
+      },
+      {
+        "claim": "Detected upstream changes are associated with Revenue",
+        "refs": [
+          "Summary!B2"
+        ],
+        "root_change_ids": [
+          "chg_0001",
+          "chg_0002"
+        ],
+        "representative_paths": [
+          {
+            "id": "path_001_001",
+            "from": "Assumptions!B2",
+            "to": "Summary!B2",
+            "nodes": [
+              "Assumptions!B2",
+              "Summary!B2"
+            ],
+            "display_nodes": [
+              {
+                "id": "Assumptions!B2",
+                "ref": "Assumptions!B2",
+                "label": "Price",
+                "node_type": "cell",
+                "semantic_role": "assumption"
+              },
+              {
+                "id": "Summary!B2",
+                "ref": "Summary!B2",
+                "label": "2027E Revenue",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
+            "edges": [
+              "e000001"
+            ],
+            "collapsed": false,
+            "confidence": 1.0
+          },
+          {
+            "id": "path_002_001",
+            "from": "Assumptions!B3",
+            "to": "Summary!B2",
+            "nodes": [
+              "Assumptions!B3",
+              "Summary!B2"
+            ],
+            "display_nodes": [
+              {
+                "id": "Assumptions!B3",
+                "ref": "Assumptions!B3",
+                "label": "Units",
+                "node_type": "cell",
+                "semantic_role": "assumption"
+              },
+              {
+                "id": "Summary!B2",
+                "ref": "Summary!B2",
+                "label": "2027E Revenue",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
+            "edges": [
+              "e000002"
+            ],
+            "collapsed": false,
+            "confidence": 1.0
+          }
+        ],
+        "evidence_type": "dependency_path",
+        "confidence": "moderate",
+        "dependency_confidence": "moderate",
+        "value_delta_confidence": "moderate",
+        "caveats": [
+          "multiple_upstream_roots"
+        ]
+      }
+    ],
+    "caveats": [
+      "Uses cached workbook formula values; numeric deltas assume both workbooks were saved after recalculation.",
+      "Output confidence factors: multiple_upstream_roots."
+    ],
+    "safe_response_rules": [
+      "Use the one_sentence_summary verbatim or paraphrase it without adding unsupported causality.",
+      "Say 'likely explains' only when explanation_strength is strong.",
+      "Say 'associated with' for moderate or weak paths.",
+      "Always include cell references for material claims."
+    ]
+  },
+  "changes": [
+    {
+      "id": "chg_0003",
+      "kind": "cached_value_changed",
+      "scope": "cell",
+      "object_ref": "Summary!B2",
+      "old_ref": "Summary!B2",
+      "new_ref": "Summary!B2",
+      "address_changed": false,
+      "semantic_id": "cell::summary::intersection::revenue::2027e",
+      "semantic_identity": {
+        "semantic_id": "cell::summary::intersection::revenue::2027e",
+        "kind": "row_column_intersection",
+        "row_headers": [
+          "Revenue"
+        ],
+        "column_headers": [
+          "2027E"
+        ],
+        "labels": [
+          "Revenue",
+          "2027E"
+        ],
+        "source_refs": [
+          "Summary!A2",
+          "Summary!B1"
+        ],
+        "confidence": 0.9
+      },
+      "sheet_name": "Summary",
+      "range_ref": "Summary!B2",
+      "old": {
+        "raw": 100,
+        "typed_value": 100,
+        "display_value": "100",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "new": {
+        "raw": 150,
+        "typed_value": 150,
+        "display_value": "150",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "old_display": "100",
+      "new_display": "150",
+      "delta": {
+        "old_number": 100.0,
+        "new_number": 150.0,
+        "absolute_delta": 50.0,
+        "display_delta": "+50.0",
+        "relative_delta": 0.5,
+        "display_relative_delta": "+50.0%"
+      },
+      "labels": [
+        {
+          "text": "2027E Revenue",
+          "source": "left_neighbor+above_neighbor",
+          "confidence": 0.86,
+          "source_ref": "Summary!B1,Summary!A2"
+        },
+        {
+          "text": "Revenue",
+          "source": "left_neighbor",
+          "confidence": 0.75,
+          "source_ref": "Summary!A2"
+        },
+        {
+          "text": "2027E",
+          "source": "above_neighbor",
+          "confidence": 0.65,
+          "source_ref": "Summary!B1"
+        },
+        {
+          "text": "Summary",
+          "source": "sheet_name",
+          "confidence": 0.2
+        }
+      ],
+      "semantic_role": "output",
+      "directness": "propagated",
+      "materiality_score": 105.05,
+      "confidence": 0.7,
+      "evidence": [],
+      "warnings": [],
+      "visibility_context": {
+        "sheet_visible": true,
+        "row_hidden": false,
+        "col_hidden": false
+      }
+    },
+    {
+      "id": "chg_0002",
+      "kind": "constant_changed",
+      "scope": "cell",
+      "object_ref": "Assumptions!B3",
+      "old_ref": "Assumptions!B3",
+      "new_ref": "Assumptions!B3",
+      "address_changed": false,
+      "semantic_id": "cell::assumptions::row_value::units",
+      "semantic_identity": {
+        "semantic_id": "cell::assumptions::row_value::units",
+        "kind": "row_labeled_cell",
+        "row_headers": [
+          "Units"
+        ],
+        "column_headers": [],
+        "labels": [
+          "Units"
+        ],
+        "source_refs": [
+          "Assumptions!A3"
+        ],
+        "confidence": 0.7
+      },
+      "sheet_name": "Assumptions",
+      "range_ref": "Assumptions!B3",
+      "old": {
+        "raw": 10,
+        "typed_value": 10,
+        "display_value": "10",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "new": {
+        "raw": 12.5,
+        "typed_value": 12.5,
+        "display_value": "12.5",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "old_display": "10",
+      "new_display": "12.5",
+      "delta": {
+        "old_number": 10.0,
+        "new_number": 12.5,
+        "absolute_delta": 2.5,
+        "display_delta": "+2.50",
+        "relative_delta": 0.25,
+        "display_relative_delta": "+25.0%"
+      },
+      "labels": [
+        {
+          "text": "Units",
+          "source": "left_neighbor",
+          "confidence": 0.75,
+          "source_ref": "Assumptions!A3"
+        },
+        {
+          "text": "Assumptions",
+          "source": "sheet_name",
+          "confidence": 0.2
+        }
+      ],
+      "semantic_role": "assumption",
+      "directness": "direct",
+      "materiality_score": 75.502,
+      "confidence": 0.95,
+      "evidence": [],
+      "warnings": [],
+      "visibility_context": {
+        "sheet_visible": true,
+        "row_hidden": false,
+        "col_hidden": false
+      }
+    },
+    {
+      "id": "chg_0001",
+      "kind": "constant_changed",
+      "scope": "cell",
+      "object_ref": "Assumptions!B2",
+      "old_ref": "Assumptions!B2",
+      "new_ref": "Assumptions!B2",
+      "address_changed": false,
+      "semantic_id": "cell::assumptions::row_value::price",
+      "semantic_identity": {
+        "semantic_id": "cell::assumptions::row_value::price",
+        "kind": "row_labeled_cell",
+        "row_headers": [
+          "Price"
+        ],
+        "column_headers": [],
+        "labels": [
+          "Price"
+        ],
+        "source_refs": [
+          "Assumptions!A2"
+        ],
+        "confidence": 0.7
+      },
+      "sheet_name": "Assumptions",
+      "range_ref": "Assumptions!B2",
+      "old": {
+        "raw": 10,
+        "typed_value": 10,
+        "display_value": "10",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "new": {
+        "raw": 12,
+        "typed_value": 12,
+        "display_value": "12",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "old_display": "10",
+      "new_display": "12",
+      "delta": {
+        "old_number": 10.0,
+        "new_number": 12.0,
+        "absolute_delta": 2.0,
+        "display_delta": "+2.00",
+        "relative_delta": 0.19999999999999996,
+        "display_relative_delta": "+20.0%"
+      },
+      "labels": [
+        {
+          "text": "Price",
+          "source": "left_neighbor",
+          "confidence": 0.75,
+          "source_ref": "Assumptions!A2"
+        },
+        {
+          "text": "Assumptions",
+          "source": "sheet_name",
+          "confidence": 0.2
+        }
+      ],
+      "semantic_role": "assumption",
+      "directness": "direct",
+      "materiality_score": 70.502,
+      "confidence": 0.95,
+      "evidence": [],
+      "warnings": [],
+      "visibility_context": {
+        "sheet_visible": true,
+        "row_hidden": false,
+        "col_hidden": false
+      }
+    }
+  ],
+  "grouped_changes": [],
+  "dependency_graph_stats": {
+    "baseline_node_count": 8,
+    "baseline_edge_count": 2,
+    "aligned_baseline_node_count": 8,
+    "aligned_baseline_edge_count": 2,
+    "candidate_node_count": 8,
+    "candidate_edge_count": 2
+  },
+  "structural_alignment": {
+    "summary": {
+      "matched_cells": 8,
+      "semantic_matches": 8,
+      "shifted_semantic_matches": 0,
+      "unmatched_old_cells": 0,
+      "unmatched_new_cells": 0
+    },
+    "shifted_matches": [],
+    "shifted_matches_omitted": 0
+  },
+  "change_impact_dag": {
+    "roots": [
+      "Assumptions!B3",
+      "Assumptions!B2"
+    ],
+    "outputs": [
+      "Summary!B2"
+    ],
+    "nodes": {
+      "Summary!B2": {
+        "id": "Summary!B2",
+        "ref": "Summary!B2",
+        "node_type": "cell",
+        "label": "2027E Revenue",
+        "semantic_id": "cell::summary::intersection::revenue::2027e",
+        "semantic_identity": {
+          "semantic_id": "cell::summary::intersection::revenue::2027e",
+          "kind": "row_column_intersection",
+          "row_headers": [
+            "Revenue"
+          ],
+          "column_headers": [
+            "2027E"
+          ],
+          "labels": [
+            "Revenue",
+            "2027E"
+          ],
+          "source_refs": [
+            "Summary!A2",
+            "Summary!B1"
+          ],
+          "confidence": 0.9
+        },
+        "semantic_role": "output",
+        "sheet_name": "Summary",
+        "old_value": null,
+        "new_value": {
+          "raw": 150,
+          "typed_value": 150,
+          "display_value": "150",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": {
+          "raw": "=Assumptions!B2*Assumptions!B3",
+          "normalized": "ASSUMPTIONS!B2*ASSUMPTIONS!B3",
+          "formula_type": "normal",
+          "tokens": [
+            {
+              "type": "reference",
+              "text": "Assumptions!B2",
+              "target": "Assumptions!B2"
+            },
+            {
+              "type": "reference",
+              "text": "Assumptions!B3",
+              "target": "Assumptions!B3"
+            }
+          ],
+          "precedents": [
+            {
+              "raw": "Assumptions!B2",
+              "ref": "B2",
+              "sheet_name": "Assumptions",
+              "kind": "cell",
+              "target": "Assumptions!B2",
+              "confidence": 1.0
+            },
+            {
+              "raw": "Assumptions!B3",
+              "ref": "B3",
+              "sheet_name": "Assumptions",
+              "kind": "cell",
+              "target": "Assumptions!B3",
+              "confidence": 1.0
+            }
+          ],
+          "has_volatile_function": false,
+          "has_dynamic_reference": false,
+          "has_external_reference": false,
+          "parse_status": "ok",
+          "parse_warnings": []
+        },
+        "changes": [
+          "chg_0003"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      },
+      "Assumptions!B3": {
+        "id": "Assumptions!B3",
+        "ref": "Assumptions!B3",
+        "node_type": "cell",
+        "label": "Units",
+        "semantic_id": "cell::assumptions::row_value::units",
+        "semantic_identity": {
+          "semantic_id": "cell::assumptions::row_value::units",
+          "kind": "row_labeled_cell",
+          "row_headers": [
+            "Units"
+          ],
+          "column_headers": [],
+          "labels": [
+            "Units"
+          ],
+          "source_refs": [
+            "Assumptions!A3"
+          ],
+          "confidence": 0.7
+        },
+        "semantic_role": "assumption",
+        "sheet_name": "Assumptions",
+        "old_value": null,
+        "new_value": {
+          "raw": 12.5,
+          "typed_value": 12.5,
+          "display_value": "12.5",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": null,
+        "changes": [
+          "chg_0002"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      },
+      "Assumptions!B2": {
+        "id": "Assumptions!B2",
+        "ref": "Assumptions!B2",
+        "node_type": "cell",
+        "label": "Price",
+        "semantic_id": "cell::assumptions::row_value::price",
+        "semantic_identity": {
+          "semantic_id": "cell::assumptions::row_value::price",
+          "kind": "row_labeled_cell",
+          "row_headers": [
+            "Price"
+          ],
+          "column_headers": [],
+          "labels": [
+            "Price"
+          ],
+          "source_refs": [
+            "Assumptions!A2"
+          ],
+          "confidence": 0.7
+        },
+        "semantic_role": "assumption",
+        "sheet_name": "Assumptions",
+        "old_value": null,
+        "new_value": {
+          "raw": 12,
+          "typed_value": 12,
+          "display_value": "12",
+          "value_type": "number",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": null,
+        "changes": [
+          "chg_0001"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      }
+    },
+    "edges": [
+      {
+        "id": "e000001",
+        "from": "Assumptions!B2",
+        "to": "Summary!B2",
+        "edge_type": "cell_reference",
+        "formula_ref": "Summary!B2",
+        "evidence": "Assumptions!B2",
+        "confidence": 1.0
+      },
+      {
+        "id": "e000002",
+        "from": "Assumptions!B3",
+        "to": "Summary!B2",
+        "edge_type": "cell_reference",
+        "formula_ref": "Summary!B2",
+        "evidence": "Assumptions!B3",
+        "confidence": 1.0
+      }
+    ],
+    "range_membership_summary": [],
+    "collapsed_node_count": 0,
+    "omitted_node_count": 5
+  },
+  "top_direct_changes": [
+    {
+      "id": "chg_0002",
+      "kind": "constant_changed",
+      "scope": "cell",
+      "object_ref": "Assumptions!B3",
+      "old_ref": "Assumptions!B3",
+      "new_ref": "Assumptions!B3",
+      "address_changed": false,
+      "semantic_id": "cell::assumptions::row_value::units",
+      "semantic_identity": {
+        "semantic_id": "cell::assumptions::row_value::units",
+        "kind": "row_labeled_cell",
+        "row_headers": [
+          "Units"
+        ],
+        "column_headers": [],
+        "labels": [
+          "Units"
+        ],
+        "source_refs": [
+          "Assumptions!A3"
+        ],
+        "confidence": 0.7
+      },
+      "sheet_name": "Assumptions",
+      "range_ref": "Assumptions!B3",
+      "old": {
+        "raw": 10,
+        "typed_value": 10,
+        "display_value": "10",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "new": {
+        "raw": 12.5,
+        "typed_value": 12.5,
+        "display_value": "12.5",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "old_display": "10",
+      "new_display": "12.5",
+      "delta": {
+        "old_number": 10.0,
+        "new_number": 12.5,
+        "absolute_delta": 2.5,
+        "display_delta": "+2.50",
+        "relative_delta": 0.25,
+        "display_relative_delta": "+25.0%"
+      },
+      "labels": [
+        {
+          "text": "Units",
+          "source": "left_neighbor",
+          "confidence": 0.75,
+          "source_ref": "Assumptions!A3"
+        },
+        {
+          "text": "Assumptions",
+          "source": "sheet_name",
+          "confidence": 0.2
+        }
+      ],
+      "semantic_role": "assumption",
+      "directness": "direct",
+      "materiality_score": 75.502,
+      "confidence": 0.95,
+      "evidence": [],
+      "warnings": [],
+      "visibility_context": {
+        "sheet_visible": true,
+        "row_hidden": false,
+        "col_hidden": false
+      }
+    },
+    {
+      "id": "chg_0001",
+      "kind": "constant_changed",
+      "scope": "cell",
+      "object_ref": "Assumptions!B2",
+      "old_ref": "Assumptions!B2",
+      "new_ref": "Assumptions!B2",
+      "address_changed": false,
+      "semantic_id": "cell::assumptions::row_value::price",
+      "semantic_identity": {
+        "semantic_id": "cell::assumptions::row_value::price",
+        "kind": "row_labeled_cell",
+        "row_headers": [
+          "Price"
+        ],
+        "column_headers": [],
+        "labels": [
+          "Price"
+        ],
+        "source_refs": [
+          "Assumptions!A2"
+        ],
+        "confidence": 0.7
+      },
+      "sheet_name": "Assumptions",
+      "range_ref": "Assumptions!B2",
+      "old": {
+        "raw": 10,
+        "typed_value": 10,
+        "display_value": "10",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "new": {
+        "raw": 12,
+        "typed_value": 12,
+        "display_value": "12",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "old_display": "10",
+      "new_display": "12",
+      "delta": {
+        "old_number": 10.0,
+        "new_number": 12.0,
+        "absolute_delta": 2.0,
+        "display_delta": "+2.00",
+        "relative_delta": 0.19999999999999996,
+        "display_relative_delta": "+20.0%"
+      },
+      "labels": [
+        {
+          "text": "Price",
+          "source": "left_neighbor",
+          "confidence": 0.75,
+          "source_ref": "Assumptions!A2"
+        },
+        {
+          "text": "Assumptions",
+          "source": "sheet_name",
+          "confidence": 0.2
+        }
+      ],
+      "semantic_role": "assumption",
+      "directness": "direct",
+      "materiality_score": 70.502,
+      "confidence": 0.95,
+      "evidence": [],
+      "warnings": [],
+      "visibility_context": {
+        "sheet_visible": true,
+        "row_hidden": false,
+        "col_hidden": false
+      }
+    }
+  ],
+  "top_impacted_outputs": [
+    {
+      "ref": "Summary!B2",
+      "old_ref": "Summary!B2",
+      "new_ref": "Summary!B2",
+      "address_changed": false,
+      "change_id": "chg_0003",
+      "change_kind": "cached_value_changed",
+      "semantic_id": "cell::summary::intersection::revenue::2027e",
+      "label": "Revenue",
+      "old_value": {
+        "raw": 100,
+        "typed_value": 100,
+        "display_value": "100",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "new_value": {
+        "raw": 150,
+        "typed_value": 150,
+        "display_value": "150",
+        "value_type": "number",
+        "number_format": "General"
+      },
+      "delta": {
+        "old_number": 100.0,
+        "new_number": 150.0,
+        "absolute_delta": 50.0,
+        "display_delta": "+50.0",
+        "relative_delta": 0.5,
+        "display_relative_delta": "+50.0%"
+      },
+      "upstream_change_ids": [
+        "chg_0001",
+        "chg_0002"
+      ],
+      "representative_paths": [
+        {
+          "id": "path_001_001",
+          "from": "Assumptions!B2",
+          "to": "Summary!B2",
+          "nodes": [
+            "Assumptions!B2",
+            "Summary!B2"
+          ],
+          "display_nodes": [
+            {
+              "id": "Assumptions!B2",
+              "ref": "Assumptions!B2",
+              "label": "Price",
+              "node_type": "cell",
+              "semantic_role": "assumption"
+            },
+            {
+              "id": "Summary!B2",
+              "ref": "Summary!B2",
+              "label": "2027E Revenue",
+              "node_type": "cell",
+              "semantic_role": "output"
+            }
+          ],
+          "edges": [
+            "e000001"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        },
+        {
+          "id": "path_002_001",
+          "from": "Assumptions!B3",
+          "to": "Summary!B2",
+          "nodes": [
+            "Assumptions!B3",
+            "Summary!B2"
+          ],
+          "display_nodes": [
+            {
+              "id": "Assumptions!B3",
+              "ref": "Assumptions!B3",
+              "label": "Units",
+              "node_type": "cell",
+              "semantic_role": "assumption"
+            },
+            {
+              "id": "Summary!B2",
+              "ref": "Summary!B2",
+              "label": "2027E Revenue",
+              "node_type": "cell",
+              "semantic_role": "output"
+            }
+          ],
+          "edges": [
+            "e000002"
+          ],
+          "collapsed": false,
+          "confidence": 1.0
+        }
+      ],
+      "explanation_strength": "moderate",
+      "dependency_confidence": "moderate",
+      "value_delta_confidence": "moderate",
+      "confidence_factors": [
+        {
+          "code": "multiple_upstream_roots",
+          "message": "Multiple upstream direct changes converge on this output.",
+          "strength_cap": "moderate",
+          "confidence_area": "explanation"
+        }
+      ],
+      "explanation": "Summary!B2 changed and is associated with 2 upstream direct change(s).",
+      "materiality_score": 105.05,
+      "semantic_role": "output"
+    }
+  ],
+  "unexplained_changes": [],
+  "diagnostics": [
+    {
+      "severity": "info",
+      "code": "CACHED_VALUE_MODE",
+      "message": "This report uses cached formula results. Numeric output deltas assume both workbooks were saved after recalculation."
+    }
+  ]
+}

@@ -7,6 +7,7 @@ Summary!G31 Total LTV changed from 1180 to 1220 (+40.0 / +3.4%), associated with
 ## Counts
 
 - direct_changes: 1
+- raw_direct_changes: 1
 - propagated_changes: 2
 - unexplained_changes: 0
 - formula_changes: 0
@@ -19,10 +20,11 @@ Summary!G31 Total LTV changed from 1180 to 1220 (+40.0 / +3.4%), associated with
 
 ## Top Impacted Outputs
 
-- `Summary!G31` Total LTV: 1180 -> 1220 +40.0 / +3.4%; strength=moderate
-- `Revenue!G22` 2027 Revenue: 1180 -> 1220 +40.0 / +3.4%; strength=moderate
+- `Summary!G31` Total LTV: 1180 -> 1220 +40.0 / +3.4%; strength=moderate; dependency=high; value_delta=moderate
+- `Revenue!G22` 2027 Revenue: 1180 -> 1220 +40.0 / +3.4%; strength=moderate; dependency=high; value_delta=moderate
 
 ## Caveats
 
 - Uses cached workbook formula values; numeric deltas assume both workbooks were saved after recalculation.
 - Warnings present: MANUAL_CALCULATION_MODE.
+- Output confidence factors: manual_calculation_mode.

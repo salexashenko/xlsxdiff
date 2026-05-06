@@ -166,13 +166,26 @@ def render_llm_summary_markdown(llm_summary: Dict[str, Any]) -> str:
     if llm_summary.get("top_change_groups"):
         lines.extend(["", "## Top Change Groups", ""])
         for group in llm_summary["top_change_groups"]:
-            lines.append(f"- {group.get('label') or group.get('group_type')}: {group.get('summary') or ''}".rstrip())
+            if group.get("group_type") == "named_range_rebound":
+                delta = _delta_display(group)
+                value = f"; effective value {group.get('effective_old') or 'blank'} -> {group.get('effective_new') or 'blank'}"
+                if delta:
+                    value += f" {delta}"
+                lines.append(
+                    f"- Named range `{group.get('name')}` was rebound from `{group.get('old_target')}` to `{group.get('new_target')}`{value}."
+                )
+            else:
+                lines.append(f"- {group.get('label') or group.get('group_type')}: {group.get('summary') or ''}".rstrip())
     if llm_summary.get("top_impacted_outputs"):
         lines.extend(["", "## Top Impacted Outputs", ""])
         for output in llm_summary["top_impacted_outputs"]:
+            delta = output.get("delta") or ""
+            movement = f"{output.get('old') or ''} -> {output.get('new') or ''}"
+            if delta:
+                movement += f" {delta}"
             lines.append(
-                f"- `{output['ref']}` {output.get('label') or ''}: {output.get('old') or ''} -> {output.get('new') or ''} "
-                f"{output.get('delta') or ''}; strength={output.get('explanation_strength')}"
+                f"- `{output['ref']}` {output.get('label') or ''}: {movement}; strength={output.get('explanation_strength')}; "
+                f"dependency={output.get('dependency_confidence')}; value_delta={output.get('value_delta_confidence')}"
             )
     if llm_summary.get("caveats"):
         lines.extend(["", "## Caveats", ""])
@@ -709,7 +722,8 @@ def _render_focused_graph_details(outputs: Sequence[Dict[str, Any]], changes_by_
             )
         paths = []
         for path in output.get("paths", [])[:5]:
-            refs = " → ".join(f"<code>{escape_html(node)}</code>" for node in path.get("nodes", []))
+            display_nodes = path.get("display_nodes") or [{"id": node, "ref": node, "label": node} for node in path.get("nodes", [])]
+            refs = " → ".join(_path_node_html(node) for node in display_nodes)
             if refs:
                 paths.append(f'<div class="path-line">{refs}</div>')
         items.append(
@@ -729,6 +743,14 @@ def _old_new_text(old: Any, new: Any) -> str:
     if not old_text and not new_text:
         return ""
     return f"{old_text or 'blank'} → {new_text or 'blank'}"
+
+
+def _path_node_html(node: Dict[str, Any]) -> str:
+    label = node.get("label") or node.get("ref") or node.get("id") or ""
+    ref = node.get("ref") or node.get("id") or label
+    if label and ref and label != ref:
+        return f'{escape_html(label)} <code>{escape_html(ref)}</code>'
+    return f'<code>{escape_html(ref)}</code>'
 
 
 def render_graph_svg(dag: Dict[str, Any], max_nodes: int = 80) -> str:

@@ -1,9 +1,9 @@
 # Workbook Diff Report
 
 Compared:
-- Baseline: `baseline.xlsx` `464a8ca5f82b`
-- Candidate: `candidate.xlsx` `6ef5c6c9dfe9`
-- Generated: 2026-05-06T00:56:25.956212+00:00
+- Baseline: `baseline.xlsx` `f07303f6bf46`
+- Candidate: `candidate.xlsx` `3acc57af00ea`
+- Generated: 2026-05-06T01:49:04.304169+00:00
 - Overall confidence: **high**
 
 ## Executive summary

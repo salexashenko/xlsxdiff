@@ -266,6 +266,12 @@
         "explanation_strength": {
           "enum": ["strong", "moderate", "weak", "unexplained"]
         },
+        "dependency_confidence": {
+          "enum": ["high", "moderate", "weak", null]
+        },
+        "value_delta_confidence": {
+          "enum": ["high", "moderate", "weak", null]
+        },
         "explanation": {
           "type": "string"
         },
@@ -302,6 +308,9 @@
         },
         "strength_cap": {
           "enum": ["strong", "moderate", "weak", "unexplained"]
+        },
+        "confidence_area": {
+          "enum": ["dependency", "value_delta", "explanation"]
         }
       },
       "additionalProperties": true

@@ -12,6 +12,7 @@ from xml.etree import ElementTree as ET
 
 import yaml
 from openpyxl import Workbook
+from openpyxl.worksheet.table import Table, TableStyleInfo
 from openpyxl.workbook.defined_name import DefinedName
 
 
@@ -29,12 +30,21 @@ BENCHMARK_DIR = Path(__file__).resolve().parent
 CASES_DIR = BENCHMARK_DIR / "cases"
 DOCS_REPORT_DIR = REPO_ROOT / "docs" / "examples" / "simple_assumption_report"
 FIXED_DATETIME = datetime(2026, 1, 1, 0, 0, 0)
+FIXED_DATETIME_TEXT = "2026-01-01T00:00:00Z"
 FIXED_ZIP_DATE = (2026, 1, 1, 0, 0, 0)
 NS_MAIN = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
 NS_REL = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 NS_PKG_REL = "http://schemas.openxmlformats.org/package/2006/relationships"
+NS_CORE = "http://schemas.openxmlformats.org/package/2006/metadata/core-properties"
+NS_DC = "http://purl.org/dc/elements/1.1/"
+NS_DCTERMS = "http://purl.org/dc/terms/"
+NS_XSI = "http://www.w3.org/2001/XMLSchema-instance"
 ET.register_namespace("", NS_MAIN)
 ET.register_namespace("r", NS_REL)
+ET.register_namespace("cp", NS_CORE)
+ET.register_namespace("dc", NS_DC)
+ET.register_namespace("dcterms", NS_DCTERMS)
+ET.register_namespace("xsi", NS_XSI)
 
 
 @dataclass(frozen=True)
@@ -137,6 +147,60 @@ def _cases() -> List[BenchmarkCase]:
             config={"outputs": [{"ref": "Summary!G31", "name": "Total LTV"}]},
             options={},
         ),
+        BenchmarkCase(
+            slug="006_formula_cache_unchanged",
+            title="Formula Changed but Cache Unchanged",
+            purpose="An output formula changes, but the workbook cache still shows the old numeric result.",
+            expected="The formula change should be detected while value-delta confidence is downgraded because the cached output did not move.",
+            builder=_build_formula_cache_unchanged,
+            config={"outputs": [{"ref": "Summary!B2", "name": "Total Revenue"}]},
+            options={},
+        ),
+        BenchmarkCase(
+            slug="007_structured_table_reference",
+            title="Structured Table Reference",
+            purpose="A formula depends on an Excel table structured reference.",
+            expected="A changed table row should flow through the table/range dependency to the summary output.",
+            builder=_build_structured_table_reference,
+            config={"outputs": [{"ref": "Summary!B2", "name": "Booked ARR"}], "raw_data_sheets": ["Bookings"]},
+            options={},
+        ),
+        BenchmarkCase(
+            slug="008_external_reference",
+            title="External Workbook Reference",
+            purpose="A formula changes from one external workbook reference to another.",
+            expected="The external reference change should be classified and treated as opaque; no external workbook should be fetched.",
+            builder=_build_external_reference,
+            config={"outputs": [{"ref": "Summary!B2", "name": "External Input"}]},
+            options={},
+        ),
+        BenchmarkCase(
+            slug="009_hidden_sheet_driver",
+            title="Hidden Sheet Driver",
+            purpose="A hidden calculation sheet drives a visible summary output.",
+            expected="The hidden-sheet driver change should propagate to the visible output when hidden sheets are included.",
+            builder=_build_hidden_sheet_driver,
+            config={"outputs": [{"ref": "Summary!B2", "name": "Visible KPI"}]},
+            options={},
+        ),
+        BenchmarkCase(
+            slug="010_multiple_upstream_roots",
+            title="Multiple Upstream Roots",
+            purpose="Two assumptions change and converge into the same output.",
+            expected="The output should be associated with multiple roots and explanation confidence should be moderate.",
+            builder=_build_multiple_upstream_roots,
+            config={"outputs": [{"ref": "Summary!B2", "name": "Revenue"}]},
+            options={},
+        ),
+        BenchmarkCase(
+            slug="011_formula_to_hardcode_override",
+            title="Formula to Hardcode Override",
+            purpose="A formula-driven total is replaced with a hardcoded override.",
+            expected="The override should be reported as a direct formula-to-constant output change.",
+            builder=_build_formula_to_hardcode_override,
+            config={"outputs": [{"ref": "Summary!B4", "name": "Total Revenue"}]},
+            options={},
+        ),
     ]
 
 
@@ -163,6 +227,36 @@ def _build_inserted_modeling_step(baseline: Path, candidate: Path) -> None:
 def _build_manual_calc_mode(baseline: Path, candidate: Path) -> None:
     _make_assumption_workbook(baseline, growth=0.18, revenue=1180, summary=1180, manual_calc=True)
     _make_assumption_workbook(candidate, growth=0.22, revenue=1220, summary=1220, manual_calc=True)
+
+
+def _build_formula_cache_unchanged(baseline: Path, candidate: Path) -> None:
+    _make_formula_cache_workbook(baseline, formula="=100*2", cached=200)
+    _make_formula_cache_workbook(candidate, formula="=100*3", cached=200)
+
+
+def _build_structured_table_reference(baseline: Path, candidate: Path) -> None:
+    _make_structured_table_workbook(baseline, amount=100, cached=100)
+    _make_structured_table_workbook(candidate, amount=125, cached=125)
+
+
+def _build_external_reference(baseline: Path, candidate: Path) -> None:
+    _make_external_reference_workbook(baseline, "='[budget_old.xlsx]Inputs'!A1", cached=10)
+    _make_external_reference_workbook(candidate, "='[budget_new.xlsx]Inputs'!A1", cached=12)
+
+
+def _build_hidden_sheet_driver(baseline: Path, candidate: Path) -> None:
+    _make_hidden_driver_workbook(baseline, driver=10, cached=20)
+    _make_hidden_driver_workbook(candidate, driver=15, cached=30)
+
+
+def _build_multiple_upstream_roots(baseline: Path, candidate: Path) -> None:
+    _make_two_driver_workbook(baseline, price=10, units=10, cached=100)
+    _make_two_driver_workbook(candidate, price=12, units=12.5, cached=150)
+
+
+def _build_formula_to_hardcode_override(baseline: Path, candidate: Path) -> None:
+    _make_hardcode_override_baseline(baseline)
+    _make_hardcode_override_candidate(candidate)
 
 
 def _make_assumption_workbook(path: Path, growth: float, revenue: int, summary: int, manual_calc: bool) -> None:
@@ -269,6 +363,121 @@ def _make_model_step_candidate(path: Path) -> None:
     _patch_cached_values(path, {"Summary": {"B4": 40, "C4": 48, "B5": 30, "C5": 33}})
 
 
+def _make_formula_cache_workbook(path: Path, formula: str, cached: int) -> None:
+    wb = Workbook()
+    wb.calculation.fullCalcOnLoad = False
+    ws = wb.active
+    ws.title = "Summary"
+    ws["A1"] = "Metric"
+    ws["B1"] = "2027E"
+    ws["A2"] = "Total Revenue"
+    ws["B2"] = formula
+    _save_workbook(wb, path)
+    _patch_cached_values(path, {"Summary": {"B2": cached}})
+
+
+def _make_structured_table_workbook(path: Path, amount: int, cached: int) -> None:
+    wb = Workbook()
+    wb.calculation.fullCalcOnLoad = False
+    ws = wb.active
+    ws.title = "Bookings"
+    ws["A1"] = "Customer"
+    ws["B1"] = "Amount"
+    ws["A2"] = "Acme"
+    ws["B2"] = amount
+    table = Table(displayName="BookingsTable", ref="A1:B2")
+    table.tableStyleInfo = TableStyleInfo(name="TableStyleMedium2", showRowStripes=True)
+    ws.add_table(table)
+    summary = wb.create_sheet("Summary")
+    summary["A1"] = "Metric"
+    summary["B1"] = "2027E"
+    summary["A2"] = "Booked ARR"
+    summary["B2"] = "=SUM(BookingsTable[Amount])"
+    _save_workbook(wb, path)
+    _patch_cached_values(path, {"Summary": {"B2": cached}})
+
+
+def _make_external_reference_workbook(path: Path, formula: str, cached: int) -> None:
+    wb = Workbook()
+    wb.calculation.fullCalcOnLoad = False
+    ws = wb.active
+    ws.title = "Summary"
+    ws["A1"] = "Metric"
+    ws["B1"] = "2027E"
+    ws["A2"] = "External input"
+    ws["B2"] = formula
+    _save_workbook(wb, path)
+    _patch_cached_values(path, {"Summary": {"B2": cached}})
+
+
+def _make_hidden_driver_workbook(path: Path, driver: int, cached: int) -> None:
+    wb = Workbook()
+    wb.calculation.fullCalcOnLoad = False
+    summary = wb.active
+    summary.title = "Summary"
+    summary["A1"] = "Metric"
+    summary["B1"] = "Value"
+    summary["A2"] = "Visible KPI"
+    summary["B2"] = "=HiddenCalc!B2*2"
+    hidden = wb.create_sheet("HiddenCalc")
+    hidden.sheet_state = "hidden"
+    hidden["A2"] = "Internal driver"
+    hidden["B2"] = driver
+    _save_workbook(wb, path)
+    _patch_cached_values(path, {"Summary": {"B2": cached}})
+
+
+def _make_two_driver_workbook(path: Path, price: float, units: float, cached: int) -> None:
+    wb = Workbook()
+    wb.calculation.fullCalcOnLoad = False
+    assumptions = wb.active
+    assumptions.title = "Assumptions"
+    assumptions["A2"] = "Price"
+    assumptions["B2"] = price
+    assumptions["A3"] = "Units"
+    assumptions["B3"] = units
+    summary = wb.create_sheet("Summary")
+    summary["A1"] = "Metric"
+    summary["B1"] = "2027E"
+    summary["A2"] = "Revenue"
+    summary["B2"] = "=Assumptions!B2*Assumptions!B3"
+    _save_workbook(wb, path)
+    _patch_cached_values(path, {"Summary": {"B2": cached}})
+
+
+def _make_hardcode_override_baseline(path: Path) -> None:
+    wb = Workbook()
+    wb.calculation.fullCalcOnLoad = False
+    ws = wb.active
+    ws.title = "Summary"
+    ws["A1"] = "Metric"
+    ws["B1"] = "2027E"
+    ws["A2"] = "Revenue"
+    ws["B2"] = 100
+    ws["A3"] = "Services Revenue"
+    ws["B3"] = 200
+    ws["A4"] = "Total Revenue"
+    ws["B4"] = "=SUM(B2:B3)"
+    _save_workbook(wb, path)
+    _patch_cached_values(path, {"Summary": {"B4": 300}})
+
+
+def _make_hardcode_override_candidate(path: Path) -> None:
+    wb = Workbook()
+    wb.calculation.fullCalcOnLoad = False
+    ws = wb.active
+    ws.title = "Summary"
+    ws["A1"] = "Metric"
+    ws["B1"] = "2027E"
+    ws["A2"] = "Revenue"
+    ws["B2"] = 100
+    ws["A3"] = "Services Revenue"
+    ws["B3"] = 200
+    ws["A4"] = "Total Revenue"
+    ws["B4"] = 325
+    _save_workbook(wb, path)
+
+
 def _save_workbook(wb: Workbook, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     wb.properties.creator = "xlsxdiff"
@@ -282,7 +491,20 @@ def _save_workbook(wb: Workbook, path: Path) -> None:
 def _normalize_xlsx_zip(path: Path) -> None:
     with zipfile.ZipFile(path, "r") as archive:
         entries = {info.filename: archive.read(info.filename) for info in archive.infolist()}
+    _normalize_core_properties(entries)
     _write_xlsx_entries(path, entries)
+
+
+def _normalize_core_properties(entries: Dict[str, bytes]) -> None:
+    core_path = "docProps/core.xml"
+    if core_path not in entries:
+        return
+    root = ET.fromstring(entries[core_path])
+    for tag in ["created", "modified"]:
+        node = root.find(f"{{{NS_DCTERMS}}}{tag}")
+        if node is not None:
+            node.text = FIXED_DATETIME_TEXT
+    entries[core_path] = ET.tostring(root, encoding="utf-8", xml_declaration=False)
 
 
 def _patch_cached_values(path: Path, values: Dict[str, Dict[str, Any]]) -> None:

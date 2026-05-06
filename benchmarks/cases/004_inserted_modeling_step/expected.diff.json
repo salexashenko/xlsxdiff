@@ -2,26 +2,26 @@
   "schema_version": "0.1",
   "baseline": {
     "filename": "baseline.xlsx",
-    "sha256": "fed2b738a57e13db9606aedceeff01090cbcbc797d556e7c961cacd40f92f547",
-    "file_size_bytes": 5003,
+    "sha256": "b1fc2fdacbe1f721bf757cd8e8cb44a3b0f62bd549a95a27884401b39638bcd7",
+    "file_size_bytes": 4992,
     "workbook_type": "xlsx",
     "has_macros": false,
     "calc_mode": "unknown",
     "full_calc_on_load": false,
     "created_at": "2026-01-01T00:00:00",
-    "modified_at": "2026-05-06T00:56:25",
+    "modified_at": "2026-01-01T00:00:00",
     "app_version": null
   },
   "candidate": {
     "filename": "candidate.xlsx",
-    "sha256": "19f64f66230ce268d760aebe961f44fed5860b09c9cd3a5c4da4062d068c614e",
-    "file_size_bytes": 5036,
+    "sha256": "b59bab2a90ec36e62ebb6df0a6a478c09d9939cbe49cb2fe19f8e360d4264b01",
+    "file_size_bytes": 5025,
     "workbook_type": "xlsx",
     "has_macros": false,
     "calc_mode": "unknown",
     "full_calc_on_load": false,
     "created_at": "2026-01-01T00:00:00",
-    "modified_at": "2026-05-06T00:56:25",
+    "modified_at": "2026-01-01T00:00:00",
     "app_version": null
   },
   "summary": {
@@ -52,6 +52,7 @@
     "confidence": "high",
     "counts": {
       "direct_changes": 5,
+      "raw_direct_changes": 5,
       "propagated_changes": 0,
       "unexplained_changes": 0,
       "formula_changes": 2,
@@ -166,22 +167,28 @@
         "old_ref": "Summary!C4",
         "new_ref": "Summary!C5",
         "address_changed": true,
+        "change_id": "chg_0002",
+        "change_kind": "formula_reference_changed",
         "semantic_id": "cell::summary::intersection::ebitda::2027e",
         "label": "2027 EBITDA",
         "old": "48",
         "new": "33",
         "delta": "-15.0 / -31.2%",
         "explanation_strength": "moderate",
+        "dependency_confidence": "moderate",
+        "value_delta_confidence": "moderate",
         "confidence_factors": [
           {
             "code": "multiple_upstream_roots",
             "message": "Multiple upstream direct changes converge on this output.",
-            "strength_cap": "moderate"
+            "strength_cap": "moderate",
+            "confidence_area": "explanation"
           },
           {
             "code": "formula_and_value_changed",
             "message": "The output formula and cached value both changed.",
-            "strength_cap": "moderate"
+            "strength_cap": "moderate",
+            "confidence_area": "value_delta"
           }
         ],
         "upstream_change_ids": [
@@ -197,6 +204,22 @@
               "Summary!C3",
               "Summary!C5"
             ],
+            "display_nodes": [
+              {
+                "id": "Summary!C3",
+                "ref": "Summary!C3",
+                "label": "2027E GPU Expense",
+                "node_type": "cell",
+                "semantic_role": "unknown"
+              },
+              {
+                "id": "Summary!C5",
+                "ref": "Summary!C5",
+                "label": "2027E EBITDA",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
             "edges": [
               "e000006"
             ],
@@ -210,6 +233,15 @@
             "nodes": [
               "Summary!C5"
             ],
+            "display_nodes": [
+              {
+                "id": "Summary!C5",
+                "ref": "Summary!C5",
+                "label": "2027E EBITDA",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
             "edges": [],
             "collapsed": false,
             "confidence": 1.0
@@ -222,22 +254,28 @@
         "old_ref": "Summary!B4",
         "new_ref": "Summary!B5",
         "address_changed": true,
+        "change_id": "chg_0001",
+        "change_kind": "formula_reference_changed",
         "semantic_id": "cell::summary::intersection::ebitda::2026e",
         "label": "2026 EBITDA",
         "old": "40",
         "new": "30",
         "delta": "-10.0 / -25.0%",
         "explanation_strength": "moderate",
+        "dependency_confidence": "moderate",
+        "value_delta_confidence": "moderate",
         "confidence_factors": [
           {
             "code": "multiple_upstream_roots",
             "message": "Multiple upstream direct changes converge on this output.",
-            "strength_cap": "moderate"
+            "strength_cap": "moderate",
+            "confidence_area": "explanation"
           },
           {
             "code": "formula_and_value_changed",
             "message": "The output formula and cached value both changed.",
-            "strength_cap": "moderate"
+            "strength_cap": "moderate",
+            "confidence_area": "value_delta"
           }
         ],
         "upstream_change_ids": [
@@ -253,6 +291,22 @@
               "Summary!B3",
               "Summary!B5"
             ],
+            "display_nodes": [
+              {
+                "id": "Summary!B3",
+                "ref": "Summary!B3",
+                "label": "2026E GPU Expense",
+                "node_type": "cell",
+                "semantic_role": "unknown"
+              },
+              {
+                "id": "Summary!B5",
+                "ref": "Summary!B5",
+                "label": "2026E EBITDA",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
             "edges": [
               "e000004"
             ],
@@ -266,6 +320,15 @@
             "nodes": [
               "Summary!B5"
             ],
+            "display_nodes": [
+              {
+                "id": "Summary!B5",
+                "ref": "Summary!B5",
+                "label": "2026E EBITDA",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
             "edges": [],
             "collapsed": false,
             "confidence": 1.0
@@ -274,8 +337,197 @@
         "explanation": "Summary!B5 changed and is associated with 2 upstream direct change(s)."
       }
     ],
+    "claims": [
+      {
+        "claim": "2027 EBITDA changed from 48 to 33",
+        "refs": [
+          "Summary!C5"
+        ],
+        "old_value": 48,
+        "new_value": 33,
+        "delta": {
+          "old_number": 48.0,
+          "new_number": 33.0,
+          "absolute_delta": -15.0,
+          "display_delta": "-15.0",
+          "relative_delta": -0.3125,
+          "display_relative_delta": "-31.2%"
+        },
+        "evidence_type": "cached_value_diff",
+        "confidence": "moderate",
+        "caveats": [
+          "cached_value_mode",
+          "multiple_upstream_roots",
+          "formula_and_value_changed"
+        ]
+      },
+      {
+        "claim": "Detected upstream changes are associated with 2027 EBITDA",
+        "refs": [
+          "Summary!C5"
+        ],
+        "root_change_ids": [
+          "chg_0002",
+          "chg_0005"
+        ],
+        "representative_paths": [
+          {
+            "id": "path_001_001",
+            "from": "Summary!C3",
+            "to": "Summary!C5",
+            "nodes": [
+              "Summary!C3",
+              "Summary!C5"
+            ],
+            "display_nodes": [
+              {
+                "id": "Summary!C3",
+                "ref": "Summary!C3",
+                "label": "2027E GPU Expense",
+                "node_type": "cell",
+                "semantic_role": "unknown"
+              },
+              {
+                "id": "Summary!C5",
+                "ref": "Summary!C5",
+                "label": "2027E EBITDA",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
+            "edges": [
+              "e000006"
+            ],
+            "collapsed": false,
+            "confidence": 1.0
+          },
+          {
+            "id": "path_002_001",
+            "from": "Summary!C5",
+            "to": "Summary!C5",
+            "nodes": [
+              "Summary!C5"
+            ],
+            "display_nodes": [
+              {
+                "id": "Summary!C5",
+                "ref": "Summary!C5",
+                "label": "2027E EBITDA",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
+            "edges": [],
+            "collapsed": false,
+            "confidence": 1.0
+          }
+        ],
+        "evidence_type": "dependency_path",
+        "confidence": "moderate",
+        "dependency_confidence": "moderate",
+        "value_delta_confidence": "moderate",
+        "caveats": [
+          "multiple_upstream_roots",
+          "formula_and_value_changed"
+        ]
+      },
+      {
+        "claim": "2026 EBITDA changed from 40 to 30",
+        "refs": [
+          "Summary!B5"
+        ],
+        "old_value": 40,
+        "new_value": 30,
+        "delta": {
+          "old_number": 40.0,
+          "new_number": 30.0,
+          "absolute_delta": -10.0,
+          "display_delta": "-10.0",
+          "relative_delta": -0.25,
+          "display_relative_delta": "-25.0%"
+        },
+        "evidence_type": "cached_value_diff",
+        "confidence": "moderate",
+        "caveats": [
+          "cached_value_mode",
+          "multiple_upstream_roots",
+          "formula_and_value_changed"
+        ]
+      },
+      {
+        "claim": "Detected upstream changes are associated with 2026 EBITDA",
+        "refs": [
+          "Summary!B5"
+        ],
+        "root_change_ids": [
+          "chg_0001",
+          "chg_0004"
+        ],
+        "representative_paths": [
+          {
+            "id": "path_001_002",
+            "from": "Summary!B3",
+            "to": "Summary!B5",
+            "nodes": [
+              "Summary!B3",
+              "Summary!B5"
+            ],
+            "display_nodes": [
+              {
+                "id": "Summary!B3",
+                "ref": "Summary!B3",
+                "label": "2026E GPU Expense",
+                "node_type": "cell",
+                "semantic_role": "unknown"
+              },
+              {
+                "id": "Summary!B5",
+                "ref": "Summary!B5",
+                "label": "2026E EBITDA",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
+            "edges": [
+              "e000004"
+            ],
+            "collapsed": false,
+            "confidence": 1.0
+          },
+          {
+            "id": "path_002_002",
+            "from": "Summary!B5",
+            "to": "Summary!B5",
+            "nodes": [
+              "Summary!B5"
+            ],
+            "display_nodes": [
+              {
+                "id": "Summary!B5",
+                "ref": "Summary!B5",
+                "label": "2026E EBITDA",
+                "node_type": "cell",
+                "semantic_role": "output"
+              }
+            ],
+            "edges": [],
+            "collapsed": false,
+            "confidence": 1.0
+          }
+        ],
+        "evidence_type": "dependency_path",
+        "confidence": "moderate",
+        "dependency_confidence": "moderate",
+        "value_delta_confidence": "moderate",
+        "caveats": [
+          "multiple_upstream_roots",
+          "formula_and_value_changed"
+        ]
+      }
+    ],
     "caveats": [
-      "Uses cached workbook formula values; numeric deltas assume both workbooks were saved after recalculation."
+      "Uses cached workbook formula values; numeric deltas assume both workbooks were saved after recalculation.",
+      "Output confidence factors: formula_and_value_changed, multiple_upstream_roots."
     ],
     "safe_response_rules": [
       "Use the one_sentence_summary verbatim or paraphrase it without adding unsupported causality.",
@@ -843,41 +1095,84 @@
       "Summary!B5"
     ],
     "nodes": {
-      "Summary!A3": {
-        "id": "Summary!A3",
-        "ref": "Summary!A3",
+      "Summary!C5": {
+        "id": "Summary!C5",
+        "ref": "Summary!C5",
         "node_type": "cell",
-        "label": "Revenue",
-        "semantic_id": "cell::summary::row_header::gpu_expense",
+        "label": "2027E EBITDA",
+        "semantic_id": "cell::summary::intersection::ebitda::2027e",
         "semantic_identity": {
-          "semantic_id": "cell::summary::row_header::gpu_expense",
-          "kind": "row_header",
+          "semantic_id": "cell::summary::intersection::ebitda::2027e",
+          "kind": "row_column_intersection",
           "row_headers": [
-            "GPU Expense"
+            "EBITDA"
           ],
-          "column_headers": [],
+          "column_headers": [
+            "2027E"
+          ],
           "labels": [
-            "GPU Expense"
+            "EBITDA",
+            "2027E"
           ],
           "source_refs": [
-            "Summary!A3"
+            "Summary!A5",
+            "Summary!C1"
           ],
-          "confidence": 0.78
+          "confidence": 0.9
         },
-        "semantic_role": "unknown",
+        "semantic_role": "output",
         "sheet_name": "Summary",
         "old_value": null,
         "new_value": {
-          "raw": "GPU Expense",
-          "typed_value": "GPU Expense",
-          "display_value": "GPU Expense",
-          "value_type": "string",
+          "raw": 33,
+          "typed_value": 33,
+          "display_value": "33",
+          "value_type": "number",
           "number_format": "General"
         },
         "old_formula": null,
-        "new_formula": null,
+        "new_formula": {
+          "raw": "=C4-C3",
+          "normalized": "C4-C3",
+          "formula_type": "normal",
+          "tokens": [
+            {
+              "type": "reference",
+              "text": "C4",
+              "target": "Summary!C4"
+            },
+            {
+              "type": "reference",
+              "text": "C3",
+              "target": "Summary!C3"
+            }
+          ],
+          "precedents": [
+            {
+              "raw": "C4",
+              "ref": "C4",
+              "sheet_name": "Summary",
+              "kind": "cell",
+              "target": "Summary!C4",
+              "confidence": 1.0
+            },
+            {
+              "raw": "C3",
+              "ref": "C3",
+              "sheet_name": "Summary",
+              "kind": "cell",
+              "target": "Summary!C3",
+              "confidence": 1.0
+            }
+          ],
+          "has_volatile_function": false,
+          "has_dynamic_reference": false,
+          "has_external_reference": false,
+          "parse_status": "ok",
+          "parse_warnings": []
+        },
         "changes": [
-          "chg_0003"
+          "chg_0002"
         ],
         "materiality_score": 0,
         "confidence": 1.0
@@ -1007,6 +1302,45 @@
         "materiality_score": 0,
         "confidence": 1.0
       },
+      "Summary!A3": {
+        "id": "Summary!A3",
+        "ref": "Summary!A3",
+        "node_type": "cell",
+        "label": "Revenue",
+        "semantic_id": "cell::summary::row_header::gpu_expense",
+        "semantic_identity": {
+          "semantic_id": "cell::summary::row_header::gpu_expense",
+          "kind": "row_header",
+          "row_headers": [
+            "GPU Expense"
+          ],
+          "column_headers": [],
+          "labels": [
+            "GPU Expense"
+          ],
+          "source_refs": [
+            "Summary!A3"
+          ],
+          "confidence": 0.78
+        },
+        "semantic_role": "unknown",
+        "sheet_name": "Summary",
+        "old_value": null,
+        "new_value": {
+          "raw": "GPU Expense",
+          "typed_value": "GPU Expense",
+          "display_value": "GPU Expense",
+          "value_type": "string",
+          "number_format": "General"
+        },
+        "old_formula": null,
+        "new_formula": null,
+        "changes": [
+          "chg_0003"
+        ],
+        "materiality_score": 0,
+        "confidence": 1.0
+      },
       "Summary!C3": {
         "id": "Summary!C3",
         "ref": "Summary!C3",
@@ -1049,88 +1383,6 @@
         ],
         "materiality_score": 0,
         "confidence": 1.0
-      },
-      "Summary!C5": {
-        "id": "Summary!C5",
-        "ref": "Summary!C5",
-        "node_type": "cell",
-        "label": "2027E EBITDA",
-        "semantic_id": "cell::summary::intersection::ebitda::2027e",
-        "semantic_identity": {
-          "semantic_id": "cell::summary::intersection::ebitda::2027e",
-          "kind": "row_column_intersection",
-          "row_headers": [
-            "EBITDA"
-          ],
-          "column_headers": [
-            "2027E"
-          ],
-          "labels": [
-            "EBITDA",
-            "2027E"
-          ],
-          "source_refs": [
-            "Summary!A5",
-            "Summary!C1"
-          ],
-          "confidence": 0.9
-        },
-        "semantic_role": "output",
-        "sheet_name": "Summary",
-        "old_value": null,
-        "new_value": {
-          "raw": 33,
-          "typed_value": 33,
-          "display_value": "33",
-          "value_type": "number",
-          "number_format": "General"
-        },
-        "old_formula": null,
-        "new_formula": {
-          "raw": "=C4-C3",
-          "normalized": "C4-C3",
-          "formula_type": "normal",
-          "tokens": [
-            {
-              "type": "reference",
-              "text": "C4",
-              "target": "Summary!C4"
-            },
-            {
-              "type": "reference",
-              "text": "C3",
-              "target": "Summary!C3"
-            }
-          ],
-          "precedents": [
-            {
-              "raw": "C4",
-              "ref": "C4",
-              "sheet_name": "Summary",
-              "kind": "cell",
-              "target": "Summary!C4",
-              "confidence": 1.0
-            },
-            {
-              "raw": "C3",
-              "ref": "C3",
-              "sheet_name": "Summary",
-              "kind": "cell",
-              "target": "Summary!C3",
-              "confidence": 1.0
-            }
-          ],
-          "has_volatile_function": false,
-          "has_dynamic_reference": false,
-          "has_external_reference": false,
-          "parse_status": "ok",
-          "parse_warnings": []
-        },
-        "changes": [
-          "chg_0002"
-        ],
-        "materiality_score": 0,
-        "confidence": 1.0
       }
     },
     "edges": [
@@ -1153,6 +1405,7 @@
         "confidence": 1.0
       }
     ],
+    "range_membership_summary": [],
     "collapsed_node_count": 0,
     "omitted_node_count": 10
   },
@@ -1616,6 +1869,8 @@
       "old_ref": "Summary!C4",
       "new_ref": "Summary!C5",
       "address_changed": true,
+      "change_id": "chg_0002",
+      "change_kind": "formula_reference_changed",
       "semantic_id": "cell::summary::intersection::ebitda::2027e",
       "label": "2027 EBITDA",
       "old_value": {
@@ -1653,6 +1908,22 @@
             "Summary!C3",
             "Summary!C5"
           ],
+          "display_nodes": [
+            {
+              "id": "Summary!C3",
+              "ref": "Summary!C3",
+              "label": "2027E GPU Expense",
+              "node_type": "cell",
+              "semantic_role": "unknown"
+            },
+            {
+              "id": "Summary!C5",
+              "ref": "Summary!C5",
+              "label": "2027E EBITDA",
+              "node_type": "cell",
+              "semantic_role": "output"
+            }
+          ],
           "edges": [
             "e000006"
           ],
@@ -1666,22 +1937,35 @@
           "nodes": [
             "Summary!C5"
           ],
+          "display_nodes": [
+            {
+              "id": "Summary!C5",
+              "ref": "Summary!C5",
+              "label": "2027E EBITDA",
+              "node_type": "cell",
+              "semantic_role": "output"
+            }
+          ],
           "edges": [],
           "collapsed": false,
           "confidence": 1.0
         }
       ],
       "explanation_strength": "moderate",
+      "dependency_confidence": "moderate",
+      "value_delta_confidence": "moderate",
       "confidence_factors": [
         {
           "code": "multiple_upstream_roots",
           "message": "Multiple upstream direct changes converge on this output.",
-          "strength_cap": "moderate"
+          "strength_cap": "moderate",
+          "confidence_area": "explanation"
         },
         {
           "code": "formula_and_value_changed",
           "message": "The output formula and cached value both changed.",
-          "strength_cap": "moderate"
+          "strength_cap": "moderate",
+          "confidence_area": "value_delta"
         }
       ],
       "explanation": "Summary!C5 changed and is associated with 2 upstream direct change(s).",
@@ -1693,6 +1977,8 @@
       "old_ref": "Summary!B4",
       "new_ref": "Summary!B5",
       "address_changed": true,
+      "change_id": "chg_0001",
+      "change_kind": "formula_reference_changed",
       "semantic_id": "cell::summary::intersection::ebitda::2026e",
       "label": "2026 EBITDA",
       "old_value": {
@@ -1730,6 +2016,22 @@
             "Summary!B3",
             "Summary!B5"
           ],
+          "display_nodes": [
+            {
+              "id": "Summary!B3",
+              "ref": "Summary!B3",
+              "label": "2026E GPU Expense",
+              "node_type": "cell",
+              "semantic_role": "unknown"
+            },
+            {
+              "id": "Summary!B5",
+              "ref": "Summary!B5",
+              "label": "2026E EBITDA",
+              "node_type": "cell",
+              "semantic_role": "output"
+            }
+          ],
           "edges": [
             "e000004"
           ],
@@ -1743,22 +2045,35 @@
           "nodes": [
             "Summary!B5"
           ],
+          "display_nodes": [
+            {
+              "id": "Summary!B5",
+              "ref": "Summary!B5",
+              "label": "2026E EBITDA",
+              "node_type": "cell",
+              "semantic_role": "output"
+            }
+          ],
           "edges": [],
           "collapsed": false,
           "confidence": 1.0
         }
       ],
       "explanation_strength": "moderate",
+      "dependency_confidence": "moderate",
+      "value_delta_confidence": "moderate",
       "confidence_factors": [
         {
           "code": "multiple_upstream_roots",
           "message": "Multiple upstream direct changes converge on this output.",
-          "strength_cap": "moderate"
+          "strength_cap": "moderate",
+          "confidence_area": "explanation"
         },
         {
           "code": "formula_and_value_changed",
           "message": "The output formula and cached value both changed.",
-          "strength_cap": "moderate"
+          "strength_cap": "moderate",
+          "confidence_area": "value_delta"
         }
       ],
       "explanation": "Summary!B5 changed and is associated with 2 upstream direct change(s).",

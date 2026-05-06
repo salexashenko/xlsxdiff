@@ -7,6 +7,7 @@ Summary!C5 2027 EBITDA changed from 48 to 33 (-15.0 / -31.2%), associated with S
 ## Counts
 
 - direct_changes: 5
+- raw_direct_changes: 5
 - propagated_changes: 0
 - unexplained_changes: 0
 - formula_changes: 2
@@ -28,9 +29,10 @@ Summary!C5 2027 EBITDA changed from 48 to 33 (-15.0 / -31.2%), associated with S
 
 ## Top Impacted Outputs
 
-- `Summary!C5` 2027 EBITDA: 48 -> 33 -15.0 / -31.2%; strength=moderate
-- `Summary!B5` 2026 EBITDA: 40 -> 30 -10.0 / -25.0%; strength=moderate
+- `Summary!C5` 2027 EBITDA: 48 -> 33 -15.0 / -31.2%; strength=moderate; dependency=moderate; value_delta=moderate
+- `Summary!B5` 2026 EBITDA: 40 -> 30 -10.0 / -25.0%; strength=moderate; dependency=moderate; value_delta=moderate
 
 ## Caveats
 
 - Uses cached workbook formula values; numeric deltas assume both workbooks were saved after recalculation.
+- Output confidence factors: formula_and_value_changed, multiple_upstream_roots.
